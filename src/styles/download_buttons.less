@@ -1,0 +1,119 @@
+>.chapters_container >.content_container .text_container,
+>.header_container .content_bottom {
+  .download_buttons_container {
+    margin: 0 0 20px 0;
+    a {
+      border-radius: 20px;
+      border: 0;
+      color: #fff;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 22px;
+      margin: 0 10px 10px 0;
+      padding: 8px 20px 8px 40px;
+      position: relative;
+      text-decoration: none;
+      &:before {
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        content:'';
+        display: block;
+        height: 30px;
+        left: 6px;
+        position: absolute;
+        top: 4px;
+        width: 30px;
+      }
+      &.overview {
+        background-color: #ffc800;
+        color: #000;
+        &:before {
+          background-image: url('./../assets/img/icons/icon_eye_black.png');
+        }
+        &:hover {
+          background-color: #B06E2A;
+          color: #fff;
+        }
+      }
+      &.pdf_download {
+        background-color: #CEE3A0;
+        color: #000;
+        &:before {
+          background-image: url('./../assets/img/icons/icon_download_black.png');
+        }
+        &:hover {
+          background-color: #E6EFD0;
+          color: #000;
+        }
+      }
+      &.chapter_download,
+      &.regional {
+        background-color: #27833A;
+        color: #fff;
+        padding-left: 20px;
+        &:hover {
+          background-color: #72bf44;
+          color: #fff;
+        }
+      }
+      &.chapter_download {
+        padding-left: 40px;
+        &:before {
+          background-image: url('./../assets/img/icons/icon_download_white.png');
+        }
+      }
+    }
+    button {
+      background: #27833A;
+      border-radius: 20px;
+      border: 0;
+      color: #fff;
+      cursor: pointer;
+      display: inline-block;
+      font-family: Inter, Helvetica, Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 22px;
+      margin: 0 10px 10px 0;
+      outline: none;
+      padding: 8px 20px 8px 40px;
+      position: relative;
+      text-decoration: none;
+      &:before {
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        content:'';
+        display: block;
+        height: 30px;
+        left: 6px;
+        position: absolute;
+        top: 4px;
+        width: 30px;
+      }
+      &:hover {
+        background-color: #72bf44;
+        color: #fff;
+      }
+      &.video {
+        &:before {
+          background-image: url('./../assets/img/icons/video.png');
+        }
+      }
+      &.podcast {
+        padding-left: 35px;
+        &:before {
+          background-size: 20px auto;
+          background-image: url('./../assets/img/icons/podcast.png');
+        }
+      }
+      &.fdi_explorer,
+      &.press {
+        padding-left: 20px;
+      }
+    }
+  }
+}

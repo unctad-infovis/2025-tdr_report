@@ -1,0 +1,258 @@
+>.header_container {
+  align-content: space-between;
+  // background-blend-mode: hard-light;
+  // background-color: rgba(0, 0, 0, 0.5);
+  background-image: url('./../../assets/img/2025tdr-main.jpg');
+  background-position: 50% 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 50vh;
+  position: relative;
+  z-index: 4;
+  // @media all and (max-width: 970px) {
+  //   background-image: url('./../assets/img/l/cover-min.jpg');
+  // }
+  // @media all and (max-width: 450px) {
+  //   background-image: url('./../assets/img/l/cover-min.jpg');
+  // }
+  >div {
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 1350px;
+    padding: 0 10px;
+    @media all and (max-width: 450px) {
+      padding: 0 0;
+    }
+    &.content_top {
+      margin: 20px auto;
+      width: 100%;
+      h2 {
+        color: #fff;
+        font-size: 36px;
+        line-height: 40px;
+        margin: 0 0 20px 0;
+        max-width: 350px;
+        text-shadow: 0 0 10px #000, 0 0 10px #000;
+        @media all and (max-width: 450px) {
+          padding: 0 10px;
+        }
+        &:after {
+          display: none;
+        }
+        .year {
+          span {
+            color: #ffcb05;
+          }
+        }
+      }
+    }
+    &.between {
+      flex: 1;
+      min-height: 250px;
+    }
+    &.content_bottom {
+      margin-bottom: 20px;
+      width: 100%;
+      >h2 {
+        color: #fff;
+        font-size: 60px;
+        line-height: 64px;
+        margin: 0 0 20px 0;
+        max-width: 700px;
+        padding: 0;
+        position: relative;
+        text-shadow: 0 0 10px #000, 0 0 10px #000;
+        .share_wrapper {
+          display: inline;
+          position: relative;
+          z-index: 2;
+          margin: 0 10px;
+          @media all and (max-width: 768px) {
+            display: block;
+            height: 55px;
+            margin: 0 0 0 0;
+          }
+          @import './../share.less';
+        }
+        @media all and (max-width: 450px) {
+          font-size: 38px;
+          line-height: 42px;
+          padding: 0 10px;
+        }
+        &:after {
+          display: none;
+        }
+      }
+      .download_buttons_container {
+        @media all and (max-width: 340px) {
+          .overview {
+            margin-bottom: 10px;
+          }
+        }
+        @media all and (max-width: 450px) {
+          padding: 0 10px;
+        }
+      }
+      .chapters_navigation_container {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        @media all and (max-width: 970px) {
+          flex-direction: column;
+        }
+        button {
+          background: none;
+          border-radius: 0;
+          border: 0;
+          cursor: pointer;
+          font-family: Inter, Helvetica, Arial, sans-serif;
+          height: auto;
+          margin: 0;
+          outline: none;
+          padding: 0;
+          text-align: left;
+          @media all and (max-width: 970px) {
+            border-bottom: 2px solid #fff;
+            border-top: 2px solid #fff;
+            margin-top: -2px;
+          }
+          .chapter_navigation {
+            align-items: stretch;
+            background-color: #27833A;
+            border-color: #27833A;
+            border-style: solid;
+            border-width: 5px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            margin: 0 10px 0 0;
+            width: 170px;
+            @media all and (max-width: 970px) {
+              flex-direction: row;
+              width: 100%;
+              .chapter_meta {
+                order: 1;
+              }
+              .chapter_title {
+                order: 2;
+              }
+              .chapter_image {
+                order: 3;
+              }
+            }
+            .chapter_title {
+              background-color: #27833A;
+              box-sizing: border-box;
+              display: flex;
+              flex: 1;
+              padding: 5px 5px 10px 5px;
+              @media all and (max-width: 970px) {
+                align-items: center;
+                padding: 5px 5px 5px 5px;
+              }
+              h2 {
+                color: #fff;
+                font-size: 20px;
+                line-height: 22px;
+                margin: 0;
+                padding: 0;
+                &:after {
+                  display: none;
+                }
+              }
+            }
+            .chapter_image {
+              background: transparent;
+              padding: 5px;
+              position: relative;
+              @media all and (max-width: 970px) {
+                height: 60px;
+                padding: 0;
+                width: 60px;
+              }
+              div {
+                aspect-ratio: 1/1;
+                background-position: 50% 50%;
+                background-size: auto 100%;
+                background-blend-mode: darken;
+                background-color: rgba(0, 0, 0, 0.4);
+                &.chapter_image_1 {
+                  background-image: url('./../../assets/img/2025tdr-chapter1.jpg');
+                }
+                &.chapter_image_2 {
+                  background-image: url('./../../assets/img/2025tdr-chapter2.jpg');
+                }
+                &.chapter_image_3 {
+                  background-image: url('./../../assets/img/2025tdr-chapter3.jpg');
+                }
+                &.chapter_image_4 {
+                  background-image: url('./../../assets/img/2025tdr-chapter4.jpg');
+                }
+                &.chapter_image_5 {
+                  background-image: url('./../../assets/img/2025tdr-chapter5.jpg');
+                }
+              }
+            }
+            .chapter_meta {
+              align-items: center;
+              background-color: #27833A;
+              display: flex;
+              justify-content: space-between;
+              padding: 5px 5px 0px 5px;
+              @media all and (max-width: 970px) {
+                padding: 5px 5px 5px 5px;
+              }
+              .chapter_number {
+                color: #fff;
+                font-size: 24px;
+                font-weight: 900;
+              }
+              .chapter_download_button {
+                color: #fff;
+                font-family: Inter, Helvetica, Arial, sans-serif;
+                margin-top: -4px;
+                @media all and (max-width: 970px) {
+                  display: none;
+                }
+                &:before {
+                  background-image: url('./../../assets/img/icons/icon_download_white.png');
+                  background-size: 100%;
+                  content: '';
+                  display: block;
+                  height: 30px;
+                  width: 30px;
+                }
+                &:hover {
+                  &:before {
+                    opacity: 0.5;
+                  }
+                }
+              }
+            }
+            &:hover {
+              border-color: #72bf44;
+              .chapter_title {
+                background-color: #72bf44;
+                h2 {
+                  color: #000;
+                }
+              }
+              .chapter_meta {
+                background-color: #72bf44;
+              }
+              .chapter_image {
+                div {
+                  background-color: transparent;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

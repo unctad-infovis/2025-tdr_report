@@ -1,0 +1,236 @@
+#app-root-2025-tdr_report_footer {
+  font-family: Inter, Helvetica, Arial, sans-serif;
+  .footer_container {
+    background-color: #000;
+    padding: 30px 0 0 0;
+    h2 {
+      color: #fff;
+      font-size: 60px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 60px;
+      margin: auto auto 40px auto;
+      text-align: center;
+      text-transform: uppercase;
+      &:after {
+        display: none;
+      }
+      @media all and (max-width: 991px) {
+        max-width: 600px;
+      }
+      @media all and (min-width: 992px) {
+        max-width: 1000px;
+      }
+    }
+    .download_button {
+      margin-bottom: 50px;
+      text-align: center;
+      a {
+        background-color: #fff;
+        border-radius: 15px;
+        color: #000;
+        font-size: 20px;
+        font-weight: 700;
+        padding: 7px 30px;
+        text-decoration: none;
+        text-transform: uppercase;
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+    .footer_elements {
+      align-items: flex-start;
+      display: flex;
+      justify-content: center;
+      margin: auto auto;
+      max-width: 1000px;
+      @media all and (max-width: 849px) {
+        align-items: center;
+        flex-direction: column;
+      }
+      @media all and (min-width: 850px) {
+        flex-direction: row;
+      }
+      .footer_element {
+        @media all and (max-width: 640px) {
+          margin: auto 20px auto 20px;
+          max-width: 500px;
+          width: 100%;
+        }
+        @media all and (max-width: 849px) and (min-width: 640px) {
+          margin: auto auto auto auto;
+          width: 600px;
+        }
+        @media all and (min-width: 850px) {
+          margin: 10px;
+          &.footer_element_1 {
+            width: calc(100%);
+          }
+        }
+        .footer_content {
+          background-color: #fff;
+          border-radius: 5px;
+          box-sizing: border-box;
+          color: #000;
+          margin-bottom: 20px;
+          padding: 20px;
+          width: 100%;
+          p {
+            color: #000;
+            font-size: 20px;
+            line-height: 26px;
+            margin: 0 0 5px 0;
+          }
+          img {
+            margin-top: 10px;
+            width: 100%;
+            max-width: 200px;
+          }
+          a {
+            color: #fff;
+            white-space: nowrap;
+          }
+          .iframe_container {
+            font-size: 18px;
+            line-height: 22px;
+            margin: 0 0 10px 0;
+            a {
+              color: @unbluetext;
+              text-decoration: underline;
+              white-space: wrap;
+              &:hover {
+                text-decoration: none;
+              }
+            }
+            &.youtube_iframe {
+              padding-bottom: 56.25%;
+              position: relative;
+              width: 100%;
+              iframe {
+                border: 0;
+                height: 100%;
+                left: 0;
+                position: absolute;
+                top: 0;
+                width: 100%;
+              }
+            }
+            iframe {
+              border: 0;
+            }
+          }
+          h3 {
+            font-family: Inter, Arial, sans-serif;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 36px;
+            margin: 0 0 20px 0;
+            text-transform: uppercase;
+            a {
+              color: @unbluetext;
+              text-decoration: underline;
+              &:hover {
+                text-decoration: none;
+              }
+            }
+          }
+          h4 {
+            font-size: 20px;
+            line-height: 22px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+          }
+          ul {
+            margin: 10px 0 20px 0;
+            padding: 0 0 0 0;
+            list-style-type: none;
+            a {
+              color: @unbluetext;
+              text-decoration: underline;
+              &:hover {
+                text-decoration: none;
+              }
+            }
+            li {
+              font-size: 18px;
+              line-height: 22px;
+              margin: 0 0 10px 0;
+              ul {
+                list-style-type: disc;
+                margin: 0 0 20px 5px;
+                padding: 0 0 0 20px;
+                li {
+                  font-size: 15px;
+                  margin-bottom: 0;
+                }
+              }
+            }
+            &.podcasts_container,
+            &.videos_container {
+              list-style-type: none;
+              padding: 0;
+              li {
+                align-items: center;
+                display: flex;
+                width: 100%;
+                .icon {
+                  background-position: 50% 50%;
+                  background-repeat: no-repeat;
+                  content: '';
+                  display: inline-block;
+                  height: 40px;
+                  margin-right: 10px;
+                  max-width: 40px;
+                  position: relative;
+                  width: 40px;
+                }
+                .text {
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.footer_override {
+  background-color: #000;
+  padding-bottom: 20px;
+  .real-full-width {
+    .block {
+      background-color: #fff !important;
+      border-radius: 4px;
+      color: #000;
+      margin: auto auto;
+      max-width: 980px;
+      padding: 30px 30px;
+      &.block-inline-blockbasic {
+        padding-bottom: 0;
+      }
+      &.block-field-blocknodepublicationfield-documents,
+      &.block-field-blocknodepublicationfield-background-documents,
+      &.block-field-blocknodepublicationfield-press-materials {
+        margin: -10px auto auto auto;
+        padding-bottom: 20px;
+      }
+      h2 {
+        font-family: Inter, Arial, sans-serif;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        line-height: 36px;
+        margin: 0 0 0 0;
+        text-transform: uppercase;
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+}

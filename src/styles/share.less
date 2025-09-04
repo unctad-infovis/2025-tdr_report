@@ -1,0 +1,85 @@
+.share_container {
+  left: 0;
+  line-height: 12px;
+  position: absolute;
+  top: 10px;
+  .icon_container {
+    button {
+      background-color: transparent;
+      border: 0;
+      box-sizing: content-box;
+      color: #fff;
+      cursor: pointer;
+      height: 30px;
+      margin-top: 5px;
+      width: 35px;
+      &:hover {
+        img {
+          border-color: #004987;
+       }
+      }
+      img {
+        border-radius: 50%;
+        border: 3px solid #fff;
+        height: 35px;
+        margin: 0;
+        padding: 0;
+        width: 35px;
+      }
+    }
+  }
+  .share_buttons {
+    display: none;
+    font-size: 0;
+    left: 50px;
+    position: absolute;
+    text-align: left;
+    top: 5px;
+    width: 135px;
+    @media all and (max-width: 768px) {
+      width: 300px;
+    }
+    .share_button {
+      box-sizing: content-box;
+      display: inline-block;
+      position: relative;
+      a {
+        img {
+          background-color: #009edb;
+          border-radius: 50%;
+          border: 3px solid #fff;
+          color: #fff;
+          display: inline-block;
+          font-size: 12px;
+          height: 35px !important;
+          line-height: 30px;
+          margin: 0;
+          margin: 2px 2px;
+          padding: 0;
+          text-align: center;
+          text-decoration: none;
+          width: 35px !important;
+          &:hover {
+            background-color: #004987;
+            border-color: #004987;
+          }
+        }
+      }
+      .copied_message {
+        font-size: 12px;
+        left: -30px;
+        line-height: 12px;
+        opacity: 0;
+        position: absolute;
+        text-align: center;
+        text-transform: uppercase;
+        top: 50px;
+        transition: opacity 1s;
+        width: 100px;
+        &.active {
+          transition: opacity 0s;
+        }
+      }
+    }
+  }
+}
