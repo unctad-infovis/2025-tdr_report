@@ -1,98 +1,145 @@
 import React, {
   useEffect, useRef, useState, useCallback, forwardRef
 } from 'react';
-import * as d3 from 'd3';
 import PropTypes from 'prop-types';
+import * as d3 from 'd3';
+import { interpolatePath } from 'd3-interpolate-path';
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
 
-const FigureIntro = forwardRef(({ highlight_bool, node_count }, ref) => {
+const LineGraph = forwardRef(({ value }, ref) => {
   const svgRef = useRef();
   const svgContainerRef = useRef();
-  const simulationRef = useRef(null);
   const chartRef = useRef();
   const isVisible = useIsVisible(chartRef, { once: true });
 
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
-    radius: Math.min(window.innerWidth, window.innerHeight) / 2 - 50,
-    width: window.innerWidth
+    width: window.innerWidth,
   });
 
+  // Update dimensions on window resize
   useEffect(() => {
     const handleResize = () => {
       setDimensions({
         height: window.innerHeight,
-        radius: Math.min(window.innerWidth, window.innerHeight) / 2 - 50,
-        width: window.innerWidth
+        width: window.innerWidth,
       });
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const chart = useCallback((count, highlight) => {
-    const { width, height, radius } = dimensions;
-    const nodes = d3.range(count).map((d, i) => ({ id: i, radius: 5, name: '$' }));
-
-    if (!svgRef.current) return;
+  const chart = useCallback(() => {
     const svg = d3.select(svgRef.current);
-    const circles = svg.selectAll('circle').data(nodes, d => d.id); // or text
-    const r = (dimensions.width > 578) ? 10 : 5;
-    circles.exit()
+    if (!svg.node()) return;
+
+    const container = svg.node().parentNode;
+    if (!container) return;
+    const height = container.getBoundingClientRect().height / 2;
+    const width = Math.max(200, container.getBoundingClientRect().width);
+    const margin = {
+      top: 0, right: 20, bottom: 0, left: 20
+    };
+
+    svg.attr('viewBox', [0, 0, width, height]);
+    svg.attr('height', window.innerHeight);
+    svg.attr('width', window.innerWidth);
+
+    // Example datasets
+    const data1 = [
+      { x: 0, y: 0 }, { x: 1, y: 30 }, { x: 2, y: 40 },
+      { x: 3, y: 50 }, { x: 4, y: 60 },
+    ];
+    const data2 = [
+      { x: 0, y: 50 }, { x: 1, y: 40 }, { x: 2, y: 60 },
+      { x: 3, y: 20 }, { x: 4, y: 30 },
+    ];
+    const data3 = [
+      { x: 0, y: 15 }, { x: 1, y: 28 }, { x: 2, y: 42 },
+      { x: 3, y: 48 }, { x: 4, y: 62 },
+    ];
+
+    // Scales
+    const x = d3.scaleLinear()
+      .domain(d3.extent(data1, d => d.x))
+      .range([margin.left, width - margin.right]);
+
+    const y = d3.scaleLinear()
+      .domain([0, d3.max([...data1, ...data2, ...data3], d => d.y)])
+      .nice()
+      .range([height - margin.bottom, margin.top]);
+
+    const lineGen = d3.line()
+      .x(d => x(d.x))
+      .y(d => y(d.y));
+      // .curve(d3.curveMonotoneX);
+
+    // Base group
+    const gSel = svg.selectAll('.chart-group').data([null]);
+    const gEnter = gSel.enter().append('g').attr('class', 'chart-group');
+    const g = gEnter.merge(gSel);
+
+    // --- Line 1 (always visible) ---
+    const line1Sel = g.selectAll('.line1').data([data1]);
+    line1Sel.enter()
+      .append('path')
+      .attr('class', 'line1')
+      .attr('fill', 'none')
+      .attr('stroke', '#009edb')
+      .attr('stroke-width', 4)
+      .merge(line1Sel)
+      .interrupt()
       .transition()
-      .delay((d, i) => Math.random() * i * 1)
-      .attr('r', 0)
-      .style('font-size', 0)
-      .remove();
-
-    const enter = circles.enter().append('circle') // or text
-      .text('$')
-      .attr('r', 0)
-      .style('font-size', 0)
-      .attr('text-anchor', 'middle')
-      .attr('fill', (d, i) => (d.id === 5 && highlight ? '#ffc800' : i > 19 ? '#009edb' : '#c5dfef'));
-
-    enter
-      .transition()
-      .delay((d, i) => Math.random() * i * 5)
-      .attr('r', r)
-      .style('font-size', '30px');
-
-    enter.merge(circles)
-      .transition()
-      .delay((d, i) => Math.random() * i * 5)
-      .attr('r', r);
-
-    circles.attr('fill', (d, i) => (d.id === 5 && highlight ? '#ffc800' : i > 19 ? '#009edb' : '#c5dfef'));
-
-    const collide = dimensions.width > 578
-      ? d3.forceCollide().radius(d => (count === 19 ? (d.id === 5 && highlight) ? 40 : d.radius + 8 + Math.random() * 10 : (d.id === 5 && highlight) ? d.radius + 8 : d.radius + 8 + Math.random() * 10)).iterations(1)
-      : d3.forceCollide().radius(d => (count === 19 ? (d.id === 5 && highlight) ? 40 : d.radius - 2 + Math.random() * 10 : (d.id === 5 && highlight) ? d.radius - 2 : d.radius - 2 + Math.random() * 10)).iterations(1);
-
-    const radial = dimensions.width > 578
-      ? d3.forceRadial(radius).strength((count === 19 ? 0.05 : 0.0005))
-      : d3.forceRadial(radius).strength((count === 19 ? 0.05 : 0.01));
-
-    simulationRef.current = d3.forceSimulation()
-      .nodes(nodes)
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collide', collide)
-      .force('radial', radial)
-      .on('tick', () => {
-        svg.selectAll('circle')
-          .attr('cx', d => d.x)
-          .attr('cy', d => d.y);
-        svg.selectAll('text')
-          .attr('x', d => d.x)
-          .attr('y', d => d.y);
+      .duration(500)
+      .attrTween('d', () => {
+        const previous = line1Sel.empty() ? lineGen(data1) : line1Sel.node().getAttribute('d');
+        const interpolator = interpolatePath(previous, lineGen(data1));
+        return t => interpolator(t);
       });
+    line1Sel.exit().remove();
 
-    if (simulationRef.current) {
-      simulationRef.current.alpha(1).restart();
+    // --- Line 2 (stages 2 & 3) ---
+    const currentData = value === '2' ? data2 : value === '3' ? data3 : null;
+    const line2Sel = g.selectAll('.line2');
+
+    if (currentData) {
+      // Join data
+      const join = line2Sel.data([currentData]);
+      const enterLine2 = join.enter()
+        .append('path')
+        .attr('class', 'line2')
+        .attr('fill', 'none')
+        .attr('stroke-width', 4)
+        .attr('stroke', '#ffcb05')
+        .attr('opacity', 0)
+        .attr('d', lineGen);
+
+      const mergedLine2 = enterLine2.merge(join);
+
+      mergedLine2
+        .interrupt()
+        .attr('stroke', '#ffcb05')
+        .transition()
+        .duration(500)
+        .attr('opacity', 1)
+        .attrTween('d', () => {
+          const previous = line2Sel.empty() ? lineGen(currentData) : mergedLine2.node().getAttribute('d');
+          const interpolator = interpolatePath(previous, lineGen(currentData));
+          return t => interpolator(t);
+        });
+
+      join.exit().remove();
+    } else if (!currentData && !line2Sel.empty()) {
+      // Stage 2 -> 1: fade out smoothly
+      line2Sel
+        .interrupt()
+        .transition()
+        .duration(500)
+        .attr('opacity', 0)
+        .on('end', event => d3.select(event.target).remove());
     }
-  }, [dimensions]);
+  }, [value]);
 
   useEffect(() => {
     const { width, height } = dimensions;
@@ -104,22 +151,12 @@ const FigureIntro = forwardRef(({ highlight_bool, node_count }, ref) => {
           .attr('width', width);
 
         svgRef.current = svg.node();
-        setTimeout(() => {
-          chart(node_count, highlight_bool);
-        }, 1000);
+        chart();
       } else {
-        chart(node_count, highlight_bool);
+        chart();
       }
     }
-    return () => {
-      if (simulationRef.current) {
-        simulationRef.current.stop();
-      }
-      // if (svgRef.current) {
-      // d3.select(svgRef.current).selectAll('*').remove();
-      // }
-    };
-  }, [chart, highlight_bool, isVisible, node_count, dimensions]);
+  }, [chart, isVisible, dimensions]);
 
   return (
     <div ref={chartRef}>
@@ -130,9 +167,8 @@ const FigureIntro = forwardRef(({ highlight_bool, node_count }, ref) => {
   );
 });
 
-FigureIntro.propTypes = {
-  highlight_bool: PropTypes.bool.isRequired,
-  node_count: PropTypes.number.isRequired
+LineGraph.propTypes = {
+  value: PropTypes.string.isRequired,
 };
 
-export default FigureIntro;
+export default LineGraph;

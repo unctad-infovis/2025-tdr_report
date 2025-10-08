@@ -9,7 +9,7 @@
     "push": "git push && git push unctad main",
     "start": "webpack serve --open --config webpack.dev.js",
     "sync-gh-pages": "git subtree push --prefix public origin gh-pages",
-    "sync-prod":"azcopy copy \"public/*\" \"https://${AZURE_STORAGE_NAME}.blob.core.windows.net/\\$web/${npm_package_name}/\" --include-path 'js;css;assets' --recursive --exclude-pattern '.DS_Store'"
+    "sync-prod": "azcopy copy \"public/*\" \"https://${AZURE_STORAGE_NAME}.blob.core.windows.net/\\$web/${npm_package_name}/\" --include-path 'js;css;assets' --recursive --exclude-pattern '.DS_Store'"
   },
   "keywords": [],
   "author": "",
@@ -43,6 +43,8 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
+    "d3": "^7.9.0",
+    "d3-interpolate-path": "^2.3.0",
     "intersection-observer": "^0.12.2",
     "react-is-visible": "^1.2.0",
     "scroll-into-view": "^1.16.2",

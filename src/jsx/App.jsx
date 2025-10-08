@@ -14,6 +14,8 @@ import DwChartContainer from './components/DwChartContainer.jsx';
 import ChapterHeader from './components/ChapterHeader.jsx';
 import ParallaxImage from './components/ParallaxImage.jsx';
 import ScrollingText from './components/ScrollingText.jsx';
+import Figure1 from './figures/Figure1.jsx';
+import Figure2 from './figures/Figure2.jsx';
 
 function App() {
   const appRef = useRef();
@@ -141,8 +143,6 @@ function App() {
     }, 500); // A short delay ensures the DOM is ready
   }, []);
 
-  const chapterTitles = ['Chapter 1 title', 'Chapter 2 title', 'Chapter 3 title', 'Chapter 4 title', 'Chapter 5 title', 'Chapter 6 title'];
-
   const downloadDocument = (event) => {
     track('Anchor', `${event.currentTarget.href}`);
     event.stopPropagation();
@@ -189,6 +189,120 @@ function App() {
     }
   }, [track]);
 
+  const chapterTitles = ['Chapter 1 title', 'Chapter 2 title', 'Chapter 3 title', 'Chapter 4 title', 'Chapter 5 title', 'Chapter 6 title'];
+
+  const [figure1Data, setFigure1Data] = useState('1');
+  const fixedSectionRefFigure1 = useRef();
+  const chartFigure1 = useRef(null);
+  const [positionFigure1, setPositionFigure1] = useState('');
+  const handleScrollFigure01 = useCallback(() => {
+    if (!fixedSectionRefFigure1.current) return;
+
+    // 3 screens.
+    fixedSectionRefFigure1.current.style.height = `${4 * 130 + 80}vh`;
+
+    const { scrollY, innerHeight } = window;
+    let { top } = fixedSectionRefFigure1.current.getBoundingClientRect();
+    top += scrollY;
+    const { height } = fixedSectionRefFigure1.current.getBoundingClientRect();
+    const fixedBottom = top + height - innerHeight;
+    const relativeScroll = scrollY - top;
+
+    // Determine position state
+    setPositionFigure1((scrollY < top) ? 'absolute_top' : (scrollY < fixedBottom) ? 'fixed' : 'absolute_bottom');
+
+    if (!chartFigure1.current) return;
+
+    // Define switch points
+    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8, innerHeight * 2.9 + innerHeight * 0.8, innerHeight * 4.2 + innerHeight * 0.8];
+
+    const newState = {
+      isAbove1: relativeScroll < switchPoints[0],
+      isAbove2: relativeScroll < switchPoints[1],
+      isAbove3: relativeScroll < switchPoints[2],
+      isAbove4: relativeScroll < switchPoints[3],
+    };
+    if (newState.isAbove1) {
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'auto';
+      fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'auto';
+      setFigure1Data('1');
+    } else if (newState.isAbove2) {
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure1Data('1');
+    } else if (newState.isAbove3) {
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure1Data('2');
+    } else {
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure1Data('3');
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScrollFigure01);
+    return () => window.removeEventListener('scroll', handleScrollFigure01);
+  }, [handleScrollFigure01]);
+
+  const [figure2Data, setFigure2Data] = useState('1');
+  const fixedSectionRefFigure2 = useRef();
+  const chartFigure2 = useRef(null);
+  const [positionFigure2, setPositionFigure2] = useState('');
+  const handleScrollFigure02 = useCallback(() => {
+    if (!fixedSectionRefFigure2.current) return;
+
+    // 3 screens.
+    fixedSectionRefFigure2.current.style.height = `${3 * 130 + 80}vh`;
+
+    const { scrollY, innerHeight } = window;
+    let { top } = fixedSectionRefFigure2.current.getBoundingClientRect();
+    top += scrollY;
+    const { height } = fixedSectionRefFigure2.current.getBoundingClientRect();
+    const fixedBottom = top + height - innerHeight;
+    const relativeScroll = scrollY - top;
+
+    // Determine position state
+    setPositionFigure2((scrollY < top) ? 'absolute_top' : (scrollY < fixedBottom) ? 'fixed' : 'absolute_bottom');
+
+    if (!chartFigure2.current) return;
+
+    // Define switch points
+    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8, innerHeight * 2.9 + innerHeight * 0.8];
+
+    const newState = {
+      isAbove1: relativeScroll < switchPoints[0],
+      isAbove2: relativeScroll < switchPoints[1],
+      isAbove3: relativeScroll < switchPoints[2]
+    };
+    if (newState.isAbove1) {
+      fixedSectionRefFigure2.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+      fixedSectionRefFigure2.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'auto';
+      fixedSectionRefFigure2.current.querySelector('.scroll-elements').style.pointerEvents = 'auto';
+      setFigure2Data('1');
+    } else if (newState.isAbove2) {
+      fixedSectionRefFigure2.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure2.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure2.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure2Data('1');
+    } else {
+      fixedSectionRefFigure2.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure2.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure2.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure2Data('2');
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScrollFigure02);
+    return () => window.removeEventListener('scroll', handleScrollFigure02);
+  }, [handleScrollFigure02]);
+
   return (
     <div className="app" ref={appRef}>
       <Header downloadDocument={downloadDocument} scrollTo={scrollTo} chapterTitles={chapterTitles} />
@@ -223,6 +337,45 @@ function App() {
           </div>
         </div>
         <ScrollingText texts={['Sliding text 1']} chapter_text="Chapter 1" />
+        <div ref={fixedSectionRefFigure1} className="fixed-section">
+          <div className={`fixed-background ${positionFigure1}`}>
+            <div className="overlay" />
+            <div className="scroll-indicator"><div className="arrow" /></div>
+            <div className="chart_container_full">
+              <Figure1 ref={chartFigure1} value={figure1Data} />
+            </div>
+          </div>
+          <div className="scroll-elements">
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Lets focus
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  This is data
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  This is another data
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  See how they correlate
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="content_container chapter_header_1" ref={chapter1Ref}>
           <div className="text_container">
             <ChapterHeader
@@ -243,6 +396,38 @@ function App() {
           </div>
         </div>
         <ScrollingText texts={['Chapter 2 sliding text']} chapter_text="Chapter 2" />
+        <div ref={fixedSectionRefFigure2} className="fixed-section">
+          <div className={`fixed-background ${positionFigure2}`}>
+            <div className="overlay" />
+            <div className="scroll-indicator"><div className="arrow" /></div>
+            <div className="chart_container_full">
+              <Figure2 ref={chartFigure2} value={figure2Data} />
+            </div>
+          </div>
+          <div className="scroll-elements">
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Lets focus
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  This is data
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  But see how it changes
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="content_container chapter_header_2" ref={chapter2Ref}>
           <div className="text_container">
             <ChapterHeader

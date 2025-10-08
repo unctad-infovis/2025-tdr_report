@@ -240,41 +240,37 @@
       }
     }
   }
-  >.chapters_container >.backtotop_container {
+  .chapters_container > .backtotop_container {
+    animation-delay: 10s;
+    animation-direction: normal;
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+    animation-iteration-count: 5;
+    animation-name: bounce2;
+    animation-play-state: running;
+    animation-timing-function: ease-in-out;
     background-color: transparent;
-    height: 45px;
+    margin-right: 50px;
     position: sticky;
-    width: 100%;
-    top: calc(100vh - 65px);
-    z-index: 10;
+    top: calc(100dvh - 65px);
+    z-index: 15;
     @keyframes bounce2 {
       0%, 100% {
-        bottom: 0;
+        top: calc(100dvh - 65px);
       }
       5% {
-        bottom: 5px;
+        top: calc(100dvh - 70px);
       }
       10% {
-        bottom: 10px;
+        top: calc(100dvh - 75px);
       }
       /* rest of the time is idle */
     }
+    @media all and (max-width: 1000px) {
+      right: 20px;
+    }
     div {
-      animation-delay: 10s;
-      animation-direction: normal;
-      animation-duration: 0.5s;
-      animation-fill-mode: both;
-      animation-iteration-count: 5;
-      animation-name: bounce2;
-      animation-play-state: running;
-      animation-timing-function: ease-in-out;
-      bottom: 20px;
-      margin-right: 50px;
-      position: relative;
       text-align: right;
-      @media all and (max-width: 1000px) {
-        margin-right: 20px;
-      }
       button {
         background-color: #ffcb05;
         border-radius: 50px;
@@ -296,7 +292,7 @@
     }
   }
   >.chapters_container >.progress_indicator_container {
-    background-color: #004987;
+    background-color: #A71F36;
     height: 10px;
     position: sticky;
     top: 0;
@@ -316,7 +312,7 @@
         opacity: 0.5;
       }
       .progress_bar {
-        background-color: #009edb;
+        background-color: #ED1847;
         border-radius: 0;
         height: 10px;
         pointer-events: none;
@@ -445,6 +441,7 @@
         width: 100%;
         div {
           width: 100%;
+          @import './components/figure2.less';
         }
       }
     }
