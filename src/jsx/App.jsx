@@ -484,14 +484,14 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  What really interests us is the cyclical component.
+                  What really interests us is the cyclical component. (Maybe the previous screen is not needed)
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  And how that has evolved. (Maybe the previous screen is not needed)
+                  And how that has evolved.
                 </p>
               </div>
             </div>
