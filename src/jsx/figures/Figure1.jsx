@@ -258,7 +258,6 @@ const LineGraph = forwardRef(({ value }, ref) => {
       g.select('.y-axis')
         .selectAll('.tick line')
         .attr('x2', width - margin.right - margin.left);
-
       g.selectAll('.tick')
         .filter(d => d === 0)
         .select('line')
@@ -297,9 +296,18 @@ const LineGraph = forwardRef(({ value }, ref) => {
     const p4 = line4Ref.current;
     const ap = areaRef.current;
 
+    // --- ALWAYS UPDATE PATH SHAPES ON RESIZE -------------------------
+    if (p1) p1.attr('d', lineGen1(data1));
+
+    if (p2) p2.attr('d', lineGen1(data2));
+
+    if (p4) p4.attr('d', lineGen2(data4));
+
     // Phase 1
     if (phase === 1) {
-      updateLegend([], margin);
+      updateLegend([
+
+      ], margin);
       // Hide all.
       animateUndraw(p1, len1Ref, 0);
       animateUndraw(p2, len2Ref, 0);

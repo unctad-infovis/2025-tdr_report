@@ -34,8 +34,6 @@ function App() {
   const isVisibleChapter4 = useIsVisible(chapter4Ref);
   const chapter5Ref = useRef();
   const isVisibleChapter5 = useIsVisible(chapter5Ref);
-  const chapter6Ref = useRef();
-  const isVisibleChapter6 = useIsVisible(chapter6Ref);
 
   const [offset, setOffset] = useState(false);
 
@@ -96,13 +94,6 @@ function App() {
       seenChapter('Chapter 5');
     }
   }, [chapter5Ref, seenChapter, isVisibleChapter5]);
-
-  useEffect(() => {
-    if (!chapter6Ref.current.classList.contains('seen') && isVisibleChapter6) {
-      chapter6Ref.current.classList.add('seen');
-      seenChapter('Chapter 6');
-    }
-  }, [chapter6Ref, seenChapter, isVisibleChapter6]);
 
   useEffect(() => {
     const onScroll = () => setOffset(window.pageYOffset);
@@ -181,7 +172,7 @@ function App() {
     }
   }, [track]);
 
-  const chapterTitles = ['Chapter 1 title', 'Chapter 2 title', 'Chapter 3 title', 'Chapter 4 title', 'Chapter 5 title', 'Chapter 6 title'];
+  const chapterTitles = ['The fleeting resilience of 2025', 'Trade in the age of financialization', 'The enduring dollar', 'Financialization and the global South', 'Building resilience while avoiding further fracture'];
 
   const [figure1Data, setFigure1Data] = useState('1');
   const fixedSectionRefFigure1 = useRef();
@@ -427,12 +418,18 @@ function App() {
         <div className="text_container">
           <div className="text_content">
             <h3>First paragraph</h3>
-            <p>Text</p>
-            <p>Text</p>
-            <p>Text</p>
-            <p>Text</p>
+            <p>On the surface, global trade looks resilient. Goods are moving, supply chains are adapting, and trade grew about 4% in early 2025 – even amid tariff hikes and geopolitical tensions.</p>
+            <p>But under the surface lies a volatile system powering trade – built more on balance sheets and financial flows than on supply chains.</p>
+            <ul>
+              <li>Behind every shipment is a credit line.</li>
+              <li>Behind every container, an exchange rate.</li>
+              <li>Behind every trade route, a network of banks.</li>
+            </ul>
+            <p>Over 90% of world trade now depends on finance. This means the global financial architecture increasingly determines who can trade, on what terms and at what cost.</p>
+            <p>Yet unlike trade, the financial infrastructure remains highly concentrated – leaving much of the Global South on the margins.</p>
+            <p>The 2025 Trade and Development Report reveals how the tightening link between trade and finance is reshaping global opportunities – and why the stakes are greatest for developing countries.</p>
             <blockquote>
-              <div className="quote">Quote.</div>
+              <div className="quote">Trade is not just the concatenation of suppliers. It is the concatenation of credit lines, payment systems, currency markets, and capital flows.</div>
               <div className="author">
                 <span className="name">Rebeca Grynspan</span>
                 <span className="title">Secretary-General of UN Trade and Development (UNCTAD)</span>
@@ -516,7 +513,22 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter1.jpg" /></div></div>
             <div className="text_content">
-              <p>Text</p>
+              <p>The year 2025 began with momentum and what looked like a rebound – boosted by companies rushing to ship goods before new tariffs and by rising AI-related investments.</p>
+              <p>But remove these temporary factors and global trade growth falls from 4% to somewhere between 2.5% and 3.0%, with a slowdown on the horizon.</p>
+              <p>Global economic growth tells a similar story:</p>
+              <ul>
+                <li>Global GDP is projected to fall to 2.6% in 2025, below the pre-pandemic trend.</li>
+                <li>The United States and European economies are cooling. US economic growth expected to slow to 1.8% in 2025 and 1.5% in 2026, compared to X.</li>
+                <li>China is stabilizing but decelerating. Its economic growth is projected to slow to 4.9% in 2025 and 4.5% in 2026, compared to X</li>
+                <li>Across the global South, financial volatility and weaker external demand squeeze investment and jobs.</li>
+              </ul>
+              <p>Despite this difficult landscape, developing economies will drive almost 70% of global growth in 2025 – yet they face the harshest constraints on financing that growth.</p>
+              <p>The climate crisis adds another layer. Some climate-vulnerable countries pay an extra $20 billion per year in interest simply because climate risk raises their borrowing costs — money that could have gone into schools, hospitals or climate resilience itself.</p>
+              <p>
+                <strong>The takeaway:</strong>
+                {' '}
+                The world is growing, but unevenly – and the resilience we see is thinner than it seems and masks structural weaknesses. Without coordinated action, developing countries risk being locked into slower growth, heavier debt and fewer options to steer their own economic futures.
+              </p>
             </div>
             <div className="charts_container">
               <DwChartContainer title="Seaborne trade growth" chart_id="iJGvP" />
@@ -568,7 +580,22 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter2.jpg" /></div></div>
             <div className="text_content">
-              <p>Text</p>
+              <p>Trade today moves to the rhythm of global finance. When interest rates change in major economies or investor sentiment swings, trade flows shift almost instantly.</p>
+              <p>Data show that world trade and global financial cycles now move in sync, rising and falling together.</p>
+              <p>For developing countries, this creates vulnerabilities:</p>
+              <ul>
+                <li>Currency volatility can make imports and debt repayments more expensive.</li>
+                <li>Shifts in global risk appetite can cut off credit for exporters.</li>
+                <li>Financial volatility can hit their markets harder and more often.</li>
+              </ul>
+              <p>Financialization is reshaping entire sectors. In global food markets, for example, over 75% of the revenues of major food trading companies now come from financial operations, not from moving wheat, coffee, cocoa or other crops and grains.</p>
+              <p>Prices increasingly reflect speculative strategies, not supply and demand. When finance sets the price of food, countries struggle more to secure affordable, reliable supplies.</p>
+              <p>
+                <strong>The takeaway:</strong>
+                {' '}
+                When markets move based on financial signals rather than real economic conditions, developing economies – especially their small producers – compete on a more uneven playing field. They face higher costs, greater uncertainty, and lower bargaining power – and shocks hit them hardest.
+              </p>
+
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="wuNd6" title="Monthly ship transits through the Strait of Hormuz and the Suez Canal" />
@@ -627,7 +654,21 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter3.jpg" /></div></div>
             <div className="text_content">
-              <p>Text</p>
+              <p>In 2025, financial turbulence produced something unusual – the dollar weakened even as yields on United States Treasuries rose. But stepping back, the long-term picture becomes clearer – and the dollar’s dominance remains unchanged.</p>
+              <p>
+                While the dollar’s share in global foreign exchange reserves has steadily declined since 2000, no other currency has risen to replace it. At the same time:
+              </p>
+              <ul>
+                <li>The dollar’s share in SWIFT payments – the global messaging system banks use to move money across borders – climbed from 39% to 50% in just five years, reinforcing its role as the backbone of global transactions.</li>
+                <li>The US still holds 50% of global equity market value – where companies raise capital – and 40% of the global bond market, which finances governments and major investments.</li>
+
+              </ul>
+              <p>The dollar’s influence reaches far beyond central bank reserves or how trade is priced. It affects who can get credit, where investment flows and how quickly financial shocks spread around the world.</p>
+              <p>
+                <strong>The takeaway:</strong>
+                {' '}
+                Even in a transforming global economy, the dollar remains the anchor, reaching deep into development paths. A dollar-centric global economy means developing countries’ financing costs rise or fall based on decisions taken elsewhere. It reinforces the asymmetry between their growing role in trade and their peripheral place in global finance.
+              </p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="66WBL" title="Shanghai Containerized Freight Index spot rates" />
@@ -682,7 +723,20 @@ function App() {
               <DwChartContainer chart_id="9nVSh" title="Average waiting times for container ships in port" />
             </div>
             <div className="text_content">
-              <p>Text</p>
+              <p>The Global South has become central to world trade and production – accounting for over 40% of global output and world trade, and half of global foreign direct investment (FDI) inflows.</p>
+              <p>But their presence in global financial markets remains far smaller – a mismatch that constrains development options. Excluding China, developing countries hold just 12% of global equity market value and 6% of the global bond market.</p>
+              <p>While equity markets in the Global South have grown since the 2008–09 global financial crisis, they still trail in size and sophistication. This leaves many developing countries dependent on foreign banks and financial markets – often at high and volatile interest rates.</p>
+              <p>Key points about developing countries:</p>
+              <li>They have smaller, less liquid capital markets, making it harder for firms to raise capital or for investors to trade without difficulty.</li>
+              <li>They pay significantly higher borrowing costs, with higher interest payments draining resources that could otherwise support jobs, infrastructure or public services.</li>
+              <li>They face bigger swings in market sentiment – when global rates rise or investors become more risk-averse, capital can exit quickly, pushing up borrowing costs, weakening currencies and amplifying financial stress.</li>
+              <p>The borrowing costs illustrate the gap clearly. While advanced economies often borrow at 1–3%, many emerging markets pay 6–12% or more for similar government bonds. </p>
+              <p>This means a government in an emerging economy may pay three to five times more in interest – a stark difference that limits fiscal space and raises the cost of development.</p>
+              <p>
+                <strong>The takeway:</strong>
+                {' '}
+                This structural imbalance means developing economies contribute increasingly to global growth but are not empowered to shape global financial rules or secure affordable financing for long-term development. It limits their ability to invest in infrastructure, innovation and climate adaptation.
+              </p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="Sk6d3" title="Ports providing liquefied natural gas (LNG) bunkering services" />
@@ -702,24 +756,20 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter5.jpg" /></div></div>
             <div className="text_content">
-              <p>Text</p>
-            </div>
-          </div>
-        </div>
-        <ScrollingText texts={['Will be even have chapter 6 sliding text']} chapter_text="The way forward" />
-        <div className="content_container chapter_header_6" ref={chapter6Ref}>
-          <div className="text_container">
-            <ChapterHeader
-              chapter_number="6"
-              subtitle="This is the chapter 6 subtitle"
-              title="This is the title if we have one"
-            />
-            <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter6.jpg" /></div></div>
-            <div className="text_content">
-              <p>Text</p>
+              <p>Resilience today requires more than returning to “normal.” It means moving forward rather than bouncing back, building economies that can withstand shocks, adapt to transitions and grow sustainably even under uncertainty.</p>
+              <p>The report calls for a strategy that integrates trade, finance and climate policy, with five priorities:</p>
               <ol>
-                <li>List</li>
+                <li>Reform the global financial system to support climate-vulnerable countries. Debt and climate are now intertwined. Without major reforms, climate shocks will push more countries into debt distress. Climate-vulnerable countries need fair financing, not higher interest penalties.</li>
+                <li>Expand regional financial cooperation. Regional bond markets, payment systems and development funds can lower borrowing costs and reduce reliance on volatile global markets.</li>
+                <li>Strengthen domestic financial ecosystems. Countries need credible, modern payment and financial infrastructures – especially digital payments and capital markets – to mobilize resources and finance the green transition.</li>
+                <li>Address emerging financial risks beyond the banking sector. Shadow banking and securitized food trading and high-leverage commodity markets create new systemic vulnerabilities and require new regulations.</li>
+                <li>Promote “networked multilateralism”. A fragmented global system hightents uncertainty and cannot deliver predictable trade or stable finance. More inclusive governance is essential. Developing countries need a stronger voice in shaping trade and financial rules.</li>
               </ol>
+              <p>
+                <strong>The takeaway:</strong>
+                {' '}
+                Resilience is not automatic. It is built through coordinated strategies that align trade, finance and sustainability – and ensure developing countries can shape, not just absorb, global economic shifts.
+              </p>
             </div>
           </div>
         </div>
