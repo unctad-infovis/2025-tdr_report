@@ -1,6 +1,6 @@
 # 2025-tdr_report
 
-**Live demo** https://unctad-infovis.github.io/2025-rmt_report/
+**Live demo** https://unctad-infovis.github.io/2025-tdr_report/
 
 ## Rights of usage
 
@@ -11,7 +11,7 @@ Contact Teemo Tebest.
 This is a Webpack + React project.
 
 * `npm install`
-* `npm start`
+* `npm run start`
 
 Project should start at: http://localhost:8080
 
