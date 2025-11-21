@@ -491,7 +491,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  And how that has evolved.
+                  And how that has evolved. (Maybe the previous screen is not needed)
                 </p>
               </div>
             </div>
