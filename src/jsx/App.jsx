@@ -156,12 +156,7 @@ function App() {
       setTimeout(() => {
         scrollIntoView(document.querySelector(target), {
           align: {
-            left: 0,
-            leftOffset: 0,
-            lockX: false,
-            lockY: false,
-            top: 0,
-            topOffset: 40
+            left: 0, leftOffset: 0, lockX: false, lockY: false, top: 0, topOffset: 40
           },
           cancellable: false,
           ease(value) {
@@ -174,12 +169,7 @@ function App() {
       setTimeout(() => {
         scrollIntoView(appRef.current.querySelector(target), {
           align: {
-            left: 0,
-            leftOffset: 0,
-            lockX: false,
-            lockY: false,
-            top: 0,
-            topOffset: 60
+            left: 0, leftOffset: 0, lockX: false, lockY: false, top: 0, topOffset: 60
           },
           cancellable: false,
           ease(value) {
@@ -200,8 +190,8 @@ function App() {
   const handleScrollFigure01 = useCallback(() => {
     if (!fixedSectionRefFigure1.current) return;
 
-    // 3 screens.
-    fixedSectionRefFigure1.current.style.height = `${4 * 130 + 80}vh`;
+    // 5 screens.
+    fixedSectionRefFigure1.current.style.height = `${6 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure1.current.getBoundingClientRect();
@@ -216,13 +206,15 @@ function App() {
     if (!chartFigure1.current) return;
 
     // Define switch points
-    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8, innerHeight * 2.9 + innerHeight * 0.8, innerHeight * 4.2 + innerHeight * 0.8];
+    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8, innerHeight * 2.9 + innerHeight * 0.8, innerHeight * 4.2 + innerHeight * 0.8, innerHeight * 5.5 + innerHeight * 0.8, innerHeight * 6.8 + innerHeight * 0.8];
 
     const newState = {
       isAbove1: relativeScroll < switchPoints[0],
       isAbove2: relativeScroll < switchPoints[1],
       isAbove3: relativeScroll < switchPoints[2],
-      isAbove4: relativeScroll < switchPoints[3]
+      isAbove4: relativeScroll < switchPoints[3],
+      isAbove5: relativeScroll < switchPoints[4],
+      isAbove6: relativeScroll < switchPoints[5]
     };
     if (newState.isAbove1) {
       fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
@@ -233,17 +225,27 @@ function App() {
       fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
       fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
       fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
-      setFigure1Data('1');
+      setFigure1Data('2');
     } else if (newState.isAbove3) {
       fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
       fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
       fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
-      setFigure1Data('2');
+      setFigure1Data('3');
+    } else if (newState.isAbove4) {
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure1Data('4');
+    } else if (newState.isAbove5) {
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure1Data('5');
     } else {
       fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
       fixedSectionRefFigure1.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
       fixedSectionRefFigure1.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
-      setFigure1Data('3');
+      setFigure1Data('6');
     }
   }, []);
 
@@ -450,7 +452,7 @@ function App() {
             <button type="button" onClick={() => scrollTo('.header_container', 'Top')}>Back to top</button>
           </div>
         </div>
-        <ScrollingText texts={['Sliding text 1']} chapter_text="Chapter 1" />
+        <ScrollingText texts={['What is the correlation with global financial cycle and world trade']} chapter_text="Chapter 1" />
         <div ref={fixedSectionRefFigure1} className="fixed-section">
           <div className={`fixed-background ${positionFigure1}`}>
             <div className="overlay" />
@@ -462,29 +464,41 @@ function App() {
           <div className="scroll-elements">
             <div className="scroll-content">
               <div>
+                <p>Lets investigate</p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
                 <p>
-                  Lets focus
+                  Lets first observe the World Trade…
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  This is data
+                  ...and how it has evolved in long term.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  This is another data
+                  What really interests us is the cyclical component.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  See how they correlate
+                  And how that has evolved.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Because we see that the global financial cycle drives the World Trade.
                 </p>
               </div>
             </div>

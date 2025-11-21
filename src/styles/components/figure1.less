@@ -1,0 +1,54 @@
+.legend {
+  font-size: 16px;
+  fill: #fff;
+}
+.area-fill {
+  fill: rgba(0, 158, 219, 0.4);
+  transition: opacity .3s ease;
+}
+.line1,
+.line2,
+.line3,
+.line4 {
+  fill: none;
+}
+.line1 {
+  stroke: #009edb;
+  stroke-width: 4;
+}
+.line2 {
+  stroke: #fff;
+  stroke-width: 2;
+}
+.line3 {
+  stroke: #009edb;
+  stroke-width: 4;
+}
+.line4 {
+  stroke: #ffcb05;
+  stroke-width: 4;
+}
+.x-axis,
+.y-axis {
+  path {
+    stroke-opacity: 0.4;
+    stroke: #fff;
+    display: none;
+  }
+  .tick {
+    line {
+      stroke-dasharray: 3,3;
+      stroke-opacity: 0.4;
+      stroke-width: 1;
+      stroke: #fff;
+      &.line_0 {
+        stroke-dasharray: 0;
+        stroke-opacity: 0.8;
+        stroke-width: 1;
+      }
+    }
+    text {
+      fill: #fff;
+    }
+  }
+}
