@@ -615,28 +615,28 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets focus
+                  Lets look at the US dollar centric world
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  This is 2020
+                  US dollar has been the dominating currency
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  This is 2023
+                  And despite recent decline
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  This is 2025
+                  No other single currency has taken its place
                 </p>
               </div>
             </div>
