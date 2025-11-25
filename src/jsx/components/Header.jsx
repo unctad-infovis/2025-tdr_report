@@ -22,7 +22,7 @@ function App(props) {
       <div className="between" />
       <div className="content_bottom">
         <h2>
-          Title of the report
+          Trade in the Age of Financialization
           <div className="share_wrapper"><ShareContainer url={window.location.href} /></div>
         </h2>
         <div className="download_buttons_container">

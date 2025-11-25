@@ -7,22 +7,17 @@ import * as d3 from 'd3';
 import { interpolatePath } from 'd3-interpolate-path';
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
+
 import rawData1 from './data/figure1_data1.json';
 import rawData2 from './data/figure1_data2.json';
 import rawData3 from './data/figure1_data3.json';
 import rawData4 from './data/figure1_data4.json';
 
-/* ---------------------------
-   Prepare data (convert x -> Date)
-   --------------------------- */
 const data1 = rawData1.map(d => ({ x: new Date(d.x), y: +d.y }));
 const data2 = rawData2.map(d => ({ x: new Date(d.x), y: +d.y }));
 const data3 = rawData3.map(d => ({ x: new Date(d.x), y: +d.y }));
 const data4 = rawData4.map(d => ({ x: new Date(d.x), y: +d.y }));
 
-/* ---------------------------
-   LineGraph component
-   --------------------------- */
 const LineGraph = forwardRef(({ value }, ref) => {
   const svgRef = useRef(null);
   const svgContainerRef = useRef(null);
@@ -118,7 +113,8 @@ const LineGraph = forwardRef(({ value }, ref) => {
 
   const animateDraw = useCallback((p, lenRef, duration = 900, ease = d3.easeCubicOut) => {
     const start = safeGetOffset(p, lenRef.current || p.node().getTotalLength());
-    p.interrupt()
+    prepareDash(p, lenRef);
+    p.interrupt().attr('opacity', 1)
       .transition()
       .duration(duration)
       .ease(ease)
@@ -132,12 +128,13 @@ const LineGraph = forwardRef(({ value }, ref) => {
         if (p === line2Ref.current) line2DrawnRef.current = true;
         if (p === line4Ref.current) line4DrawnRef.current = true;
       });
-  }, [safeGetOffset]);
+  }, [prepareDash, safeGetOffset]);
 
   const animateUndraw = useCallback((p, lenRef, duration = 600, ease = d3.easeCubicOut) => {
     const start = safeGetOffset(p, lenRef.current || p.node().getTotalLength());
     const end = lenRef.current || p.node().getTotalLength();
-    p.interrupt()
+    prepareDash(p, lenRef);
+    p.interrupt().attr('opacity', 0)
       .transition()
       .duration(duration)
       .ease(ease)
@@ -152,7 +149,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
         if (p === line4Ref.current) line4DrawnRef.current = false;
         p.attr('stroke-dashoffset', end);
       });
-  }, [safeGetOffset]);
+  }, [prepareDash, safeGetOffset]);
 
   const morphPath = useCallback((p, fromD, toD, onEnd, duration = 900, ease = d3.easeCubicOut) => {
     const startD = fromD || p.attr('d') || toD;
@@ -267,19 +264,16 @@ const LineGraph = forwardRef(({ value }, ref) => {
     // Line 1
     if (!line1Ref.current) {
       const p1 = g.append('path').attr('class', 'line1').attr('d', lineGen1(data1));
-      prepareDash(p1, len1Ref);
       line1Ref.current = p1;
     }
     // Line 2
     if (!line2Ref.current) {
       const p2 = g.append('path').attr('class', 'line2').attr('d', lineGen1(data2));
-      prepareDash(p2, len2Ref);
       line2Ref.current = p2;
     }
     // Line 4
     if (!line4Ref.current) {
       const p4 = g.append('path').attr('class', 'line4').attr('d', lineGen2(data4));
-      prepareDash(p4, len4Ref);
       line4Ref.current = p4;
     }
     // Area
@@ -297,7 +291,9 @@ const LineGraph = forwardRef(({ value }, ref) => {
     const ap = areaRef.current;
 
     // --- ALWAYS UPDATE PATH SHAPES ON RESIZE -------------------------
-    if (p1) p1.attr('d', lineGen1(data1));
+    if (p1) {
+      p1.attr('d', (prevPhaseRef.current === 5 || phase === 5) ? lineGen2(data3) : lineGen1(data1));
+    }
 
     if (p2) p2.attr('d', lineGen1(data2));
 
@@ -305,9 +301,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
 
     // Phase 1
     if (phase === 1) {
-      updateLegend([
-
-      ], margin);
+      updateLegend([], margin);
       // Hide all.
       animateUndraw(p1, len1Ref, 0);
       animateUndraw(p2, len2Ref, 0);
@@ -349,15 +343,13 @@ const LineGraph = forwardRef(({ value }, ref) => {
       if (!line2DrawnRef.current) animateDraw(p2, len2Ref);
       // Let's make sure line1 is in place
       if (prevPhaseRef.current === 5) {
-        const morphDuration = 900; // keep same as axisDuration for sync
-        const ease = d3.easeCubicOut;
         const currentD = p1.attr('d') || lineGen1(data3);
         const targetD = lineGen1(data1);
         morphPath(p1, currentD, targetD, () => {
           // onEnd
           p1.attr('opacity', 1);
           line1DrawnRef.current = true;
-        }, morphDuration, ease);
+        }, 900, d3.easeCubicOut);
       } else if (!line1DrawnRef.current) animateDraw(p1, len1Ref);
 
       // Build polygon
@@ -395,19 +387,19 @@ const LineGraph = forwardRef(({ value }, ref) => {
 
       if (!line1DrawnRef.current) {
         animateDraw(p1, len1Ref);
-        const currentD = p1.attr('d') || lineGen2(data1);
+        const currentD = lineGen2(data1);
         const targetD = lineGen2(data3);
         morphPath(p1, currentD, targetD, () => {
           p1.attr('opacity', 1);
           line1DrawnRef.current = true;
         }, 0);
-      } else {
-        const currentD = p1.attr('d') || lineGen2(data1);
+      } else if (prevPhaseRef.current === 4) {
+        const currentD = lineGen1(data1);
         const targetD = lineGen2(data3);
         morphPath(p1, currentD, targetD, () => {
           p1.attr('opacity', 1);
           line1DrawnRef.current = true;
-        });
+        }, 900, d3.easeCubicOut);
       }
 
       const areaPoly = [
@@ -462,7 +454,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
 
     prevPhaseRef.current = phase;
   }, [
-    animateDraw, animateUndraw, morphPath, prepareDash, updateLegend, value
+    animateDraw, animateUndraw, morphPath, updateLegend, value
   ]);
 
   // mount svg once and call chart on updates

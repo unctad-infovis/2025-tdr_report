@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
+import rawData from './data/figure4_data.json';
 
 const TwoLineChart = forwardRef(({ value }, ref) => {
   const svgRef = useRef();
@@ -13,14 +14,12 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
   const isVisible = useIsVisible(chartRef, { once: true });
 
   const [dimensions, setDimensions] = useState({
-    width: window.innerWidth,
     height: 320,
+    width: window.innerWidth
   });
 
-  const nPoints = 100;
-
   useEffect(() => {
-    const handleResize = () => setDimensions({ width: window.innerWidth, height: 320 });
+    const handleResize = () => setDimensions({ height: 320, width: window.innerWidth });
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -29,61 +28,62 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
     if (!svgRef.current) return;
 
     // Fixed datasets for hand-drawn effect
-    const line1Data = [
-      51, 50, 52, 51, 50, 49, 52, 50, 51, 50, 51, 52, 50, 51, 49, 50, 51, 50, 52, 51,
-      50, 51, 50, 52, 50, 51, 49, 50, 51, 50, 51, 50, 52, 51, 50, 51, 50, 51, 49, 50,
-      51, 50, 51, 50, 52, 51, 50, 51, 50, 51, 49, 50, 51, 50, 51, 50, 52, 50, 51, 50,
-      51, 49, 50, 51, 50, 51, 50, 52, 50, 51, 50, 51, 50, 51, 49, 50, 51, 50, 51, 50,
-      70, 72, 75, 73, 74, 76, 77, 78, 80, 82, 81, 83, 85, 84, 86, 87, 88, 89, 90, 92
-    ];
+    const data1 = rawData.map(((d, i) => ({ id: i, x: new Date(d.date), y: +d['30-year United States Treasury yield'] })));
+    const data2 = rawData.map(((d, i) => ({ id: i, x: new Date(d.date), y: +d['United States dollar index'] })));
 
-    const line2Data = [
-      50, 51, 50, 52, 51, 50, 51, 50, 52, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50,
-      51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50,
-      51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50, 51, 50,
-      45, 44, 42, 41, 43, 40, 39, 38, 37, 36, 35, 34, 32, 31, 33, 30, 29, 28, 27, 25,
-      24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 23, 22, 21, 20, 19, 18, 17, 16, 15, 16
-    ];
-
-    const { width, height } = dimensions;
+    const { height, width } = dimensions;
     const svg = d3.select(svgRef.current)
-      .attr('width', width)
       .attr('height', height)
+      .attr('width', width)
       .attr('viewBox', [0, 0, width, height]);
 
-    const xScale = d3.scaleLinear().domain([0, nPoints - 1]).range([40, width - 40]);
-    const yScale = d3.scaleLinear().domain([0, 100]).range([height - 40, 40]);
+    const xScale = d3.scaleTime()
+      .domain(d3.extent(data1, d => d.x))
+      .range([40, width - 40]);
 
-    const lineGen = d3.line()
+    const yScale1 = d3.scaleLinear()
+      .domain([[d3.min(data1, d => d.y), d3.max(data1, d => d.y)]])
+      .range([height - 40, 40]);
+    const yScale2 = d3.scaleLinear()
+      .domain([[d3.min(data2, d => d.y), d3.max(data2, d => d.y)]])
+      .range([height - 40, 40]);
+
+    const lineGen1 = d3.line()
       .x((d, i) => xScale(i))
-      .y(d => yScale(d));
+      .y(d => yScale1(d));
+    const lineGen2 = d3.line()
+      .x((d, i) => xScale(i))
+      .y(d => yScale2(d));
 
     const g = svg.selectAll('.chart-group').data([null]).join('g').attr('class', 'chart-group');
 
-    const linesData = [
-      {
-        id: 'line1', values: line1Data, color: '#009edb', currentLimit: 0
-      },
-      {
-        id: 'line2', values: line2Data, color: '#ffcb05', currentLimit: 0
-      },
-    ];
+    const lineSel1 = g.selectAll('.line1').data(data1, d => d.id);
+    const lineSel2 = g.selectAll('.line2').data(data2, d => d.id);
 
-    const lineSel = g.selectAll('.line').data(linesData, d => d.id);
-
-    const lineEnter = lineSel.enter()
+    const lineEnter1 = lineSel1.enter()
       .append('path')
       .attr('class', 'line')
       .attr('fill', 'none')
       .attr('stroke-width', 3)
-      .attr('stroke', d => d.color)
+      .attr('stroke', '#009edb')
       .attr('opacity', 0)
-      .attr('d', d => lineGen(d.values.slice(0, 0)))
+      .attr('d', d => lineGen1(d.values.slice(0, 0)))
       .each((d, i, nodes) => { nodes[i].currentLimit = 0; });
 
-    const mergedLine = lineEnter.merge(lineSel);
+    const lineEnter2 = lineSel2.enter()
+      .append('path')
+      .attr('class', 'line')
+      .attr('fill', 'none')
+      .attr('stroke-width', 3)
+      .attr('stroke', '#ffcb05')
+      .attr('opacity', 0)
+      .attr('d', d => lineGen2(d.values.slice(0, 0)))
+      .each((d, i, nodes) => { nodes[i].currentLimit = 0; });
 
-    mergedLine
+    const mergedLine1 = lineEnter1.merge(lineSel1);
+    const mergedLine2 = lineEnter2.merge(lineSel2);
+
+    mergedLine1
       .interrupt()
       .attr('opacity', 1)
       .transition()
@@ -97,12 +97,36 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
         return t => {
           el.currentLimit = interpolator(t);
           const sliceLimit = Math.round(el.currentLimit);
-          d3.select(el).attr('d', lineGen(d.values.slice(0, sliceLimit)));
+          d3.select(el).attr('d', lineGen1(d.values.slice(0, sliceLimit)));
+        };
+      });
+
+    mergedLine2
+      .interrupt()
+      .attr('opacity', 1)
+      .transition()
+      .duration(value === '1' ? 1200 : 1200) // tweak timing per stage
+      .tween('draw', (d, i, nodes) => {
+        const el = nodes[i];
+        const startLimit = el.currentLimit;
+        const endLimit = value === '1' ? 80 : 100;
+        const interpolator = d3.interpolateNumber(startLimit, endLimit);
+
+        return t => {
+          el.currentLimit = interpolator(t);
+          const sliceLimit = Math.round(el.currentLimit);
+          d3.select(el).attr('d', lineGen2(d.values.slice(0, sliceLimit)));
         };
       });
 
     // Remove lines if reverting to stage1
-    lineSel.exit()
+    lineSel1.exit()
+      .transition()
+      .duration(500)
+      .attr('opacity', 0)
+      .remove();
+
+    lineSel2.exit()
       .transition()
       .duration(500)
       .attr('opacity', 0)

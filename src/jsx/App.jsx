@@ -548,21 +548,21 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets focus
+                  Lets look at the flow of investments
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  This is data
+                  Before the global financial crisis of 2008 we had a global north centric system
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  But see how it changes
+                  Data from 2023 shows the growth of global south as investment centers
                 </p>
               </div>
             </div>
@@ -727,9 +727,11 @@ function App() {
               <p>But their presence in global financial markets remains far smaller – a mismatch that constrains development options. Excluding China, developing countries hold just 12% of global equity market value and 6% of the global bond market.</p>
               <p>While equity markets in the Global South have grown since the 2008–09 global financial crisis, they still trail in size and sophistication. This leaves many developing countries dependent on foreign banks and financial markets – often at high and volatile interest rates.</p>
               <p>Key points about developing countries:</p>
-              <li>They have smaller, less liquid capital markets, making it harder for firms to raise capital or for investors to trade without difficulty.</li>
-              <li>They pay significantly higher borrowing costs, with higher interest payments draining resources that could otherwise support jobs, infrastructure or public services.</li>
-              <li>They face bigger swings in market sentiment – when global rates rise or investors become more risk-averse, capital can exit quickly, pushing up borrowing costs, weakening currencies and amplifying financial stress.</li>
+              <ul>
+                <li>They have smaller, less liquid capital markets, making it harder for firms to raise capital or for investors to trade without difficulty.</li>
+                <li>They pay significantly higher borrowing costs, with higher interest payments draining resources that could otherwise support jobs, infrastructure or public services.</li>
+                <li>They face bigger swings in market sentiment – when global rates rise or investors become more risk-averse, capital can exit quickly, pushing up borrowing costs, weakening currencies and amplifying financial stress.</li>
+              </ul>
               <p>The borrowing costs illustrate the gap clearly. While advanced economies often borrow at 1–3%, many emerging markets pay 6–12% or more for similar government bonds. </p>
               <p>This means a government in an emerging economy may pay three to five times more in interest – a stark difference that limits fiscal space and raises the cost of development.</p>
               <p>
