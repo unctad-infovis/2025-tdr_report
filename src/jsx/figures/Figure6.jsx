@@ -12,21 +12,26 @@ import {
   extent,
   interpolateNumber,
   line,
-  max,
-  min,
   scaleLinear,
   scaleTime,
-  select,
-  timeFormat
+  select
 } from 'd3';
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
-import rawData from './data/figure4_data.json';
+import rawData from './data/figure6_data.json';
+
+const highlightRanges = [
+  { start: new Date('1994/01/01'), end: new Date('1995/12/31'), label: 'Mexican Peso Crisis' },
+  { start: new Date('1998/01/01'), end: new Date('1999/12/31'), label: 'Asian Financial Crisis' },
+  { start: new Date('2007/01/01'), end: new Date('2009/12/31'), label: 'Global Financial Crisis' },
+  { start: new Date('2020/01/01'), end: new Date('2022/12/31'), label: 'Covid-19 Pandemic' },
+];
 
 const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
   const svgRef = useRef();
   const svgContainerRef = useRef();
   const chartRef = useRef();
+  const highlightGroupRef = useRef();
   const isVisible = useIsVisible(chartRef, { once: true });
 
   const chart = useCallback(() => {
@@ -35,17 +40,15 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     // --- Prepare data (same as you had) ---
     const dataRaw = rawData.map(d => ({
       date: new Date(d.date),
-      y1: +d['30-year United States Treasury yield'],
-      y2: +d['United States dollar index']
+      y1: +d['Gross domestic product (GDP)'],
+      y2: +d['Global financial market']
     }));
-    // ensure sorted by x
-    dataRaw.sort((a, b) => a.date - b.date);
 
-    let { height } = dimensions;
     const { width } = dimensions;
+    let { height } = dimensions;
     height /= 2;
     const margin = {
-      top: 40, right: 40, bottom: 4, left: 40
+      top: 40, right: 40, bottom: 40, left: 40
     };
     const svg = select(svgRef.current)
       .attr('height', height)
@@ -56,13 +59,13 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     const legendEnter = legendG.enter()
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', 'translate(60, 20)');
+      .attr('transform', 'translate(60, 60)');
 
     const legend = legendEnter.merge(legendG);
 
     // Bind items
     const items = legend.selectAll('.legend-item')
-      .data([{ color: '#009edb', label: '30-year United States Treasury yield' }, { color: '#ffcb05', label: 'United States dollar index' }], d => d.label); // use label as key
+      .data([{ color: '#009edb', label: 'Gross domestic product (GDP)' }, { color: '#ffcb05', label: 'Global financial market' }], d => d.label); // use label as key
 
     // Enter
     const itemsEnter = items.enter()
@@ -98,97 +101,118 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .domain(extent(dataRaw, d => d.date))
       .range([margin.left, width - margin.right]);
 
-    const yScale1 = scaleLinear()
-      .domain([min(dataRaw, d => d.y1), max(dataRaw, d => d.y1)])
+    const my_extent = extent(
+      dataRaw.flatMap(d => [d.y1, d.y2])
+    );
+
+    const [minValue, maxValue] = my_extent;
+
+    const yScale = scaleLinear()
+      .domain([minValue, maxValue])
       .nice()
       .range([height - margin.top, margin.bottom]);
 
-    const yScale2 = scaleLinear()
-      .domain([min(dataRaw, d => d.y2), max(dataRaw, d => d.y2)])
-      .nice()
-      .range([height - margin.top, margin.bottom]);
-
-    // --- Axes ---
+    // Axes
     svg.selectAll('.axis-group').data([null]).join('g').attr('class', 'axis-group');
 
     const axesG = svg.select('.axis-group');
     axesG.selectAll('*').remove(); // simple: clear and re-draw axes each render
-    // x axis
+    // X-Axis
     axesG.append('g').attr('class', 'x-axis')
       .attr('transform', `translate(0, ${height - margin.top})`)
       .call(axisBottom(xScale).ticks(6));
-    // left y axis (for y1)
+    // Y-Axis
     axesG.append('g').attr('class', 'y-axis')
       .attr('transform', `translate(${margin.left},0)`)
-      .call(axisLeft(yScale2).ticks(5));
+      .call(axisLeft(yScale).ticks(5));
+
     axesG.select('.y-axis')
       .selectAll('.tick line')
       .attr('x2', width);
-    // right y axis (for y2)
 
     // --- Line generators (use d.date and d.y1/d.y2) ---
     const line1 = line()
       .x(d => xScale(d.date))
-      .y(d => yScale1(d.y1))
-      .defined(d => d.y1 !== null);
+      .y(d => yScale(d.y1))
+      .defined(d => d.y1 != null && !Number.isNaN(d.y1));
 
     const line2 = line()
       .x(d => xScale(d.date))
-      .y(d => yScale2(d.y2))
-      .defined(d => d.y2 !== null);
+      .y(d => yScale(d.y2))
+      .defined(d => d.y2 != null && !Number.isNaN(d.y2));
 
+    // --- Helper: compute index limit for a target date ---
     const getIndexForDate = (targetDate) => {
       if (!targetDate) return dataRaw.length;
+      // index of first point after targetDate
       const idx = bisector(d => d.date).right(dataRaw, targetDate);
+      // we want to draw up to idx (i.e., slice(0, idx))
       return Math.max(0, Math.min(dataRaw.length, idx));
     };
 
     const phase = value; // keep your prop name
-    const targetDate = new Date(2025, 3, 2);
+    const targetDate = new Date(2000, 0, 1);
 
-    // Create marker group (only once)
-    const markerGroup = svg.selectAll('.target-marker')
-      .data([null])
-      .join(
-        enterSel => {
-          const g = enterSel.append('g')
-            .attr('class', 'target-marker')
-            .style('opacity', 0);
-          g.append('line')
-            .attr('class', 'marker-line')
-            .attr('y1', 0)
-            .attr('y2', height - 40);
-          g.append('text')
-            .attr('class', 'marker-label')
-            .attr('text-anchor', 'middle')
-            .attr('y', 20);
-          return g;
-        }
-      );
+    // Inside chart():
+    if (!highlightGroupRef.current) {
+      highlightGroupRef.current = svg.append('g')
+        .attr('class', 'highlight-ranges');
+    }
 
-    // Function to position the marker
-    const updateMarker = (dateLabel) => {
-      const xPos = xScale(dateLabel);
+    const highlightGroup = highlightGroupRef.current;
 
-      markerGroup.select('.marker-line')
-        .attr('x1', xPos)
-        .attr('x2', xPos);
+    function updateHighlightRanges(ranges) {
+      const groups = highlightGroup.selectAll('.highlight-range')
+        .data(ranges, d => d.label);
 
-      markerGroup.select('.marker-label')
-        .attr('x', xPos)
-        .text(timeFormat('%-d %B %Y')(dateLabel));
-    };
+      // ENTER
+      const enter = groups.enter()
+        .append('g')
+        .attr('class', 'highlight-range');
+
+      enter.append('rect')
+        .attr('class', 'highlight-rect');
+
+      enter.append('text')
+        .attr('class', 'highlight-label');
+
+      // ENTER + UPDATE
+      groups.merge(enter).each((d, i, nodes) => {
+        const g = select(nodes[i]);
+        g.attr('class', `highlight-range highlight-range-${i}`);
+        const xStart = xScale(d.start);
+        const xEnd = xScale(d.end);
+        const group_width = xEnd - xStart;
+
+        g.select('.highlight-rect')
+          .attr('x', xStart)
+          .attr('width', group_width)
+          .attr('y', 0)
+          .attr('height', height - 40);
+
+        // place label in center of rectangle vertically
+        const labelX = xStart + group_width / 2;
+        const labelY = 50;
+
+        g.select('.highlight-label')
+          .attr('x', labelX)
+          .attr('y', labelY)
+          .attr('text-anchor', 'start')
+          .attr('dominant-baseline', 'middle') // vertically center text
+          .attr('transform', `rotate(90, ${labelX}, ${labelY})`)
+          .text(d.label);
+      });
+
+      // EXIT
+      groups.exit().remove();
+    }
+
+    // Call once
+    updateHighlightRanges(highlightRanges);
+
     // compute desired end limits (counts of points)
     let desiredLimit;
     const onLineFinished = () => {
-      if (phase === '2') {
-        updateMarker(targetDate);
-
-        markerGroup
-          .transition()
-          .duration(400)
-          .style('opacity', 1);
-      }
     };
     if (phase === '1') {
       desiredLimit = 0;
@@ -206,7 +230,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     const path1 = g.selectAll('.line1').data([dataRaw]);
     const path2 = g.selectAll('.line2').data([dataRaw]);
 
-    // enter
+    // Line 1 tween
     path1.enter()
       .append('path')
       .attr('class', 'line1 line')
@@ -217,7 +241,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .each((d, i, nodes) => { nodes[i].currentLimit = nodes[i].currentLimit || 0; })
       .merge(path1)
       .call(sel => sel.interrupt())
-      .attr('opacity', phase === '1' ? 0 : 1) // hide in axes-only
+      .attr('opacity', phase === '1' ? 0 : 1)
       .transition()
       .duration(900)
       .tween('draw', (d, i, nodes) => {
@@ -225,14 +249,19 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         const start = el.currentLimit || 0;
         const end = desiredLimit;
         const idx = interpolateNumber(start, end);
+
         return t => {
           el.currentLimit = idx(t);
-          const sliceLimit = Math.max(0, Math.round(el.currentLimit));
-          select(el).attr('d', line1(d.slice(0, sliceLimit)));
+          const sliceLimit = Math.max(1, Math.round(el.currentLimit)); // avoid empty slice
+          const slice = d.slice(0, sliceLimit).filter(p => p.y1 != null && !Number.isNaN(p.y1));
+          if (slice.length > 0) {
+            select(el).attr('d', line1(slice));
+          }
         };
       })
       .on('end', onLineFinished);
 
+    // Line 2 tween
     path2.enter()
       .append('path')
       .attr('class', 'line2 line')
@@ -251,10 +280,14 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         const start = el.currentLimit || 0;
         const end = desiredLimit;
         const idx = interpolateNumber(start, end);
+
         return t => {
           el.currentLimit = idx(t);
-          const sliceLimit = Math.max(0, Math.round(el.currentLimit));
-          select(el).attr('d', line2(d.slice(0, sliceLimit)));
+          const sliceLimit = Math.max(1, Math.round(el.currentLimit)); // avoid empty slice
+          const slice = d.slice(0, sliceLimit).filter(p => p.y2 != null && !Number.isNaN(p.y2));
+          if (slice.length > 0) {
+            select(el).attr('d', line2(slice));
+          }
         };
       })
       .on('end', onLineFinished);
@@ -272,21 +305,33 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
           const interp = interpolateNumber(start, end);
           return t => {
             el.currentLimit = interp(t);
-            const sliceLimit = Math.max(0, Math.round(el.currentLimit));
-            const generator = el.classList.contains('line1') ? line1 : line2;
-            select(el).attr('d', generator(d.slice(0, sliceLimit)));
+            const sliceLimit = Math.max(1, Math.round(el.currentLimit));
+            select(el).attr('d', line1(d.slice(0, sliceLimit)));
           };
         })
         .transition()
         .duration(400)
         .attr('opacity', 0);
     }
+
     if (phase === '1') {
-      markerGroup.style('opacity', 0);
-    }
-    if (phase === '3') {
-      updateMarker(targetDate);
-      markerGroup.style('opacity', 1); // immediate
+      highlightGroup.select('.highlight-range-0').style('opacity', 0);
+      highlightGroup.select('.highlight-range-1').style('opacity', 0);
+      highlightGroup.select('.highlight-range-2').style('opacity', 0);
+      highlightGroup.select('.highlight-range-3').style('opacity', 0);
+      highlightGroup.select('.highlight-range-4').style('opacity', 0);
+    } else if (phase === '2') {
+      highlightGroup.select('.highlight-range-0').style('opacity', 1);
+      highlightGroup.select('.highlight-range-1').style('opacity', 1);
+      highlightGroup.select('.highlight-range-2').style('opacity', 1);
+      highlightGroup.select('.highlight-range-3').style('opacity', 0);
+      highlightGroup.select('.highlight-range-4').style('opacity', 0);
+    } else if (phase === '3') {
+      highlightGroup.select('.highlight-range-0').style('opacity', 1);
+      highlightGroup.select('.highlight-range-1').style('opacity', 1);
+      highlightGroup.select('.highlight-range-2').style('opacity', 1);
+      highlightGroup.select('.highlight-range-3').style('opacity', 1);
+      highlightGroup.select('.highlight-range-4').style('opacity', 1);
     }
   }, [value, dimensions]);
 
@@ -301,7 +346,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
   return (
     <div ref={chartRef}>
       <div className="app" ref={ref}>
-        {isVisible && <div className="svg_container figure4" ref={svgContainerRef} />}
+        {isVisible && <div className="svg_container figure6" ref={svgContainerRef} />}
       </div>
     </div>
   );

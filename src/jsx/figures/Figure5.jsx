@@ -1,5 +1,8 @@
 import React, {
-  useEffect, useRef, useState, useCallback, forwardRef
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef
 } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -18,23 +21,11 @@ import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
 import rawData from './data/figure5_data.json';
 
-const TwoLineChart = forwardRef(({ value }, ref) => {
+const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
   const svgRef = useRef();
   const svgContainerRef = useRef();
   const chartRef = useRef();
   const isVisible = useIsVisible(chartRef, { once: true });
-
-  const [dimensions, setDimensions] = useState({
-    height: window.innerHeight / 2,
-    width: window.innerWidth
-  });
-
-  useEffect(() => {
-    const handleResize = () => setDimensions({ height: window.innerHeight / 2, width: window.innerWidth });
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const chart = useCallback(() => {
     if (!svgRef.current) return;
 
@@ -44,8 +35,12 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
       y1: +d['World trade'],
       y2: +d['Imports of the United States']
     }));
-
-    const { height, width } = dimensions;
+    let { height } = dimensions;
+    const { width } = dimensions;
+    height /= 2;
+    const margin = {
+      top: 40, right: 40, bottom: 40, left: 40
+    };
     const svg = select(svgRef.current)
       .attr('height', height)
       .attr('width', width)
@@ -95,7 +90,7 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
 
     const xScale = scaleTime()
       .domain(extent(dataRaw, d => d.date))
-      .range([40, width - 40]);
+      .range([margin.left, width - margin.right]);
 
     const my_extent = extent(
       dataRaw.flatMap(d => [d.y1, d.y2])
@@ -106,7 +101,7 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
     const yScale = scaleLinear()
       .domain([minValue, maxValue])
       .nice()
-      .range([height - 40, 40]);
+      .range([height - margin.top, margin.bottom]);
 
     // Axes
     svg.selectAll('.axis-group').data([null]).join('g').attr('class', 'axis-group');
@@ -115,11 +110,11 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
     axesG.selectAll('*').remove(); // simple: clear and re-draw axes each render
     // X-Axis
     axesG.append('g').attr('class', 'x-axis')
-      .attr('transform', `translate(0, ${height - 40})`)
+      .attr('transform', `translate(0, ${height - margin.top})`)
       .call(axisBottom(xScale).ticks(6));
     // Y-Axis
     axesG.append('g').attr('class', 'y-axis')
-      .attr('transform', 'translate(40,0)')
+      .attr('transform', `translate(${margin.left},0)`)
       .call(axisLeft(yScale).ticks(5));
 
     axesG.select('.y-axis')
@@ -296,9 +291,9 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
       markerGroup.style('opacity', 0);
     }
     if (phase === '3') {
-      updateMarker(targetDate);
-      markerGroup.style('opacity', 1); // immediate
+      markerGroup.style('opacity', 1);
     }
+    updateMarker(targetDate);
   }, [value, dimensions]);
 
   useEffect(() => {
@@ -307,7 +302,7 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
       svgRef.current = svg.node();
     }
     if (isVisible) chart();
-  }, [chart, isVisible, dimensions]);
+  }, [chart, isVisible]);
 
   return (
     <div ref={chartRef}>
@@ -319,7 +314,11 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
 });
 
 TwoLineChart.propTypes = {
-  value: PropTypes.string.isRequired, // "1" or "2"
+  dimensions: PropTypes.shape({
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
+  }).isRequired,
+  value: PropTypes.string.isRequired
 };
 
 export default TwoLineChart;

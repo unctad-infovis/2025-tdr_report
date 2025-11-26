@@ -12,15 +12,18 @@ function DwChartContainer(props) {
   const isVisible = useIsVisible(chartRef, { once: true });
 
   useEffect(() => {
-    const container = document.querySelector(`.chart_container_${chart_id} .chart`);
-    const script = document.createElement('script');
+    if (isVisible) {
+      const container = document.querySelector(`.chart_container_${chart_id} .chart`);
+      const script = document.createElement('script');
 
-    script.setAttribute('src', `https://datawrapper.dwcdn.net/${chart_id}/embed.js`);
-    container.appendChild(script);
-    return () => {
-      container.removeChild(script);
-    };
-  }, [chart_id]);
+      script.setAttribute('src', `https://datawrapper.dwcdn.net/${chart_id}/embed.js`);
+      container.appendChild(script);
+      return () => {
+        container.removeChild(script);
+      };
+    }
+    return () => {};
+  }, [chart_id, isVisible]);
 
   return (
     <div className={`chart_container chart_container_${chart_id}`}>

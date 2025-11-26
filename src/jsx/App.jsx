@@ -19,6 +19,8 @@ import Figure2 from './figures/Figure2.jsx';
 import Figure3 from './figures/Figure3.jsx';
 import Figure4 from './figures/Figure4.jsx';
 import Figure5 from './figures/Figure5.jsx';
+import Figure6 from './figures/Figure6.jsx';
+import Figure7 from './figures/Figure7.jsx';
 
 function App() {
   const appRef = useRef();
@@ -53,6 +55,30 @@ function App() {
   const seenChapter = useCallback((chapter) => {
     track('Scroll', chapter);
   }, [track]);
+
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth
+  });
+
+  useEffect(() => {
+    let frame;
+    const handleResize = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        setDimensions({
+          height: window.innerHeight,
+          width: window.innerWidth
+        });
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (!overviewRef.current.classList.contains('seen') && isVisibleChapterOverview) {
@@ -254,7 +280,7 @@ function App() {
     if (!fixedSectionRefFigure2.current) return;
 
     // 3 screens.
-    fixedSectionRefFigure2.current.style.height = `${3 * 130 + 80}vh`;
+    fixedSectionRefFigure2.current.style.height = `${4 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure2.current.getBoundingClientRect();
@@ -463,6 +489,110 @@ function App() {
     return () => window.removeEventListener('scroll', handleScrollFigure05);
   }, [handleScrollFigure05]);
 
+  const [figure6Data, setFigure6Data] = useState('1');
+  const fixedSectionRefFigure6 = useRef();
+  const chartFigure6 = useRef(null);
+  const [positionFigure6, setPositionFigure6] = useState('');
+  const handleScrollFigure06 = useCallback(() => {
+    if (!fixedSectionRefFigure6.current) return;
+
+    // 4 screens.
+    fixedSectionRefFigure6.current.style.height = `${3 * 130 + 80}vh`;
+
+    const { scrollY, innerHeight } = window;
+    let { top } = fixedSectionRefFigure6.current.getBoundingClientRect();
+    top += scrollY;
+    const { height } = fixedSectionRefFigure6.current.getBoundingClientRect();
+    const fixedBottom = top + height - innerHeight;
+    const relativeScroll = scrollY - top;
+
+    // Determine position state
+    setPositionFigure6((scrollY < top) ? 'absolute_top' : (scrollY < fixedBottom) ? 'fixed' : 'absolute_bottom');
+
+    if (!chartFigure6.current) return;
+
+    // Define switch points
+    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8];
+
+    const newState = {
+      isAbove1: relativeScroll < switchPoints[0],
+      isAbove2: relativeScroll < switchPoints[1]
+    };
+    if (newState.isAbove1) {
+      fixedSectionRefFigure6.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+      fixedSectionRefFigure6.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'auto';
+      fixedSectionRefFigure6.current.querySelector('.scroll-elements').style.pointerEvents = 'auto';
+      setFigure6Data('1');
+    } else if (newState.isAbove2) {
+      fixedSectionRefFigure6.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure6.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure6.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure6Data('2');
+    } else {
+      fixedSectionRefFigure6.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure6.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure6.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure6Data('3');
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScrollFigure06);
+    return () => window.removeEventListener('scroll', handleScrollFigure06);
+  }, [handleScrollFigure06]);
+
+  const [figure7Data, setFigure7Data] = useState('1');
+  const fixedSectionRefFigure7 = useRef();
+  const chartFigure7 = useRef(null);
+  const [positionFigure7, setPositionFigure7] = useState('');
+  const handleScrollFigure07 = useCallback(() => {
+    if (!fixedSectionRefFigure7.current) return;
+
+    // 4 screens.
+    fixedSectionRefFigure7.current.style.height = `${3 * 130 + 80}vh`;
+
+    const { scrollY, innerHeight } = window;
+    let { top } = fixedSectionRefFigure7.current.getBoundingClientRect();
+    top += scrollY;
+    const { height } = fixedSectionRefFigure7.current.getBoundingClientRect();
+    const fixedBottom = top + height - innerHeight;
+    const relativeScroll = scrollY - top;
+
+    // Determine position state
+    setPositionFigure7((scrollY < top) ? 'absolute_top' : (scrollY < fixedBottom) ? 'fixed' : 'absolute_bottom');
+
+    if (!chartFigure7.current) return;
+
+    // Define switch points
+    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8];
+
+    const newState = {
+      isAbove1: relativeScroll < switchPoints[0],
+      isAbove2: relativeScroll < switchPoints[1]
+    };
+    if (newState.isAbove1) {
+      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'auto';
+      fixedSectionRefFigure7.current.querySelector('.scroll-elements').style.pointerEvents = 'auto';
+      setFigure7Data('1');
+    } else if (newState.isAbove2) {
+      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure7.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure7Data('2');
+    } else {
+      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure7.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure7Data('3');
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScrollFigure07);
+    return () => window.removeEventListener('scroll', handleScrollFigure07);
+  }, [handleScrollFigure07]);
+
   return (
     <div className="app" ref={appRef}>
       <Header downloadDocument={downloadDocument} scrollTo={scrollTo} chapterTitles={chapterTitles} />
@@ -507,7 +637,11 @@ function App() {
             <div className="overlay" />
             <div className="scroll-indicator"><div className="arrow" /></div>
             <div className="chart_container_full">
-              <Figure5 ref={chartFigure5} value={figure5Data} />
+              <Figure5
+                dimensions={dimensions}
+                ref={chartFigure5}
+                value={figure5Data}
+              />
             </div>
           </div>
           <div className="scroll-elements">
@@ -595,12 +729,57 @@ function App() {
           </div>
         </div>
         <ScrollingText texts={['Chapter 2 sliding text']} chapter_text="Chapter 2" />
+        <div ref={fixedSectionRefFigure6} className="fixed-section">
+          <div className={`fixed-background ${positionFigure6}`}>
+            <div className="overlay" />
+            <div className="scroll-indicator"><div className="arrow" /></div>
+            <div className="chart_container_full">
+              <Figure6
+                dimensions={dimensions}
+                ref={chartFigure6}
+                value={figure6Data}
+              />
+            </div>
+          </div>
+          <div className="scroll-elements">
+            <div className="scroll-content">
+              <div>
+                <p>Lets investigate</p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Lets first observe the World Trade…
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  ...and how it has evolved in long term.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  ...and how it has evolved in long term.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div ref={fixedSectionRefFigure1} className="fixed-section">
           <div className={`fixed-background ${positionFigure1}`}>
             <div className="overlay" />
             <div className="scroll-indicator"><div className="arrow" /></div>
             <div className="chart_container_full">
-              <Figure1 ref={chartFigure1} value={figure1Data} />
+              <Figure1
+                dimensions={dimensions}
+                ref={chartFigure1}
+                value={figure1Data}
+              />
             </div>
           </div>
           <div className="scroll-elements">
@@ -648,11 +827,11 @@ function App() {
         </div>
         <div className="content_container chapter_header_2" ref={chapter2Ref}>
           <div className="text_container">
-            <ChapterHeader
+            {/* <ChapterHeader
               chapter_number="2"
               subtitle="Chapter 2 subtitle"
               title={chapterTitles[1]}
-            />
+            /> */}
             <div className="download_buttons_container">
               <a href="https://unctad.org/system/files/official-document/tdr2025ch2_en.pdf" target="_blank" onClick={(event) => downloadDocument(event)} type="button" className="chapter_download" aria-label="Download Chapter 2" rel="noreferrer">Download</a>
             </div>
@@ -692,7 +871,47 @@ function App() {
             <div className="overlay" />
             <div className="scroll-indicator"><div className="arrow" /></div>
             <div className="chart_container_full">
-              <Figure4 ref={chartFigure4} value={figure4Data} />
+              <Figure4
+                dimensions={dimensions}
+                ref={chartFigure4}
+                value={figure4Data}
+              />
+            </div>
+          </div>
+          <div className="scroll-elements">
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Lets focus
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  See how they go together until
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  They dont go together anymore
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div ref={fixedSectionRefFigure7} className="fixed-section">
+          <div className={`fixed-background ${positionFigure7}`}>
+            <div className="overlay" />
+            <div className="scroll-indicator"><div className="arrow" /></div>
+            <div className="chart_container_full">
+              <Figure7
+                dimensions={dimensions}
+                ref={chartFigure7}
+                value={figure7Data}
+              />
             </div>
           </div>
           <div className="scroll-elements">
@@ -724,7 +943,11 @@ function App() {
             <div className="overlay" />
             <div className="scroll-indicator"><div className="arrow" /></div>
             <div className="chart_container_full">
-              <Figure3 ref={chartFigure3} value={figure3Data} />
+              <Figure3
+                dimensions={dimensions}
+                ref={chartFigure3}
+                value={figure3Data}
+              />
             </div>
           </div>
           <div className="scroll-elements">
@@ -775,6 +998,9 @@ function App() {
             <div className="charts_container">
               <DwChartContainer chart_id="Z8ZTx" title="The enduring dollar" />
             </div>
+            <div className="charts_container">
+              <DwChartContainer chart_id="KQgvV" title="Allocated foreign currency reserves" />
+            </div>
             <div className="text_content">
               <p>
                 While the dollar’s share in global foreign exchange reserves has steadily declined since 2000, no other currency has risen to replace it. At the same time:
@@ -797,13 +1023,17 @@ function App() {
             </div>
           </div>
         </div>
-        <ScrollingText texts={['Sliding text 4']} chapter_text="Chapter 4" />
+        <ScrollingText texts={['Is the centre of global finance shifting south?']} chapter_text="Chapter 4" />
         <div ref={fixedSectionRefFigure2} className="fixed-section">
           <div className={`fixed-background ${positionFigure2}`}>
             <div className="overlay" />
             <div className="scroll-indicator"><div className="arrow" /></div>
             <div className="chart_container_full">
-              <Figure2 ref={chartFigure2} value={figure2Data} />
+              <Figure2
+                dimensions={dimensions}
+                ref={chartFigure2}
+                value={figure2Data}
+              />
             </div>
           </div>
           <div className="scroll-elements">
@@ -817,14 +1047,21 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Before the global financial crisis of 2008 we had a global north centric system
+                  Before, all major foreign investment hubs were in the Global North.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  Data from 2023 shows the growth of global south as investment centers
+                  Now, the Global South plays a much larger role.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  But its role in global financial markets remains small.
                 </p>
               </div>
             </div>

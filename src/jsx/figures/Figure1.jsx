@@ -1,6 +1,9 @@
 // LineGraph.jsx
 import React, {
-  useEffect, useRef, useState, useCallback, forwardRef
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef
 } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -31,16 +34,11 @@ const data2 = rawData2.map(d => ({ x: new Date(d.x), y: +d.y }));
 const data3 = rawData3.map(d => ({ x: new Date(d.x), y: +d.y }));
 const data4 = rawData4.map(d => ({ x: new Date(d.x), y: +d.y }));
 
-const LineGraph = forwardRef(({ value }, ref) => {
+const LineGraph = forwardRef(({ value, dimensions }, ref) => {
   const svgRef = useRef(null);
   const svgContainerRef = useRef(null);
   const chartRef = useRef(null);
   const isVisible = useIsVisible(chartRef, { once: true });
-
-  const [dimensions, setDimensions] = useState({
-    height: window.innerHeight,
-    width: window.innerWidth,
-  });
 
   // path refs
   const line1Ref = useRef(null);
@@ -57,13 +55,6 @@ const LineGraph = forwardRef(({ value }, ref) => {
   const line4DrawnRef = useRef(false);
   const areaDrawnRef = useRef(false);
   const prevPhaseRef = useRef(null);
-
-  // update on resize
-  useEffect(() => {
-    const handleResize = () => setDimensions({ height: window.innerHeight, width: window.innerWidth });
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const safeGetOffset = useCallback((p, len) => {
     const raw = p.attr('stroke-dashoffset');
@@ -204,19 +195,15 @@ const LineGraph = forwardRef(({ value }, ref) => {
     const container = svg.node().parentNode;
     if (!container) return;
 
-    // width & height
-    const containerBounds = container.getBoundingClientRect();
-    const width = Math.max(200, containerBounds.width || 200);
-    const height = (containerBounds.height && containerBounds.height > 0)
-      ? containerBounds.height / 2
-      : Math.max(200, Math.min(window.innerHeight / 2, 300));
+    let { height } = dimensions;
+    const { width } = dimensions;
+    height /= 2;
     const margin = {
-      top: 0, right: 20, bottom: 0, left: 40
+      top: 40, right: 20, bottom: 0, left: 40
     };
-
     svg.attr('viewBox', [0, 0, width, height])
-      .attr('height', window.innerHeight)
-      .attr('width', window.innerWidth);
+      .attr('height', height)
+      .attr('width', width);
 
     const phase = parseInt(value, 10);
 
@@ -458,24 +445,16 @@ const LineGraph = forwardRef(({ value }, ref) => {
       }
       animateDraw(p4, len4Ref, 5000, easeLinear);
     }
-
     prevPhaseRef.current = phase;
-  }, [
-    animateDraw, animateUndraw, morphPath, updateLegend, value
-  ]);
+  }, [animateDraw, animateUndraw, dimensions, morphPath, updateLegend, value]);
 
-  // mount svg once and call chart on updates
   useEffect(() => {
-    if (!isVisible) return;
     if (!svgRef.current) {
-      const svg = select(svgContainerRef.current)
-        .append('svg')
-        .attr('height', dimensions.height)
-        .attr('width', dimensions.width);
+      const svg = select(svgContainerRef.current).append('svg');
       svgRef.current = svg.node();
     }
-    chart();
-  }, [chart, isVisible, dimensions]);
+    if (isVisible) chart();
+  }, [chart, isVisible]);
 
   return (
     <div ref={chartRef}>
@@ -487,7 +466,11 @@ const LineGraph = forwardRef(({ value }, ref) => {
 });
 
 LineGraph.propTypes = {
-  value: PropTypes.string.isRequired,
+  dimensions: PropTypes.shape({
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
+  }).isRequired,
+  value: PropTypes.string.isRequired
 };
 
 export default LineGraph;

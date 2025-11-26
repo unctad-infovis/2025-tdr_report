@@ -1,5 +1,9 @@
 import React, {
-  useEffect, useRef, useState, useCallback, forwardRef
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
 } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -40,7 +44,7 @@ function animateNumber(from, to, duration, stepCallback, doneCallback) {
   requestAnimationFrame(frame);
 }
 
-const ForceNetwork = forwardRef(({ value }, ref) => {
+const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
   const svgRef = useRef();
   const svgContainerRef = useRef();
   const chartRef = useRef();
@@ -50,10 +54,6 @@ const ForceNetwork = forwardRef(({ value }, ref) => {
     south: true
   });
 
-  const [dimensions, setDimensions] = useState({
-    height: window.innerHeight,
-    width: window.innerWidth,
-  });
   const [displayYear, setDisplayYear] = useState(2007);
 
   const toggle = (id) => {
@@ -62,17 +62,6 @@ const ForceNetwork = forwardRef(({ value }, ref) => {
 
   const simulationRef = useRef(null);
   const nodesMapRef = useRef({}); // keep nodes by id to preserve positions
-
-  useEffect(() => {
-    const handleResize = () => {
-      setDimensions({
-        height: window.innerHeight,
-        width: window.innerWidth,
-      });
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Update node, link & legend visibility when React state changes
   useEffect(() => {
@@ -142,8 +131,16 @@ const ForceNetwork = forwardRef(({ value }, ref) => {
   const chart = useCallback(() => {
     const allNodes = [...nodes_2007, ...nodes_2023];
     if (!svgContainerRef.current) return;
-    const svg = select(svgRef.current);
-    const { width, height } = dimensions;
+    const { height } = dimensions;
+    const { width } = dimensions;
+    const margin = {
+      top: 200, right: 0, bottom: 0, left: 100
+    };
+    const svg = select(svgRef.current)
+      .attr('width', width)
+      .attr('height', height)
+      .attr('viewBox', [0, 0, width, height]);
+
     const dragNodes = drag()
       .on('start', (event, d) => {
         if (!event.active) simulationRef.current.alphaTarget(0.3).restart();
@@ -171,7 +168,7 @@ const ForceNetwork = forwardRef(({ value }, ref) => {
     // Legend group
     const legend = svg.append('g')
       .attr('class', 'legend')
-      .attr('transform', 'translate(100, 200)');
+      .attr('transform', `translate(${margin.top}, ${margin.left})`);
 
     // One row per item
     const items = legend.selectAll('.legend-item')
@@ -412,14 +409,11 @@ const ForceNetwork = forwardRef(({ value }, ref) => {
 
   useEffect(() => {
     if (!svgRef.current && svgContainerRef.current) {
-      const svg = select(svgContainerRef.current)
-        .append('svg')
-        .attr('width', dimensions.width)
-        .attr('height', dimensions.height);
+      const svg = select(svgContainerRef.current).append('svg');
       svgRef.current = svg.node();
     }
     if (isVisible) chart();
-  }, [chart, isVisible, dimensions]);
+  }, [chart, isVisible]);
 
   useEffect(() => {
     const target = value === '1' ? 2007 : 2023;
@@ -439,7 +433,11 @@ const ForceNetwork = forwardRef(({ value }, ref) => {
 });
 
 ForceNetwork.propTypes = {
-  value: PropTypes.string.isRequired, // "1" or "2"
+  dimensions: PropTypes.shape({
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
+  }).isRequired,
+  value: PropTypes.string.isRequired
 };
 
 export default ForceNetwork;

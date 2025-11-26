@@ -1,5 +1,8 @@
 import React, {
-  useEffect, useRef, useState, useCallback, forwardRef
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef
 } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -13,27 +16,11 @@ import {
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
 
-const FigurePie = forwardRef(({ value }, ref) => {
+const FigurePie = forwardRef(({ value, dimensions }, ref) => {
   const svgRef = useRef();
   const svgContainerRef = useRef();
   const chartRef = useRef();
   const isVisible = useIsVisible(chartRef, { once: true });
-
-  const [dimensions, setDimensions] = useState({
-    height: window.innerHeight * 0.6,
-    width: window.innerWidth,
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setDimensions({
-        height: window.innerHeight * 0.6,
-        width: window.innerWidth,
-      });
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const setArcState = (el, d) => { el.currentArcState = d; };
 
@@ -47,7 +34,9 @@ const FigurePie = forwardRef(({ value }, ref) => {
   const chart = useCallback(() => {
     if (!svgRef.current) return;
 
-    const { width, height } = dimensions;
+    let { height } = dimensions;
+    const { width } = dimensions;
+    height *= 0.6;
     const svg = select(svgRef.current)
       .attr('width', width)
       .attr('height', height)
@@ -161,9 +150,6 @@ const FigurePie = forwardRef(({ value }, ref) => {
       .attr('opacity', 0)
       .remove();
 
-    // ===== RIGHT SIDE LEGEND =====
-    // --- compute donut/legend positions (replace your current g transform)
-
     // legend anchor on the right of the donut
     const legendX = donutX + radius + 60;
     const legendY = donutY - radius / 2 + 20;
@@ -257,7 +243,6 @@ const FigurePie = forwardRef(({ value }, ref) => {
           .call(sel => sel.transition()
             .duration(500)
             .attr('opacity', 1)),
-
         updateSel => updateSel.call(sel => sel.transition()
           .duration(500)
           .tween('text', (d, i, nodes) => {
@@ -275,7 +260,7 @@ const FigurePie = forwardRef(({ value }, ref) => {
       svgRef.current = svg.node();
     }
     if (isVisible) chart();
-  }, [chart, isVisible, dimensions]);
+  }, [chart, isVisible]);
 
   return (
     <div ref={chartRef}>
@@ -287,7 +272,11 @@ const FigurePie = forwardRef(({ value }, ref) => {
 });
 
 FigurePie.propTypes = {
-  value: PropTypes.string.isRequired,
+  dimensions: PropTypes.shape({
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
+  }).isRequired,
+  value: PropTypes.string.isRequired
 };
 
 export default FigurePie;
