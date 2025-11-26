@@ -866,7 +866,6 @@ function App() {
               <DwChartContainer chart_id="2M752" title="Ten-year treasury yield" />
             </div>
             <div className="text_content">
-
               <p>The borrowing costs illustrate the gap clearly. While advanced economies often borrow at 1–3%, many emerging markets pay 6–12% or more for similar government bonds. </p>
               <p>This means a government in an emerging economy may pay three to five times more in interest – a stark difference that limits fiscal space and raises the cost of development.</p>
               <p>
