@@ -18,6 +18,7 @@ import Figure1 from './figures/Figure1.jsx';
 import Figure2 from './figures/Figure2.jsx';
 import Figure3 from './figures/Figure3.jsx';
 import Figure4 from './figures/Figure4.jsx';
+import Figure5 from './figures/Figure5.jsx';
 
 function App() {
   const appRef = useRef();
@@ -396,12 +397,12 @@ function App() {
       fixedSectionRefFigure4.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
       fixedSectionRefFigure4.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
       fixedSectionRefFigure4.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
-      setFigure4Data('1');
+      setFigure4Data('2');
     } else {
       fixedSectionRefFigure4.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
       fixedSectionRefFigure4.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
       fixedSectionRefFigure4.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
-      setFigure4Data('2');
+      setFigure4Data('3');
     }
   }, []);
 
@@ -409,6 +410,59 @@ function App() {
     window.addEventListener('scroll', handleScrollFigure04);
     return () => window.removeEventListener('scroll', handleScrollFigure04);
   }, [handleScrollFigure04]);
+
+  const [figure5Data, setFigure5Data] = useState('1');
+  const fixedSectionRefFigure5 = useRef();
+  const chartFigure5 = useRef(null);
+  const [positionFigure5, setPositionFigure5] = useState('');
+  const handleScrollFigure05 = useCallback(() => {
+    if (!fixedSectionRefFigure5.current) return;
+
+    // 3 screens.
+    fixedSectionRefFigure5.current.style.height = `${3 * 130 + 80}vh`;
+
+    const { scrollY, innerHeight } = window;
+    let { top } = fixedSectionRefFigure5.current.getBoundingClientRect();
+    top += scrollY;
+    const { height } = fixedSectionRefFigure5.current.getBoundingClientRect();
+    const fixedBottom = top + height - innerHeight;
+    const relativeScroll = scrollY - top;
+
+    // Determine position state
+    setPositionFigure5((scrollY < top) ? 'absolute_top' : (scrollY < fixedBottom) ? 'fixed' : 'absolute_bottom');
+
+    if (!chartFigure5.current) return;
+
+    // Define switch points
+    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8, innerHeight * 2.9 + innerHeight * 0.8];
+
+    const newState = {
+      isAbove1: relativeScroll < switchPoints[0],
+      isAbove2: relativeScroll < switchPoints[1],
+      isAbove3: relativeScroll < switchPoints[2]
+    };
+    if (newState.isAbove1) {
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'auto';
+      fixedSectionRefFigure5.current.querySelector('.scroll-elements').style.pointerEvents = 'auto';
+      setFigure5Data('1');
+    } else if (newState.isAbove2) {
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure5.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure5Data('2');
+    } else {
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure5.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure5Data('3');
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScrollFigure05);
+    return () => window.removeEventListener('scroll', handleScrollFigure05);
+  }, [handleScrollFigure05]);
 
   return (
     <div className="app" ref={appRef}>
@@ -450,6 +504,73 @@ function App() {
           </div>
         </div>
         <ScrollingText texts={['What is the correlation with global financial cycle and world trade']} chapter_text="Chapter 1" />
+        <div ref={fixedSectionRefFigure5} className="fixed-section">
+          <div className={`fixed-background ${positionFigure5}`}>
+            <div className="overlay" />
+            <div className="scroll-indicator"><div className="arrow" /></div>
+            <div className="chart_container_full">
+              <Figure5 ref={chartFigure5} value={figure5Data} />
+            </div>
+          </div>
+          <div className="scroll-elements">
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Lets look at the US imports
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Before Trump went loco they went together with trade
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  But they skyrocketed before return to normal levels
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="content_container chapter_header_1" ref={chapter1Ref}>
+          <div className="text_container">
+            <ChapterHeader
+              chapter_number="1"
+              subtitle="Subtitle for chapter 1"
+              title={chapterTitles[0]}
+            />
+            <div className="download_buttons_container">
+              <a href="https://unctad.org/system/files/official-document/tdr2025ch1_en.pdf" target="_blank" onClick={(event) => downloadDocument(event)} type="button" className="chapter_download" aria-label="Download Chapter 1" rel="noreferrer">Download</a>
+            </div>
+            <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter1.jpg" /></div></div>
+            <div className="text_content">
+              <p>The year 2025 began with momentum and what looked like a rebound – boosted by companies rushing to ship goods before new tariffs and by rising AI-related investments.</p>
+              <p>But remove these temporary factors and global trade growth falls from 4% to somewhere between 2.5% and 3.0%, with a slowdown on the horizon.</p>
+              <p>Global economic growth tells a similar story:</p>
+              <ul>
+                <li>Global GDP is projected to fall to 2.6% in 2025, below the pre-pandemic trend.</li>
+                <li>The United States and European economies are cooling. US economic growth expected to slow to 1.8% in 2025 and 1.5% in 2026, compared to X.</li>
+                <li>China is stabilizing but decelerating. Its economic growth is projected to slow to 4.9% in 2025 and 4.5% in 2026, compared to X</li>
+                <li>Across the global South, financial volatility and weaker external demand squeeze investment and jobs.</li>
+              </ul>
+              <p>Despite this difficult landscape, developing economies will drive almost 70% of global growth in 2025 – yet they face the harshest constraints on financing that growth.</p>
+              <p>The climate crisis adds another layer. Some climate-vulnerable countries pay an extra $20 billion per year in interest simply because climate risk raises their borrowing costs — money that could have gone into schools, hospitals or climate resilience itself.</p>
+              <p>
+                <strong>The takeaway:</strong>
+                {' '}
+                The world is growing, but unevenly – and the resilience we see is thinner than it seems and masks structural weaknesses. Without coordinated action, developing countries risk being locked into slower growth, heavier debt and fewer options to steer their own economic futures.
+              </p>
+            </div>
+            <div className="charts_container">
+              <DwChartContainer title="Seaborne trade growth" chart_id="iJGvP" />
+            </div>
+          </div>
+        </div>
+        <ScrollingText texts={['Chapter 2 sliding text']} chapter_text="Chapter 2" />
         <div ref={fixedSectionRefFigure1} className="fixed-section">
           <div className={`fixed-background ${positionFigure1}`}>
             <div className="overlay" />
@@ -501,73 +622,6 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="content_container chapter_header_1" ref={chapter1Ref}>
-          <div className="text_container">
-            <ChapterHeader
-              chapter_number="1"
-              subtitle="Subtitle for chapter 1"
-              title={chapterTitles[0]}
-            />
-            <div className="download_buttons_container">
-              <a href="https://unctad.org/system/files/official-document/tdr2025ch1_en.pdf" target="_blank" onClick={(event) => downloadDocument(event)} type="button" className="chapter_download" aria-label="Download Chapter 1" rel="noreferrer">Download</a>
-            </div>
-            <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter1.jpg" /></div></div>
-            <div className="text_content">
-              <p>The year 2025 began with momentum and what looked like a rebound – boosted by companies rushing to ship goods before new tariffs and by rising AI-related investments.</p>
-              <p>But remove these temporary factors and global trade growth falls from 4% to somewhere between 2.5% and 3.0%, with a slowdown on the horizon.</p>
-              <p>Global economic growth tells a similar story:</p>
-              <ul>
-                <li>Global GDP is projected to fall to 2.6% in 2025, below the pre-pandemic trend.</li>
-                <li>The United States and European economies are cooling. US economic growth expected to slow to 1.8% in 2025 and 1.5% in 2026, compared to X.</li>
-                <li>China is stabilizing but decelerating. Its economic growth is projected to slow to 4.9% in 2025 and 4.5% in 2026, compared to X</li>
-                <li>Across the global South, financial volatility and weaker external demand squeeze investment and jobs.</li>
-              </ul>
-              <p>Despite this difficult landscape, developing economies will drive almost 70% of global growth in 2025 – yet they face the harshest constraints on financing that growth.</p>
-              <p>The climate crisis adds another layer. Some climate-vulnerable countries pay an extra $20 billion per year in interest simply because climate risk raises their borrowing costs — money that could have gone into schools, hospitals or climate resilience itself.</p>
-              <p>
-                <strong>The takeaway:</strong>
-                {' '}
-                The world is growing, but unevenly – and the resilience we see is thinner than it seems and masks structural weaknesses. Without coordinated action, developing countries risk being locked into slower growth, heavier debt and fewer options to steer their own economic futures.
-              </p>
-            </div>
-            <div className="charts_container">
-              <DwChartContainer title="Seaborne trade growth" chart_id="iJGvP" />
-            </div>
-          </div>
-        </div>
-        <ScrollingText texts={['Chapter 2 sliding text']} chapter_text="Chapter 2" />
-        <div ref={fixedSectionRefFigure2} className="fixed-section">
-          <div className={`fixed-background ${positionFigure2}`}>
-            <div className="overlay" />
-            <div className="scroll-indicator"><div className="arrow" /></div>
-            <div className="chart_container_full">
-              <Figure2 ref={chartFigure2} value={figure2Data} />
-            </div>
-          </div>
-          <div className="scroll-elements">
-            <div className="scroll-content">
-              <div>
-                <p>
-                  Lets look at the flow of investments
-                </p>
-              </div>
-            </div>
-            <div className="scroll-content">
-              <div>
-                <p>
-                  Before the global financial crisis of 2008 we had a global north centric system
-                </p>
-              </div>
-            </div>
-            <div className="scroll-content">
-              <div>
-                <p>
-                  Data from 2023 shows the growth of global south as investment centers
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="content_container chapter_header_2" ref={chapter2Ref}>
           <div className="text_container">
             <ChapterHeader
@@ -595,7 +649,6 @@ function App() {
                 {' '}
                 When markets move based on financial signals rather than real economic conditions, developing economies – especially their small producers – compete on a more uneven playing field. They face higher costs, greater uncertainty, and lower bargaining power – and shocks hit them hardest.
               </p>
-
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="wuNd6" title="Monthly ship transits through the Strait of Hormuz and the Suez Canal" />
@@ -603,6 +656,38 @@ function App() {
           </div>
         </div>
         <ScrollingText texts={['Sliding text for chapter 3']} chapter_text="Chapter 3" />
+        <div ref={fixedSectionRefFigure4} className="fixed-section">
+          <div className={`fixed-background ${positionFigure4}`}>
+            <div className="overlay" />
+            <div className="scroll-indicator"><div className="arrow" /></div>
+            <div className="chart_container_full">
+              <Figure4 ref={chartFigure4} value={figure4Data} />
+            </div>
+          </div>
+          <div className="scroll-elements">
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Lets focus
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  See how they go together until
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  They dont go together anymore
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div ref={fixedSectionRefFigure3} className="fixed-section">
           <div className={`fixed-background ${positionFigure3}`}>
             <div className="overlay" />
@@ -661,7 +746,6 @@ function App() {
               <ul>
                 <li>The dollar’s share in SWIFT payments – the global messaging system banks use to move money across borders – climbed from 39% to 50% in just five years, reinforcing its role as the backbone of global transactions.</li>
                 <li>The US still holds 50% of global equity market value – where companies raise capital – and 40% of the global bond market, which finances governments and major investments.</li>
-
               </ul>
               <p>The dollar’s influence reaches far beyond central bank reserves or how trade is priced. It affects who can get credit, where investment flows and how quickly financial shocks spread around the world.</p>
               <p>
@@ -676,33 +760,33 @@ function App() {
           </div>
         </div>
         <ScrollingText texts={['Sliding text 4']} chapter_text="Chapter 4" />
-        <div ref={fixedSectionRefFigure4} className="fixed-section">
-          <div className={`fixed-background ${positionFigure4}`}>
+        <div ref={fixedSectionRefFigure2} className="fixed-section">
+          <div className={`fixed-background ${positionFigure2}`}>
             <div className="overlay" />
             <div className="scroll-indicator"><div className="arrow" /></div>
             <div className="chart_container_full">
-              <Figure4 ref={chartFigure4} value={figure4Data} />
+              <Figure2 ref={chartFigure2} value={figure2Data} />
             </div>
           </div>
           <div className="scroll-elements">
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets focus
+                  Lets look at the flow of investments
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  See how they go together until
+                  Before the global financial crisis of 2008 we had a global north centric system
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  They dont go together anymore
+                  Data from 2023 shows the growth of global south as investment centers
                 </p>
               </div>
             </div>

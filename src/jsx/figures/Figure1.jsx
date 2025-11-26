@@ -252,9 +252,6 @@ const LineGraph = forwardRef(({ value }, ref) => {
       g.select('.y-axis')
         .selectAll('.tick line')
         .attr('x2', width - margin.right - margin.left);
-      g.select('.y-axis')
-        .selectAll('.tick line')
-        .attr('x2', width - margin.right - margin.left);
       g.selectAll('.tick')
         .filter(d => d === 0)
         .select('line')
@@ -473,7 +470,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
   return (
     <div ref={chartRef}>
       <div className="app" ref={ref}>
-        {isVisible && (<div className="svg_container" ref={svgContainerRef} />)}
+        {isVisible && (<div className="svg_container figure1" ref={svgContainerRef} />)}
       </div>
     </div>
   );
