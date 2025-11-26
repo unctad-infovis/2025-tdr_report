@@ -3,7 +3,20 @@ import React, {
   useEffect, useRef, useState, useCallback, forwardRef
 } from 'react';
 import PropTypes from 'prop-types';
-import * as d3 from 'd3';
+import {
+  axisBottom,
+  axisLeft,
+  curveLinear,
+  easeCubicOut,
+  easeLinear,
+  extent,
+  line,
+  max,
+  min,
+  scaleLinear,
+  scaleTime,
+  select
+} from 'd3';
 import { interpolatePath } from 'd3-interpolate-path';
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
@@ -68,7 +81,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
 
   const updateLegend = useCallback((legendItems, margin) => {
     // Create or select legend group
-    const svg = d3.select(svgRef.current);
+    const svg = select(svgRef.current);
     const legendG = svg.selectAll('.legend').data([null]);
     const legendEnter = legendG.enter()
       .append('g')
@@ -111,7 +124,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
     items.exit().remove();
   }, []);
 
-  const animateDraw = useCallback((p, lenRef, duration = 900, ease = d3.easeCubicOut) => {
+  const animateDraw = useCallback((p, lenRef, duration = 900, ease = easeCubicOut) => {
     const start = safeGetOffset(p, lenRef.current || p.node().getTotalLength());
     prepareDash(p, lenRef);
     p.interrupt().attr('opacity', 1)
@@ -130,7 +143,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
       });
   }, [prepareDash, safeGetOffset]);
 
-  const animateUndraw = useCallback((p, lenRef, duration = 600, ease = d3.easeCubicOut) => {
+  const animateUndraw = useCallback((p, lenRef, duration = 600, ease = easeCubicOut) => {
     const start = safeGetOffset(p, lenRef.current || p.node().getTotalLength());
     const end = lenRef.current || p.node().getTotalLength();
     prepareDash(p, lenRef);
@@ -151,7 +164,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
       });
   }, [prepareDash, safeGetOffset]);
 
-  const morphPath = useCallback((p, fromD, toD, onEnd, duration = 900, ease = d3.easeCubicOut) => {
+  const morphPath = useCallback((p, fromD, toD, onEnd, duration = 900, ease = easeCubicOut) => {
     const startD = fromD || p.attr('d') || toD;
     const endD = toD;
 
@@ -185,7 +198,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
   }, []);
 
   const chart = useCallback(() => {
-    const svg = d3.select(svgRef.current);
+    const svg = select(svgRef.current);
     if (!svg.node()) return;
 
     const container = svg.node().parentNode;
@@ -211,22 +224,22 @@ const LineGraph = forwardRef(({ value }, ref) => {
     const data_group1 = [...data1, ...data2];
     const data_group2 = [...data3, ...data4];
     const data_group = [...data1, ...data2, ...data3, ...data4];
-    const x = d3.scaleTime()
-      .domain(d3.extent(data_group, d => d.x))
+    const x = scaleTime()
+      .domain(extent(data_group, d => d.x))
       .range([margin.left, width - margin.right]);
-    const y1 = d3.scaleLinear()
-      .domain([0, d3.max(data_group1, d => d.y)])
+    const y1 = scaleLinear()
+      .domain([0, max(data_group1, d => d.y)])
       .nice()
       .range([height - margin.bottom, margin.top]);
-    const y2 = d3.scaleLinear()
-      .domain([d3.min(data_group2, d => d.y), d3.max(data_group2, d => d.y)])
+    const y2 = scaleLinear()
+      .domain([min(data_group2, d => d.y), max(data_group2, d => d.y)])
       .nice()
       .range([height - margin.bottom, margin.top]);
 
     // Generators
-    const lineGen1 = d3.line().x(d => x(d.x)).y(d => y1(d.y)).curve(d3.curveLinear);
+    const lineGen1 = line().x(d => x(d.x)).y(d => y1(d.y)).curve(curveLinear);
     // Generators
-    const lineGen2 = d3.line().x(d => x(d.x)).y(d => y2(d.y)).curve(d3.curveLinear);
+    const lineGen2 = line().x(d => x(d.x)).y(d => y2(d.y)).curve(curveLinear);
 
     // Root group
     const gSel = svg.selectAll('.chart-group').data([null]);
@@ -234,7 +247,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
 
     // Axes & grid (phase >= 1)
     if (phase >= 1) {
-      const xAxis = d3.axisBottom(x).ticks(7).tickSizeInner(6).tickSizeOuter(0)
+      const xAxis = axisBottom(x).ticks(7).tickSizeInner(6).tickSizeOuter(0)
         .tickPadding(6);
       const gx = g.selectAll('.x-axis').data([null]);
       gx.enter().append('g').attr('class', 'x-axis').merge(gx)
@@ -243,7 +256,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
         .call(sel => sel.select('.domain').remove());
 
       const tickValues = [0, 20, 40, 60, 80, 100, 120];
-      const yAxis = d3.axisLeft(y1).tickValues(tickValues).tickSize(0).tickPadding(8);
+      const yAxis = axisLeft(y1).tickValues(tickValues).tickSize(0).tickPadding(8);
       const gy = g.selectAll('.y-axis').data([null]);
       gy.enter().append('g').attr('class', 'y-axis').merge(gy)
         .attr('transform', `translate(${margin.left},0)`)
@@ -287,13 +300,10 @@ const LineGraph = forwardRef(({ value }, ref) => {
     const p4 = line4Ref.current;
     const ap = areaRef.current;
 
-    // --- ALWAYS UPDATE PATH SHAPES ON RESIZE -------------------------
     if (p1) {
       p1.attr('d', (prevPhaseRef.current === 5 || phase === 5) ? lineGen2(data3) : lineGen1(data1));
     }
-
     if (p2) p2.attr('d', lineGen1(data2));
-
     if (p4) p4.attr('d', lineGen2(data4));
 
     // Phase 1
@@ -346,7 +356,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
           // onEnd
           p1.attr('opacity', 1);
           line1DrawnRef.current = true;
-        }, 900, d3.easeCubicOut);
+        }, 900, easeCubicOut);
       } else if (!line1DrawnRef.current) animateDraw(p1, len1Ref);
 
       // Build polygon
@@ -354,12 +364,12 @@ const LineGraph = forwardRef(({ value }, ref) => {
         ...data1.map(d => ({ x: d.x, y: d.y })),
         ...data2.slice().reverse().map(d => ({ x: d.x, y: d.y }))
       ];
-      const newD = `${d3.line().x(d => x(d.x)).y(d => y1(d.y)).curve(d3.curveLinear)(areaPoly)}Z`;
+      const newD = `${line().x(d => x(d.x)).y(d => y1(d.y)).curve(curveLinear)(areaPoly)}Z`;
 
       ap.interrupt()
         .transition()
         .duration(900)
-        .ease(d3.easeCubicOut)
+        .ease(easeCubicOut)
         .attrTween('d', () => {
           const interp = interpolatePath((ap.attr('d') && ap.attr('d') !== '') ? ap.attr('d') : newD, newD);
           return t => interp(t);
@@ -378,7 +388,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
       svg.select('.y-axis')
         .transition()
         .duration(0)
-        .call(d3.axisLeft(y2).tickValues(ticks).tickSize(0).tickPadding(8))
+        .call(axisLeft(y2).tickValues(ticks).tickSize(0).tickPadding(8))
         .call(sel => sel.select('.domain').remove())
         .call(sel => sel.selectAll('.tick line').attr('x2', width - margin.right - margin.left));
 
@@ -396,20 +406,20 @@ const LineGraph = forwardRef(({ value }, ref) => {
         morphPath(p1, currentD, targetD, () => {
           p1.attr('opacity', 1);
           line1DrawnRef.current = true;
-        }, 900, d3.easeCubicOut);
+        }, 900, easeCubicOut);
       }
 
       const areaPoly = [
         ...data3.map(d => ({ x: d.x, y: d.y })), // top = data3
         ...data3.slice().reverse().map(d => ({ x: d.x, y: 0 })) // bottom = 0
       ];
-      const newAreaD = `${d3.line().x(d => x(d.x)).y(d => y2(d.y)).curve(d3.curveLinear)(areaPoly)}Z`;
+      const newAreaD = `${line().x(d => x(d.x)).y(d => y2(d.y)).curve(curveLinear)(areaPoly)}Z`;
       const fromAreaD = (ap.attr('d') && ap.attr('d') !== '') ? ap.attr('d') : newAreaD;
 
       ap.interrupt()
         .transition()
         .duration(900)
-        .ease(d3.easeCubicOut)
+        .ease(easeCubicOut)
         .attrTween('d', () => {
           const interp = interpolatePath(fromAreaD, newAreaD);
           return t => interp(t);
@@ -429,7 +439,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
       svg.select('.y-axis')
         .transition()
         .duration(0)
-        .call(d3.axisLeft(y2)
+        .call(axisLeft(y2)
           .tickValues(ticks)
           .tickSize(0)
           .tickPadding(8))
@@ -446,7 +456,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
           line1DrawnRef.current = true;
         }, 0);
       }
-      animateDraw(p4, len4Ref, 5000, d3.easeLinear);
+      animateDraw(p4, len4Ref, 5000, easeLinear);
     }
 
     prevPhaseRef.current = phase;
@@ -458,7 +468,7 @@ const LineGraph = forwardRef(({ value }, ref) => {
   useEffect(() => {
     if (!isVisible) return;
     if (!svgRef.current) {
-      const svg = d3.select(svgContainerRef.current)
+      const svg = select(svgContainerRef.current)
         .append('svg')
         .attr('height', dimensions.height)
         .attr('width', dimensions.width);

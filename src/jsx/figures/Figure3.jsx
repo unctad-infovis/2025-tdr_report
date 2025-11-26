@@ -2,7 +2,14 @@ import React, {
   useEffect, useRef, useState, useCallback, forwardRef
 } from 'react';
 import PropTypes from 'prop-types';
-import * as d3 from 'd3';
+import {
+  arc,
+  interpolate,
+  interpolateNumber,
+  pie,
+  scaleOrdinal,
+  select
+} from 'd3';
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
 
@@ -30,18 +37,18 @@ const FigurePie = forwardRef(({ value }, ref) => {
 
   const setArcState = (el, d) => { el.currentArcState = d; };
 
-  const arcTween = (arc, el) => (d) => {
+  const arcTween = (arcSel, el) => (d) => {
     const previous = el.current_d || d;
-    const interpolate = d3.interpolate(previous, d);
-    el.current_d = interpolate(0);
-    return t => arc(interpolate(t));
+    const interpolateSel = interpolate(previous, d);
+    el.current_d = interpolateSel(0);
+    return t => arcSel(interpolateSel(t));
   };
 
   const chart = useCallback(() => {
     if (!svgRef.current) return;
 
     const { width, height } = dimensions;
-    const svg = d3.select(svgRef.current)
+    const svg = select(svgRef.current)
       .attr('width', width)
       .attr('height', height)
       .attr('viewBox', [0, 0, width, height]);
@@ -91,21 +98,21 @@ const FigurePie = forwardRef(({ value }, ref) => {
 
     const data = dataStages[value] || dataStages[1];
 
-    const color = d3.scaleOrdinal()
+    const color = scaleOrdinal()
       .domain(data.map(d => d.currency))
       .range(['#009edb', '#ffcb05', '#004987', '#B06E2A', '#A05FB4', '#AEA29A']);
 
-    const pie = d3.pie()
+    const pieSel = pie()
       .sort(null)
       .value(d => d.value);
 
-    const arc = d3.arc()
+    const arcPie = arc()
       .innerRadius(radius * 0.5)
       .outerRadius(radius);
 
     // --- Draw slices ---
     const arcs = g.selectAll('path')
-      .data(pie(data), d => d.data.currency);
+      .data(pieSel(data), d => d.data.currency);
 
     arcs.enter()
       .append('path')
@@ -115,25 +122,25 @@ const FigurePie = forwardRef(({ value }, ref) => {
       .merge(arcs)
       .transition()
       .duration(750)
-      .attrTween('d', (d, i, nodes) => arcTween(arc, nodes[i])(d));
+      .attrTween('d', (d, i, nodes) => arcTween(arcPie, nodes[i])(d));
 
     arcs.exit()
       .transition()
       .duration(300)
       .attrTween('d', (d) => {
         const end = { startAngle: d.endAngle, endAngle: d.endAngle };
-        const interpolate = d3.interpolate(d, end);
-        return t => arc(interpolate(t));
+        const interpolateSel = interpolate(d, end);
+        return t => arcPie(interpolateSel(t));
       })
       .remove();
 
     // --- Labels with percent values ---
-    const labelArc = d3.arc()
+    const labelArc = arc()
       .innerRadius(radius * 0.8)
       .outerRadius(radius * 0.8);
 
     const labels = g.selectAll('.label')
-      .data(pie(data), d => d.data.currency);
+      .data(pieSel(data), d => d.data.currency);
 
     labels.enter()
       .append('text')
@@ -254,9 +261,9 @@ const FigurePie = forwardRef(({ value }, ref) => {
         updateSel => updateSel.call(sel => sel.transition()
           .duration(500)
           .tween('text', (d, i, nodes) => {
-            const node = d3.select(nodes[i]);
+            const node = select(nodes[i]);
             const current = +node.text();
-            const interpolator = d3.interpolateNumber(current, d);
+            const interpolator = interpolateNumber(current, d);
             return t => node.text(Math.round(interpolator(t)));
           }))
       );
@@ -264,7 +271,7 @@ const FigurePie = forwardRef(({ value }, ref) => {
 
   useEffect(() => {
     if (!svgRef.current && svgContainerRef.current) {
-      const svg = d3.select(svgContainerRef.current).append('svg');
+      const svg = select(svgContainerRef.current).append('svg');
       svgRef.current = svg.node();
     }
     if (isVisible) chart();

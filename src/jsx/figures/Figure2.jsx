@@ -3,7 +3,17 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import {
-  select, scaleSqrt, scaleSymlog, forceCollide, drag, extent, forceRadial, forceSimulation, forceLink, forceManyBody, forceCenter
+  drag,
+  extent,
+  forceCenter,
+  forceCollide,
+  forceLink,
+  forceManyBody,
+  forceRadial,
+  forceSimulation,
+  scaleSqrt,
+  scaleSymlog,
+  select
 } from 'd3';
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';

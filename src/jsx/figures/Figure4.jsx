@@ -2,7 +2,20 @@ import React, {
   useEffect, useRef, useState, useCallback, forwardRef
 } from 'react';
 import PropTypes from 'prop-types';
-import * as d3 from 'd3';
+import {
+  axisBottom,
+  axisLeft,
+  bisector,
+  extent,
+  interpolateNumber,
+  line,
+  max,
+  min,
+  scaleLinear,
+  scaleTime,
+  select,
+  timeFormat
+} from 'd3';
 import 'intersection-observer';
 import { useIsVisible } from 'react-is-visible';
 import rawData from './data/figure4_data.json';
@@ -37,7 +50,7 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
     dataRaw.sort((a, b) => a.date - b.date);
 
     const { height, width } = dimensions;
-    const svg = d3.select(svgRef.current)
+    const svg = select(svgRef.current)
       .attr('height', height)
       .attr('width', width)
       .attr('viewBox', [0, 0, width, height]);
@@ -84,17 +97,17 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
     // Remove old items
     items.exit().remove();
 
-    const xScale = d3.scaleTime()
-      .domain(d3.extent(dataRaw, d => d.date))
+    const xScale = scaleTime()
+      .domain(extent(dataRaw, d => d.date))
       .range([40, width - 40]);
 
-    const yScale1 = d3.scaleLinear()
-      .domain([d3.min(dataRaw, d => d.y1), d3.max(dataRaw, d => d.y1)])
+    const yScale1 = scaleLinear()
+      .domain([min(dataRaw, d => d.y1), max(dataRaw, d => d.y1)])
       .nice()
       .range([height - 40, 40]);
 
-    const yScale2 = d3.scaleLinear()
-      .domain([d3.min(dataRaw, d => d.y2), d3.max(dataRaw, d => d.y2)])
+    const yScale2 = scaleLinear()
+      .domain([min(dataRaw, d => d.y2), max(dataRaw, d => d.y2)])
       .nice()
       .range([height - 40, 40]);
 
@@ -106,33 +119,30 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
     // x axis
     axesG.append('g').attr('class', 'x-axis')
       .attr('transform', `translate(0, ${height - 40})`)
-      .call(d3.axisBottom(xScale).ticks(6));
+      .call(axisBottom(xScale).ticks(6));
     // left y axis (for y1)
     axesG.append('g').attr('class', 'y-axis')
       .attr('transform', 'translate(40,0)')
-      .call(d3.axisLeft(yScale2).ticks(5));
+      .call(axisLeft(yScale2).ticks(5));
     axesG.select('.y-axis')
       .selectAll('.tick line')
       .attr('x2', width);
     // right y axis (for y2)
-    axesG.append('g').attr('class', 'y-axis')
-      .attr('transform', `translate(${width - 40},0)`)
-      .call(d3.axisRight(yScale1).ticks(5));
 
     // --- Line generators (use d.date and d.y1/d.y2) ---
-    const line1 = d3.line()
+    const line1 = line()
       .x(d => xScale(d.date))
       .y(d => yScale1(d.y1))
       .defined(d => d.y1 !== null);
 
-    const line2 = d3.line()
+    const line2 = line()
       .x(d => xScale(d.date))
       .y(d => yScale2(d.y2))
       .defined(d => d.y2 !== null);
 
     const getIndexForDate = (targetDate) => {
       if (!targetDate) return dataRaw.length;
-      const idx = d3.bisector(d => d.date).right(dataRaw, targetDate);
+      const idx = bisector(d => d.date).right(dataRaw, targetDate);
       return Math.max(0, Math.min(dataRaw.length, idx));
     };
 
@@ -169,7 +179,7 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
 
       markerGroup.select('.marker-label')
         .attr('x', xPos)
-        .text(d3.timeFormat('%-d %B %Y')(dateLabel));
+        .text(timeFormat('%-d %B %Y')(dateLabel));
     };
     // compute desired end limits (counts of points)
     let desiredLimit;
@@ -217,11 +227,11 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
         const el = nodes[i];
         const start = el.currentLimit || 0;
         const end = desiredLimit;
-        const idx = d3.interpolateNumber(start, end);
+        const idx = interpolateNumber(start, end);
         return t => {
           el.currentLimit = idx(t);
           const sliceLimit = Math.max(0, Math.round(el.currentLimit));
-          d3.select(el).attr('d', line1(d.slice(0, sliceLimit)));
+          select(el).attr('d', line1(d.slice(0, sliceLimit)));
         };
       })
       .on('end', onLineFinished);
@@ -243,11 +253,11 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
         const el = nodes[i];
         const start = el.currentLimit || 0;
         const end = desiredLimit;
-        const idx = d3.interpolateNumber(start, end);
+        const idx = interpolateNumber(start, end);
         return t => {
           el.currentLimit = idx(t);
           const sliceLimit = Math.max(0, Math.round(el.currentLimit));
-          d3.select(el).attr('d', line2(d.slice(0, sliceLimit)));
+          select(el).attr('d', line2(d.slice(0, sliceLimit)));
         };
       })
       .on('end', onLineFinished);
@@ -262,12 +272,12 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
           const el = nodes[i];
           const start = el.currentLimit || 0;
           const end = 0;
-          const interp = d3.interpolateNumber(start, end);
+          const interp = interpolateNumber(start, end);
           return t => {
             el.currentLimit = interp(t);
             const sliceLimit = Math.max(0, Math.round(el.currentLimit));
             const generator = el.classList.contains('line1') ? line1 : line2;
-            d3.select(el).attr('d', generator(d.slice(0, sliceLimit)));
+            select(el).attr('d', generator(d.slice(0, sliceLimit)));
           };
         })
         .transition()
@@ -275,7 +285,6 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
         .attr('opacity', 0);
     }
     if (phase === '1') {
-      console.log('ass');
       markerGroup.style('opacity', 0);
     }
     if (phase === '3') {
@@ -286,7 +295,7 @@ const TwoLineChart = forwardRef(({ value }, ref) => {
 
   useEffect(() => {
     if (!svgRef.current && svgContainerRef.current) {
-      const svg = d3.select(svgContainerRef.current).append('svg');
+      const svg = select(svgContainerRef.current).append('svg');
       svgRef.current = svg.node();
     }
     if (isVisible) chart();
