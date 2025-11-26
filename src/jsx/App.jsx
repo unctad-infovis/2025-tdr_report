@@ -550,6 +550,11 @@ function App() {
             <div className="text_content">
               <p>The year 2025 began with momentum and what looked like a rebound – boosted by companies rushing to ship goods before new tariffs and by rising AI-related investments.</p>
               <p>But remove these temporary factors and global trade growth falls from 4% to somewhere between 2.5% and 3.0%, with a slowdown on the horizon.</p>
+            </div>
+            <div className="charts_container">
+              <DwChartContainer title="Global gdp growth" chart_id="jOuB1" />
+            </div>
+            <div className="text_content">
               <p>Global economic growth tells a similar story:</p>
               <ul>
                 <li>Global GDP is projected to fall to 2.6% in 2025, below the pre-pandemic trend.</li>
@@ -565,9 +570,7 @@ function App() {
                 The world is growing, but unevenly – and the resilience we see is thinner than it seems and masks structural weaknesses. Without coordinated action, developing countries risk being locked into slower growth, heavier debt and fewer options to steer their own economic futures.
               </p>
             </div>
-            <div className="charts_container">
-              <DwChartContainer title="Seaborne trade growth" chart_id="iJGvP" />
-            </div>
+
           </div>
         </div>
         <ScrollingText texts={['Chapter 2 sliding text']} chapter_text="Chapter 2" />
