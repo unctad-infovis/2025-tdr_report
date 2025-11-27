@@ -129,7 +129,6 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
   }, [visibleGroups, value]);
 
   const chart = useCallback(() => {
-    const allNodes = [...nodes_2007, ...nodes_2023];
     if (!svgContainerRef.current) return;
     const { height } = dimensions;
     const { width } = dimensions;
@@ -137,10 +136,11 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
       top: 200, right: 0, bottom: 0, left: 100
     };
     const svg = select(svgRef.current)
-      .attr('width', width)
       .attr('height', height)
+      .attr('width', width)
       .attr('viewBox', [0, 0, width, height]);
 
+    const allNodes = [...nodes_2007, ...nodes_2023];
     const dragNodes = drag()
       .on('start', (event, d) => {
         if (!event.active) simulationRef.current.alphaTarget(0.3).restart();

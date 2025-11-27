@@ -34,7 +34,16 @@
     path {
       stroke-opacity: 0.4;
       stroke: #fff;
-      display: none;
+    }
+    &.y-axis {
+      .tick {
+        &:first-child {
+          display: none;
+        }
+        &:last-child {
+          display: none;
+        }
+      }
     }
     .tick {
       line {

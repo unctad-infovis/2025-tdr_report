@@ -38,13 +38,13 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
     const { width } = dimensions;
     height *= 0.6;
     const svg = select(svgRef.current)
-      .attr('width', width)
       .attr('height', height)
+      .attr('width', width)
       .attr('viewBox', [0, 0, width, height]);
 
     const radius = Math.min(width, height) / 3;
 
-    const donutX = width / 2 - 120; // shift left by ~120px
+    const donutX = width / 2 - 120;
     const donutY = height / 2;
 
     const g = svg.selectAll('.chart-group')

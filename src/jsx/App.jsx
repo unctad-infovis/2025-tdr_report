@@ -209,7 +209,7 @@ function App() {
     if (!fixedSectionRefFigure1.current) return;
 
     // 5 screens.
-    fixedSectionRefFigure1.current.style.height = `${6 * 130 + 80}vh`;
+    fixedSectionRefFigure1.current.style.height = `${7 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure1.current.getBoundingClientRect();
@@ -392,7 +392,7 @@ function App() {
     if (!fixedSectionRefFigure4.current) return;
 
     // 3 screens.
-    fixedSectionRefFigure4.current.style.height = `${3 * 130 + 80}vh`;
+    fixedSectionRefFigure4.current.style.height = `${4 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure4.current.getBoundingClientRect();
@@ -728,7 +728,7 @@ function App() {
             </div>
           </div>
         </div>
-        <ScrollingText texts={['Chapter 2 sliding text']} chapter_text="Chapter 2" />
+        <ScrollingText texts={['How does trade increasingly depend on finance?']} chapter_text="Chapter 2" />
         <div ref={fixedSectionRefFigure6} className="fixed-section">
           <div className={`fixed-background ${positionFigure6}`}>
             <div className="overlay" />
@@ -744,27 +744,27 @@ function App() {
           <div className="scroll-elements">
             <div className="scroll-content">
               <div>
-                <p>Lets investigate</p>
+                <p>Let’s first look at how finance has outgrown the real economy</p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets first observe the World Trade…
+                  For decades, global production expanded faster than financial assets like stocks and bonds.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  ...and how it has evolved in long term.
+                  But this changed after the Asian financial crisis in the late 1990s.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  ...and how it has evolved in long term.
+                  Since then, the financial market has grown faster than production.
                 </p>
               </div>
             </div>
@@ -785,41 +785,48 @@ function App() {
           <div className="scroll-elements">
             <div className="scroll-content">
               <div>
-                <p>Lets investigate</p>
+                <p>Now let’s look at trade and finance.</p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets first observe the World Trade…
+                  This graph shows trade as an index.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  ...and how it has evolved in long term.
+                  To see the correlation with finance we have to look at trends.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  What really interests us is the cyclical component. (Maybe the previous screen is not needed)
+                  We will take the long term trend and convert the data into deviations.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  And how that has evolved.
+                  This shows trade’s short-term swings more clearly.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  Because we see that the global financial cycle drives the World Trade.
+                  And when we add global financial cycle, we can see that the pattern is clear.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  As global finance moves up or down, trade follows.
                 </p>
               </div>
             </div>
@@ -865,7 +872,7 @@ function App() {
             </div>
           </div>
         </div>
-        <ScrollingText texts={['Sliding text for chapter 3']} chapter_text="Chapter 3" />
+        <ScrollingText texts={['Has the dollar’s role changed in the global economy?']} chapter_text="Chapter 3" />
         <div ref={fixedSectionRefFigure4} className="fixed-section">
           <div className={`fixed-background ${positionFigure4}`}>
             <div className="overlay" />
@@ -882,21 +889,28 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets focus
+                  Has the dollar’s role changed in the global economy?
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  See how they go together until
+                  In 2025, something unusual happened.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  They dont go together anymore
+                  The dollar and US Treasury yields normally move together. But in April 2025, the pattern broke.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  The dollar weakened even as Treasury yields rose.
                 </p>
               </div>
             </div>
@@ -918,21 +932,21 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets focus
+                  This may hint at softer demand for US assets in the short term.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  See how they go together until
+                  But the bigger picture is clear: the dollar’s dominance endures.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  They dont go together anymore
+                  Here’s its share of global finance
                 </p>
               </div>
             </div>
@@ -1110,9 +1124,6 @@ function App() {
                 {' '}
                 This structural imbalance means developing economies contribute increasingly to global growth but are not empowered to shape global financial rules or secure affordable financing for long-term development. It limits their ability to invest in infrastructure, innovation and climate adaptation.
               </p>
-            </div>
-            <div className="charts_container">
-              <DwChartContainer chart_id="Sk6d3" title="Ports providing liquefied natural gas (LNG) bunkering services" />
             </div>
           </div>
         </div>

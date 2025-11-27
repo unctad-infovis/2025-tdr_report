@@ -45,7 +45,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     const { width } = dimensions;
     height /= 2;
     const margin = {
-      top: 40, right: 40, bottom: 4, left: 40
+      top: 40, right: 40, bottom: 40, left: 40
     };
     const svg = select(svgRef.current)
       .attr('height', height)
@@ -62,7 +62,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     // Bind items
     const items = legend.selectAll('.legend-item')
-      .data([{ color: '#009edb', label: '30-year United States Treasury yield' }, { color: '#ffcb05', label: 'United States dollar index' }], d => d.label); // use label as key
+      .data([{ color: '#009edb', label: '30-year US treasury yield, percentage' }, { color: '#ffcb05', label: 'Dollar index, Jan 2006 = 100' }], d => d.label); // use label as key
 
     // Enter
     const itemsEnter = items.enter()
@@ -124,7 +124,6 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     axesG.select('.y-axis')
       .selectAll('.tick line')
       .attr('x2', width);
-    // right y axis (for y2)
 
     // --- Line generators (use d.date and d.y1/d.y2) ---
     const line1 = line()
@@ -143,7 +142,6 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       return Math.max(0, Math.min(dataRaw.length, idx));
     };
 
-    const phase = value; // keep your prop name
     const targetDate = new Date(2025, 3, 2);
 
     // Create marker group (only once)
@@ -178,35 +176,35 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         .attr('x', xPos)
         .text(timeFormat('%-d %B %Y')(dateLabel));
     };
-    // compute desired end limits (counts of points)
+
+    // Compute desired end limits (counts of points)
     let desiredLimit;
     const onLineFinished = () => {
-      if (phase === '2') {
+      if (value === '2') {
         updateMarker(targetDate);
-
         markerGroup
           .transition()
           .duration(400)
           .style('opacity', 1);
       }
     };
-    if (phase === '1') {
+    if (value === '1') {
       desiredLimit = 0;
-    } else if (phase === '2') {
-    // draw up to targetDate
+    } else if (value === '2') {
+      // Draw up to targetDate
       desiredLimit = getIndexForDate(targetDate);
-    } else { // phase === '3'
+    } else {
       desiredLimit = dataRaw.length;
     }
 
-    // --- Bind and create two path elements (one per series) ---
+    // Bind and create two path elements (one per series)
     const g = svg.selectAll('.chart-group').data([null]).join('g').attr('class', 'chart-group');
 
-    // single data-binding: pass full data array as datum for both paths
+    // Single data-binding: pass full data array as datum for both paths
     const path1 = g.selectAll('.line1').data([dataRaw]);
     const path2 = g.selectAll('.line2').data([dataRaw]);
 
-    // enter
+    // Enter
     path1.enter()
       .append('path')
       .attr('class', 'line1 line')
@@ -217,7 +215,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .each((d, i, nodes) => { nodes[i].currentLimit = nodes[i].currentLimit || 0; })
       .merge(path1)
       .call(sel => sel.interrupt())
-      .attr('opacity', phase === '1' ? 0 : 1) // hide in axes-only
+      .attr('opacity', value === '1' ? 0 : 1)
       .transition()
       .duration(900)
       .tween('draw', (d, i, nodes) => {
@@ -243,7 +241,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .each((d, i, nodes) => { nodes[i].currentLimit = nodes[i].currentLimit || 0; })
       .merge(path2)
       .call(sel => sel.interrupt())
-      .attr('opacity', phase === '1' ? 0 : 1)
+      .attr('opacity', value === '1' ? 0 : 1)
       .transition()
       .duration(900)
       .tween('draw', (d, i, nodes) => {
@@ -260,7 +258,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .on('end', onLineFinished);
 
     // if going to phase 1, ensure we fade out paths (so axes-only)
-    if (phase === '1') {
+    if (value === '1') {
       g.selectAll('.line')
         .interrupt()
         .transition()
@@ -281,13 +279,13 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         .duration(400)
         .attr('opacity', 0);
     }
-    if (phase === '1') {
+    if (value === '1') {
       markerGroup.style('opacity', 0);
     }
-    if (phase === '3') {
-      updateMarker(targetDate);
+    if (value === '3') {
       markerGroup.style('opacity', 1); // immediate
     }
+    updateMarker(targetDate);
   }, [value, dimensions]);
 
   useEffect(() => {

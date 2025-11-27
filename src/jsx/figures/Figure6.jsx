@@ -24,7 +24,7 @@ const highlightRanges = [
   { start: new Date('1994/01/01'), end: new Date('1995/12/31'), label: 'Mexican Peso Crisis' },
   { start: new Date('1998/01/01'), end: new Date('1999/12/31'), label: 'Asian Financial Crisis' },
   { start: new Date('2007/01/01'), end: new Date('2009/12/31'), label: 'Global Financial Crisis' },
-  { start: new Date('2020/01/01'), end: new Date('2022/12/31'), label: 'Covid-19 Pandemic' },
+  { start: new Date('2020/01/01'), end: new Date('2022/12/31'), label: 'COVID-19 Pandemic' },
 ];
 
 const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
@@ -48,7 +48,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     let { height } = dimensions;
     height /= 2;
     const margin = {
-      top: 40, right: 40, bottom: 40, left: 40
+      top: 40, right: 40, bottom: 40, left: 60
     };
     const svg = select(svgRef.current)
       .attr('height', height)
@@ -59,7 +59,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     const legendEnter = legendG.enter()
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', 'translate(60, 60)');
+      .attr('transform', 'translate(60, 100)');
 
     const legend = legendEnter.merge(legendG);
 
@@ -130,6 +130,17 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .selectAll('.tick line')
       .attr('x2', width);
 
+    // Y-Axis label
+    axesG.append('text')
+      .attr('class', 'y-axis-label')
+      .attr('transform', 'rotate(-90)') // rotate text vertically
+      .attr('x', -(height / 2)) // move to vertical center
+      .attr('y', margin.left - 40) // left of the axis, adjust padding
+      .attr('text-anchor', 'middle')
+      .attr('fill', '#fff') // adjust color
+      .style('font-size', '12px')
+      .text('Trillions of dollars'); // replace with your desired label
+
     // --- Line generators (use d.date and d.y1/d.y2) ---
     const line1 = line()
       .x(d => xScale(d.date))
@@ -150,7 +161,6 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       return Math.max(0, Math.min(dataRaw.length, idx));
     };
 
-    const phase = value; // keep your prop name
     const targetDate = new Date(2000, 0, 1);
 
     // Inside chart():
@@ -191,7 +201,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
           .attr('height', height - 40);
 
         // place label in center of rectangle vertically
-        const labelX = xStart + group_width / 2;
+        const labelX = xStart + group_width / 2 - 1;
         const labelY = 50;
 
         g.select('.highlight-label')
@@ -214,10 +224,10 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     let desiredLimit;
     const onLineFinished = () => {
     };
-    if (phase === '1') {
+    if (value === '1') {
       desiredLimit = 0;
-    } else if (phase === '2') {
-    // draw up to targetDate
+    } else if (value === '2') {
+      // draw up to targetDate
       desiredLimit = getIndexForDate(targetDate);
     } else { // phase === '3'
       desiredLimit = dataRaw.length;
@@ -241,7 +251,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .each((d, i, nodes) => { nodes[i].currentLimit = nodes[i].currentLimit || 0; })
       .merge(path1)
       .call(sel => sel.interrupt())
-      .attr('opacity', phase === '1' ? 0 : 1)
+      .attr('opacity', value === '1' ? 0 : 1)
       .transition()
       .duration(900)
       .tween('draw', (d, i, nodes) => {
@@ -272,7 +282,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .each((d, i, nodes) => { nodes[i].currentLimit = nodes[i].currentLimit || 0; })
       .merge(path2)
       .call(sel => sel.interrupt())
-      .attr('opacity', phase === '1' ? 0 : 1)
+      .attr('opacity', value === '1' ? 0 : 1)
       .transition()
       .duration(900)
       .tween('draw', (d, i, nodes) => {
@@ -293,7 +303,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .on('end', onLineFinished);
 
     // if going to phase 1, ensure we fade out paths (so axes-only)
-    if (phase === '1') {
+    if (value === '1') {
       g.selectAll('.line')
         .interrupt()
         .transition()
@@ -314,24 +324,21 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         .attr('opacity', 0);
     }
 
-    if (phase === '1') {
+    if (value === '1') {
       highlightGroup.select('.highlight-range-0').style('opacity', 0);
       highlightGroup.select('.highlight-range-1').style('opacity', 0);
       highlightGroup.select('.highlight-range-2').style('opacity', 0);
       highlightGroup.select('.highlight-range-3').style('opacity', 0);
-      highlightGroup.select('.highlight-range-4').style('opacity', 0);
-    } else if (phase === '2') {
+    } else if (value === '2') {
       highlightGroup.select('.highlight-range-0').style('opacity', 1);
       highlightGroup.select('.highlight-range-1').style('opacity', 1);
-      highlightGroup.select('.highlight-range-2').style('opacity', 1);
+      highlightGroup.select('.highlight-range-2').style('opacity', 0);
       highlightGroup.select('.highlight-range-3').style('opacity', 0);
-      highlightGroup.select('.highlight-range-4').style('opacity', 0);
-    } else if (phase === '3') {
+    } else if (value === '3') {
       highlightGroup.select('.highlight-range-0').style('opacity', 1);
       highlightGroup.select('.highlight-range-1').style('opacity', 1);
       highlightGroup.select('.highlight-range-2').style('opacity', 1);
       highlightGroup.select('.highlight-range-3').style('opacity', 1);
-      highlightGroup.select('.highlight-range-4').style('opacity', 1);
     }
   }, [value, dimensions]);
 

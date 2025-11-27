@@ -56,7 +56,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     // Bind items
     const items = legend.selectAll('.legend-item')
-      .data([{ color: '#009edb', label: 'World Trade' }, { color: '#ffcb05', label: 'Imports of the United States' }], d => d.label); // use label as key
+      .data([{ color: '#009edb', label: 'World Trade, index' }, { color: '#ffcb05', label: 'Imports of the United States, index' }], d => d.label); // use label as key
 
     // Enter
     const itemsEnter = items.enter()
@@ -141,7 +141,6 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       return Math.max(0, Math.min(dataRaw.length, idx));
     };
 
-    const phase = value; // keep your prop name
     const targetDate = new Date(2024, 9, 1);
 
     // Create marker group (only once)
@@ -179,7 +178,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     // compute desired end limits (counts of points)
     let desiredLimit;
     const onLineFinished = () => {
-      if (phase === '2') {
+      if (value === '2') {
         updateMarker(targetDate);
 
         markerGroup
@@ -188,10 +187,10 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
           .style('opacity', 1);
       }
     };
-    if (phase === '1') {
+    if (value === '1') {
       desiredLimit = 0;
-    } else if (phase === '2') {
-    // draw up to targetDate
+    } else if (value === '2') {
+      // draw up to targetDate
       desiredLimit = getIndexForDate(targetDate);
     } else { // phase === '3'
       desiredLimit = dataRaw.length;
@@ -215,7 +214,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .each((d, i, nodes) => { nodes[i].currentLimit = nodes[i].currentLimit || 0; })
       .merge(path1)
       .call(sel => sel.interrupt())
-      .attr('opacity', phase === '1' ? 0 : 1)
+      .attr('opacity', value === '1' ? 0 : 1)
       .transition()
       .duration(900)
       .tween('draw', (d, i, nodes) => {
@@ -246,7 +245,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .each((d, i, nodes) => { nodes[i].currentLimit = nodes[i].currentLimit || 0; })
       .merge(path2)
       .call(sel => sel.interrupt())
-      .attr('opacity', phase === '1' ? 0 : 1)
+      .attr('opacity', value === '1' ? 0 : 1)
       .transition()
       .duration(900)
       .tween('draw', (d, i, nodes) => {
@@ -267,7 +266,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .on('end', onLineFinished);
 
     // if going to phase 1, ensure we fade out paths (so axes-only)
-    if (phase === '1') {
+    if (value === '1') {
       g.selectAll('.line')
         .interrupt()
         .transition()
@@ -287,10 +286,10 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         .duration(400)
         .attr('opacity', 0);
     }
-    if (phase === '1') {
+    if (value === '1') {
       markerGroup.style('opacity', 0);
     }
-    if (phase === '3') {
+    if (value === '3') {
       markerGroup.style('opacity', 1);
     }
     updateMarker(targetDate);

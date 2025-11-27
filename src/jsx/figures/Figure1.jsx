@@ -189,73 +189,81 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
   }, []);
 
   const chart = useCallback(() => {
-    const svg = select(svgRef.current);
-    if (!svg.node()) return;
-
-    const container = svg.node().parentNode;
-    if (!container) return;
+    if (!svgContainerRef.current) return;
 
     let { height } = dimensions;
     const { width } = dimensions;
     height /= 2;
     const margin = {
-      top: 40, right: 20, bottom: 0, left: 40
+      top: 40, right: 40, bottom: 40, left: 60
     };
-    svg.attr('viewBox', [0, 0, width, height])
+    const svg = select(svgRef.current)
       .attr('height', height)
-      .attr('width', width);
-
-    const phase = parseInt(value, 10);
+      .attr('width', width)
+      .attr('viewBox', [0, 0, width, height]);
 
     // Scales (use all x values for domain)
     const data_group1 = [...data1, ...data2];
     const data_group2 = [...data3, ...data4];
     const data_group = [...data1, ...data2, ...data3, ...data4];
-    const x = scaleTime()
+    const xScale = scaleTime()
       .domain(extent(data_group, d => d.x))
       .range([margin.left, width - margin.right]);
-    const y1 = scaleLinear()
+    const y1Scale = scaleLinear()
       .domain([0, max(data_group1, d => d.y)])
       .nice()
       .range([height - margin.bottom, margin.top]);
-    const y2 = scaleLinear()
+    const y2Scale = scaleLinear()
       .domain([min(data_group2, d => d.y), max(data_group2, d => d.y)])
       .nice()
       .range([height - margin.bottom, margin.top]);
 
     // Generators
-    const lineGen1 = line().x(d => x(d.x)).y(d => y1(d.y)).curve(curveLinear);
+    const lineGen1 = line().x(d => xScale(d.x)).y(d => y1Scale(d.y)).curve(curveLinear);
     // Generators
-    const lineGen2 = line().x(d => x(d.x)).y(d => y2(d.y)).curve(curveLinear);
+    const lineGen2 = line().x(d => xScale(d.x)).y(d => y2Scale(d.y)).curve(curveLinear);
 
     // Root group
     const gSel = svg.selectAll('.chart-group').data([null]);
     const g = gSel.enter().append('g').attr('class', 'chart-group').merge(gSel);
 
     // Axes & grid (phase >= 1)
-    if (phase >= 1) {
-      const xAxis = axisBottom(x).ticks(7).tickSizeInner(6).tickSizeOuter(0)
-        .tickPadding(6);
-      const gx = g.selectAll('.x-axis').data([null]);
-      gx.enter().append('g').attr('class', 'x-axis').merge(gx)
-        .attr('transform', `translate(0,${height - margin.bottom})`)
-        .call(xAxis)
-        .call(sel => sel.select('.domain').remove());
+    if (parseInt(value, 10) >= 1) {
+      svg.selectAll('.axis-group').data([null]).join('g').attr('class', 'axis-group');
+
+      const axesG = svg.select('.axis-group');
+      axesG.selectAll('*').remove(); // simple: clear and re-draw axes each render
+
+      axesG.append('g').attr('class', 'x-axis')
+        .attr('transform', `translate(0, ${height - margin.top})`)
+        .call(axisBottom(xScale).ticks(6));
 
       const tickValues = [0, 20, 40, 60, 80, 100, 120];
-      const yAxis = axisLeft(y1).tickValues(tickValues).tickSize(0).tickPadding(8);
-      const gy = g.selectAll('.y-axis').data([null]);
-      gy.enter().append('g').attr('class', 'y-axis').merge(gy)
+      axesG.append('g').attr('class', 'y-axis')
         .attr('transform', `translate(${margin.left},0)`)
-        .call(yAxis)
+        .call(axisLeft(y1Scale).tickValues(tickValues).tickSize(0).tickPadding(8))
         .call(sel => sel.select('.domain').remove());
       g.select('.y-axis')
         .selectAll('.tick line')
-        .attr('x2', width - margin.right - margin.left);
+        .attr('x2', width - margin.right);
       g.selectAll('.tick')
         .filter(d => d === 0)
         .select('line')
         .attr('class', 'line_0');
+      // Y-Axis label
+      axesG.append('text')
+        .attr('class', 'y-axis-label')
+        .attr('transform', 'rotate(-90)') // rotate text vertically
+        .attr('x', -(height / 2)) // move to vertical center
+        .attr('y', margin.left - 40) // left of the axis, adjust padding
+        .attr('text-anchor', 'middle')
+        .attr('fill', '#fff') // adjust color
+        .style('font-size', '12px');
+      if (parseInt(value, 10) > 4) {
+        axesG.select('.y-axis-label').text('');
+      } else {
+        axesG.select('.y-axis-label').text('Index, 2021 = 100');
+      }
     }
 
     // Line 1
@@ -288,20 +296,20 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
     const ap = areaRef.current;
 
     if (p1) {
-      p1.attr('d', (prevPhaseRef.current === 5 || phase === 5) ? lineGen2(data3) : lineGen1(data1));
+      p1.attr('d', (prevPhaseRef.current === '5' || value === '5') ? lineGen2(data3) : lineGen1(data1));
     }
     if (p2) p2.attr('d', lineGen1(data2));
     if (p4) p4.attr('d', lineGen2(data4));
 
     // Phase 1
-    if (phase === 1) {
+    if (value === '1') {
       updateLegend([], margin);
       // Hide all.
       animateUndraw(p1, len1Ref, 0);
       animateUndraw(p2, len2Ref, 0);
       animateUndraw(p4, len4Ref, 0);
       ap.interrupt().attr('opacity', 0).on('end', () => { areaDrawnRef.current = false; });
-    } else if (phase === 2) {
+    } else if (value === '2') {
       updateLegend([
         { color: '#009edb', label: 'World Trade' }
       ], margin);
@@ -312,7 +320,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
 
       // Insert line1.
       animateDraw(p1, len1Ref);
-    } else if (phase === 3) {
+    } else if (value === '3') {
       updateLegend([
         { color: '#009edb', label: 'World Trade' },
         { color: '#fff', label: 'World Trade (trend line)' }
@@ -325,7 +333,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
       if (!line1DrawnRef.current) animateDraw(p1, len1Ref);
       // Insert line2
       animateDraw(p2, len2Ref);
-    } else if (phase === 4) {
+    } else if (value === '4') {
       updateLegend([
         { color: '#009edb', label: 'World Trade' },
         { color: '#fff', label: 'World Trade (trend line)' },
@@ -336,7 +344,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
       // Make sure that line2 is in place.
       if (!line2DrawnRef.current) animateDraw(p2, len2Ref);
       // Let's make sure line1 is in place
-      if (prevPhaseRef.current === 5) {
+      if (prevPhaseRef.current === '5') {
         const currentD = p1.attr('d') || lineGen1(data3);
         const targetD = lineGen1(data1);
         morphPath(p1, currentD, targetD, () => {
@@ -351,7 +359,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
         ...data1.map(d => ({ x: d.x, y: d.y })),
         ...data2.slice().reverse().map(d => ({ x: d.x, y: d.y }))
       ];
-      const newD = `${line().x(d => x(d.x)).y(d => y1(d.y)).curve(curveLinear)(areaPoly)}Z`;
+      const newD = `${line().x(d => xScale(d.x)).y(d => y1Scale(d.y)).curve(curveLinear)(areaPoly)}Z`;
 
       ap.interrupt()
         .transition()
@@ -363,7 +371,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
         })
         .attr('opacity', 1)
         .on('end', () => { areaDrawnRef.current = true; });
-    } else if (phase === 5) {
+    } else if (value === '5') {
       updateLegend([
         { color: '#009edb', label: 'World Trade (cyclical, standardised)' }
       ], margin);
@@ -371,11 +379,11 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
       animateUndraw(p2, len2Ref, 0);
       animateUndraw(p4, len4Ref);
 
-      const ticks = y2.ticks(1);
+      const ticks = y2Scale.ticks(1);
       svg.select('.y-axis')
         .transition()
         .duration(0)
-        .call(axisLeft(y2).tickValues(ticks).tickSize(0).tickPadding(8))
+        .call(axisLeft(y2Scale).tickValues(ticks).tickSize(0).tickPadding(8))
         .call(sel => sel.select('.domain').remove())
         .call(sel => sel.selectAll('.tick line').attr('x2', width - margin.right - margin.left));
 
@@ -387,7 +395,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
           p1.attr('opacity', 1);
           line1DrawnRef.current = true;
         }, 0);
-      } else if (prevPhaseRef.current === 4) {
+      } else if (prevPhaseRef.current === '4') {
         const currentD = lineGen1(data1);
         const targetD = lineGen2(data3);
         morphPath(p1, currentD, targetD, () => {
@@ -400,7 +408,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
         ...data3.map(d => ({ x: d.x, y: d.y })), // top = data3
         ...data3.slice().reverse().map(d => ({ x: d.x, y: 0 })) // bottom = 0
       ];
-      const newAreaD = `${line().x(d => x(d.x)).y(d => y2(d.y)).curve(curveLinear)(areaPoly)}Z`;
+      const newAreaD = `${line().x(d => xScale(d.x)).y(d => y2Scale(d.y)).curve(curveLinear)(areaPoly)}Z`;
       const fromAreaD = (ap.attr('d') && ap.attr('d') !== '') ? ap.attr('d') : newAreaD;
 
       ap.interrupt()
@@ -413,7 +421,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
         })
         .attr('opacity', 1)
         .on('end', () => { areaDrawnRef.current = true; });
-    } else if (phase === 6) {
+    } else if (value === '6') {
       updateLegend([
         { color: '#009edb', label: 'World Trade (cyclical, standardised)' },
         { color: '#ffcb05', label: 'Global financial cycle' }
@@ -422,11 +430,11 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
       animateUndraw(p2, len2Ref, 0);
       ap.interrupt().attr('opacity', 0).on('end', () => { areaDrawnRef.current = false; });
 
-      const ticks = y2.ticks(1);
+      const ticks = y2Scale.ticks(1);
       svg.select('.y-axis')
         .transition()
         .duration(0)
-        .call(axisLeft(y2)
+        .call(axisLeft(y2Scale)
           .tickValues(ticks)
           .tickSize(0)
           .tickPadding(8))
@@ -445,7 +453,7 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
       }
       animateDraw(p4, len4Ref, 5000, easeLinear);
     }
-    prevPhaseRef.current = phase;
+    prevPhaseRef.current = value;
   }, [animateDraw, animateUndraw, dimensions, morphPath, updateLegend, value]);
 
   useEffect(() => {
