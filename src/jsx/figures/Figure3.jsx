@@ -34,18 +34,28 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
   const chart = useCallback(() => {
     if (!svgRef.current) return;
 
-    let { height } = dimensions;
-    const { width } = dimensions;
-    height *= 0.6;
+    const { height, width } = dimensions;
     const svg = select(svgRef.current)
       .attr('height', height)
       .attr('width', width)
       .attr('viewBox', [0, 0, width, height]);
 
-    const radius = Math.min(width, height) / 3;
+    const radius = Math.min(width, 700) / 3;
 
-    const donutX = width / 2 - 120;
+    // legend anchor on the right of the donut
+    let legendX; let legendY; let
+      donutX;
     const donutY = height / 2;
+
+    if (width < 600) {
+      donutX = width / 2;
+      legendX = width / 2 - 60;
+      legendY = donutY + radius + 20;
+    } else {
+      donutX = width / 2 - 100;
+      legendX = donutX + radius + 20;
+      legendY = donutY - radius / 2 + 65;
+    }
 
     const g = svg.selectAll('.chart-group')
       .data([null])
@@ -150,10 +160,6 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
       .attr('opacity', 0)
       .remove();
 
-    // legend anchor on the right of the donut
-    const legendX = donutX + radius + 60;
-    const legendY = donutY - radius / 2 + 20;
-
     // Stable ordering — must match the exact strings in your data.currency
     const CURRENCY_ORDER = [
       'US Dollar ($)',
@@ -203,7 +209,7 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
       .attr('y', 11)
       .attr('font-size', 14)
       .attr('alignment-baseline', 'middle')
-      .text(d => `${d.currency} – ${d.value}%`);
+      .text(d => `${d.currency}`);
 
     // MERGE (enter + update)
     const itemsMerge = itemsEnter.merge(items);
@@ -213,7 +219,7 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
       .attr('fill', d => color(d.currency));
 
     itemsMerge.select('text')
-      .text(d => `${d.currency} – ${d.value}%`);
+      .text(d => `${d.currency}`);
 
     // Transition to visible for enter/update
     itemsMerge.transition()
@@ -227,9 +233,8 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
       .attr('opacity', 0)
       .remove();
 
-    // vertical stacking (recompute transform on the merged current selection)
     itemsMerge
-      .attr('transform', (d, i) => `translate(0, ${i * 28})`);
+      .attr('transform', (d, i) => `translate(0, ${i * 20})`);
 
     g.selectAll('.title')
       .data([dataLabels[value]])
@@ -265,7 +270,7 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
   return (
     <div ref={chartRef}>
       <div className="app" ref={ref}>
-        {isVisible && <div className="svg_container" ref={svgContainerRef} />}
+        {isVisible && <div className="svg_container figure3" ref={svgContainerRef} />}
       </div>
     </div>
   );

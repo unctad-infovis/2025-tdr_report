@@ -20,7 +20,6 @@ import Figure3 from './figures/Figure3.jsx';
 import Figure4 from './figures/Figure4.jsx';
 import Figure5 from './figures/Figure5.jsx';
 import Figure6 from './figures/Figure6.jsx';
-import Figure7 from './figures/Figure7.jsx';
 
 function App() {
   const appRef = useRef();
@@ -199,7 +198,7 @@ function App() {
     }
   }, [track]);
 
-  const chapterTitles = ['The fleeting resilience of 2025', 'Trade in the age of financialization', 'The enduring dollar', 'Financialization and the global South', 'Building resilience while avoiding further fracture'];
+  const chapterTitles = ['The fleeting resilience of 2025', 'Trade and financialization', 'The enduring dollar', 'Financialization and the Global South', 'Building resilience while avoiding further fracture'];
 
   const [figure1Data, setFigure1Data] = useState('1');
   const fixedSectionRefFigure1 = useRef();
@@ -209,7 +208,7 @@ function App() {
     if (!fixedSectionRefFigure1.current) return;
 
     // 5 screens.
-    fixedSectionRefFigure1.current.style.height = `${7 * 130 + 80}vh`;
+    fixedSectionRefFigure1.current.style.height = `${8 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure1.current.getBoundingClientRect();
@@ -280,7 +279,7 @@ function App() {
     if (!fixedSectionRefFigure2.current) return;
 
     // 3 screens.
-    fixedSectionRefFigure2.current.style.height = `${4 * 130 + 80}vh`;
+    fixedSectionRefFigure2.current.style.height = `${6 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure2.current.getBoundingClientRect();
@@ -445,7 +444,7 @@ function App() {
     if (!fixedSectionRefFigure5.current) return;
 
     // 4 screens.
-    fixedSectionRefFigure5.current.style.height = `${6 * 130 + 80}vh`;
+    fixedSectionRefFigure5.current.style.height = `${7 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure5.current.getBoundingClientRect();
@@ -460,11 +459,14 @@ function App() {
     if (!chartFigure5.current) return;
 
     // Define switch points
-    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8];
+    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8, innerHeight * 2.9 + innerHeight * 0.8, innerHeight * 4.2 + innerHeight * 0.8, innerHeight * 5.5 + innerHeight * 0.8];
 
     const newState = {
       isAbove1: relativeScroll < switchPoints[0],
-      isAbove2: relativeScroll < switchPoints[1]
+      isAbove2: relativeScroll < switchPoints[1],
+      isAbove3: relativeScroll < switchPoints[2],
+      isAbove4: relativeScroll < switchPoints[3],
+      isAbove5: relativeScroll < switchPoints[4]
     };
     if (newState.isAbove1) {
       fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
@@ -476,11 +478,26 @@ function App() {
       fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
       fixedSectionRefFigure5.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
       setFigure5Data('2');
-    } else {
+    } else if (newState.isAbove3) {
       fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
       fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
       fixedSectionRefFigure5.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
       setFigure5Data('3');
+    } else if (newState.isAbove4) {
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure5.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure5Data('4');
+    } else if (newState.isAbove5) {
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure5.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure5Data('5');
+    } else {
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
+      fixedSectionRefFigure5.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
+      fixedSectionRefFigure5.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
+      setFigure5Data('6');
     }
   }, []);
 
@@ -541,58 +558,6 @@ function App() {
     return () => window.removeEventListener('scroll', handleScrollFigure06);
   }, [handleScrollFigure06]);
 
-  const [figure7Data, setFigure7Data] = useState('1');
-  const fixedSectionRefFigure7 = useRef();
-  const chartFigure7 = useRef(null);
-  const [positionFigure7, setPositionFigure7] = useState('');
-  const handleScrollFigure07 = useCallback(() => {
-    if (!fixedSectionRefFigure7.current) return;
-
-    // 4 screens.
-    fixedSectionRefFigure7.current.style.height = `${3 * 130 + 80}vh`;
-
-    const { scrollY, innerHeight } = window;
-    let { top } = fixedSectionRefFigure7.current.getBoundingClientRect();
-    top += scrollY;
-    const { height } = fixedSectionRefFigure7.current.getBoundingClientRect();
-    const fixedBottom = top + height - innerHeight;
-    const relativeScroll = scrollY - top;
-
-    // Determine position state
-    setPositionFigure7((scrollY < top) ? 'absolute_top' : (scrollY < fixedBottom) ? 'fixed' : 'absolute_bottom');
-
-    if (!chartFigure7.current) return;
-
-    // Define switch points
-    const switchPoints = [innerHeight * 0.3 + innerHeight * 0.8, innerHeight * 1.6 + innerHeight * 0.8];
-
-    const newState = {
-      isAbove1: relativeScroll < switchPoints[0],
-      isAbove2: relativeScroll < switchPoints[1]
-    };
-    if (newState.isAbove1) {
-      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'auto';
-      fixedSectionRefFigure7.current.querySelector('.scroll-elements').style.pointerEvents = 'auto';
-      setFigure7Data('1');
-    } else if (newState.isAbove2) {
-      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
-      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
-      fixedSectionRefFigure7.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
-      setFigure7Data('2');
-    } else {
-      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.backgroundColor = 'rgba(0, 0, 0, 0)';
-      fixedSectionRefFigure7.current.querySelector('.fixed-background .overlay').style.pointerEvents = 'none';
-      fixedSectionRefFigure7.current.querySelector('.scroll-elements').style.pointerEvents = 'none';
-      setFigure7Data('3');
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScrollFigure07);
-    return () => window.removeEventListener('scroll', handleScrollFigure07);
-  }, [handleScrollFigure07]);
-
   return (
     <div className="app" ref={appRef}>
       <Header downloadDocument={downloadDocument} scrollTo={scrollTo} chapterTitles={chapterTitles} />
@@ -600,7 +565,7 @@ function App() {
       <div className="content_container" ref={overviewRef}>
         <div className="text_container">
           <div className="text_content">
-            <h3>On the surface, global trade looks resilient. Goods are moving, supply chains are adapting, and trade grew about 4% in early 2025 – even amid tariff hikes and geopolitical tensions.</h3>
+            <p className="large">On the surface, global trade looks resilient. Goods are moving, supply chains are adapting, and trade grew about 4% in early 2025 – even amid tariff hikes and geopolitical tensions.</p>
             <p>But under the surface lies a volatile system powering trade – built more on balance sheets and financial flows than on supply chains.</p>
             <ul>
               <li>Behind every shipment is a credit line.</li>
@@ -631,7 +596,7 @@ function App() {
             <button type="button" onClick={() => scrollTo('.header_container', 'Top')}>Back to top</button>
           </div>
         </div>
-        <ScrollingText texts={['What drove trade growth in early 2025', 'And why didn’t it last?']} chapter_text="Chapter 1" />
+        <ScrollingText texts={['What drove trade growth in early 2025?', 'Why didn’t the rebound last?']} chapter_text="Chapter 1" />
         <div ref={fixedSectionRefFigure5} className="fixed-section">
           <div className={`fixed-background ${positionFigure5}`}>
             <div className="overlay" />
@@ -648,21 +613,21 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Let’s look at world trade and US imports.
+                  Let’s look at world trade and US import trends.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  Historically, they’ve moved together.
+                  Historically, they’ve moved closely together.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  But in late 2024, US imports skyrocketed.
+                  In late 2024, US imports skyrocketed.
                 </p>
               </div>
             </div>
@@ -676,14 +641,21 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  This pulled world trade up.
+                  This helped pulled world trade up.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  Then the surge receded. Now, a slowdown looms.
+                  But the US import surge receded. Now a trade slowdown looms.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Let’s look at other signs of weakening resilience in the global economy.
                 </p>
               </div>
             </div>
@@ -701,34 +673,38 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter1.jpg" /></div></div>
             <div className="text_content">
-              <p>The year 2025 began with momentum and what looked like a rebound – boosted by companies rushing to ship goods before new tariffs and by rising AI-related investments.</p>
-              <p>But remove these temporary factors and global trade growth falls from 4% to somewhere between 2.5% and 3.0%, with a slowdown on the horizon.</p>
+              <p className="large">The year 2025 began with what looked like a rebound – boosted not only by companies rushing to ship goods before new tariffs but also by rising AI-related investments.</p>
+              <p>But if these temporary factors are removed, global trade growth during the first half of 2025 falls from 4% to between 2.5% and 3.0%, with a slowdown on the horizon.</p>
+              <p>Global economic growth is projected to slow from 2.9% in 2024 to 2.6% in 2025 and 2026 – slipping further below the pre-pandemic trend of 3% and pre-financial-crisis trend of 4.4%.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer title="Global gdp growth" chart_id="hL6CH" />
+            </div>
+            <div className="text_content">
+              <p><strong>Other global economic trends tell a similar story.</strong></p>
+              <ul>
+                <li>The United States and European economies are cooling. US economic growth is expected to slow to 1.8% in 2025 and 1.5% in 2026, down from an average of 2.5% between 2015 and 2019.</li>
+                <li>China’s growth is slowing. Its economic growth is projected to decline slightly from 5.0% in 2025 to 4.6% in 2026, down from an average of 6.7% between 2015 and 2019.</li>
+                <li>Across the global South, financial volatility and weaker external demand are squeezing investment and jobs.</li>
+              </ul>
             </div>
             <div className="charts_container">
               <DwChartContainer title="Regional gdp growth" chart_id="jOuB1" />
             </div>
             <div className="text_content">
-              <p>Global economic growth tells a similar story:</p>
-              <ul>
-                <li>Global GDP is projected to fall to 2.6% in 2025, below the pre-pandemic trend.</li>
-                <li>The United States and European economies are cooling. US economic growth expected to slow to 1.8% in 2025 and 1.5% in 2026, compared to X.</li>
-                <li>China is stabilizing but decelerating. Its economic growth is projected to slow to 4.9% in 2025 and 4.5% in 2026, compared to X</li>
-                <li>Across the global South, financial volatility and weaker external demand squeeze investment and jobs.</li>
-              </ul>
-              <p>Despite this difficult landscape, developing economies will drive almost 70% of global growth in 2025 – yet they face the harshest constraints on financing that growth.</p>
-              <p>The climate crisis adds another layer. Some climate-vulnerable countries pay an extra $20 billion per year in interest simply because climate risk raises their borrowing costs — money that could have gone into schools, hospitals or climate resilience itself.</p>
-              <p>
-                <strong>The takeaway:</strong>
-                {' '}
-                The world is growing, but unevenly – and the resilience we see is thinner than it seems and masks structural weaknesses. Without coordinated action, developing countries risk being locked into slower growth, heavier debt and fewer options to steer their own economic futures.
-              </p>
+              <p>In this challenging global landscape, developing economies will drive almost 70% of global growth in 2025 – yet they face the harshest constraints on financing that growth.</p>
+              <p>The climate crisis adds another layer. Some climate-vulnerable countries are paying an extra $20 billion per year in interest simply because climate risk raises their borrowing costs – money that could have gone into schools, hospitals or climate resilience itself.</p>
+              <div className="takeaway_container">
+                <p>
+                  <strong>The takeaway</strong>
+                  {' '}
+                  The global economy is growing – but slowly and unevenly. And the resilience we see is thinner than it looks and masks structural weaknesses. Without coordinated action, developing countries risk being locked into slower growth, heavier debt and fewer options to steer their economic futures.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        <ScrollingText texts={['How does trade increasingly depend on finance?']} chapter_text="Chapter 2" />
+        <ScrollingText texts={['What does a deeper trade-finance link look like?']} chapter_text="Chapter 2" />
         <div ref={fixedSectionRefFigure6} className="fixed-section">
           <div className={`fixed-background ${positionFigure6}`}>
             <div className="overlay" />
@@ -744,7 +720,7 @@ function App() {
           <div className="scroll-elements">
             <div className="scroll-content">
               <div>
-                <p>Let’s first look at how finance has outgrown the real economy</p>
+                <p>Let’s first look at how finance has outgrown the real economy.</p>
               </div>
             </div>
             <div className="scroll-content">
@@ -757,14 +733,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  But this changed after the Asian financial crisis in the late 1990s.
-                </p>
-              </div>
-            </div>
-            <div className="scroll-content">
-              <div>
-                <p>
-                  Since then, the financial market has grown faster than production.
+                  But this shifted after the Asian financial crisis. Financial markets started to outpace production.
                 </p>
               </div>
             </div>
@@ -785,48 +754,55 @@ function App() {
           <div className="scroll-elements">
             <div className="scroll-content">
               <div>
-                <p>Now let’s look at trade and finance.</p>
+                <p>Now let’s look at the link between trade and finance.</p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  This graph shows trade as an index.
+                  This graph shows annual trade growth.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  To see the correlation with finance we have to look at trends.
+                  To compare it with swings in global finance, we’ll look closer at the ups and downs.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  We will take the long term trend and convert the data into deviations.
+                  So let’s take the long-term trend and focus in on standard deviations.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  This shows trade’s short-term swings more clearly.
+                  The short-term swings become clearer.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  And when we add global financial cycle, we can see that the pattern is clear.
+                  When we add the standard deviations in global finance, a pattern emerges.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  As global finance moves up or down, trade follows.
+                  When global finance moves up or down, trade follows.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Let’s look at closer at financialization’s impact on trade.
                 </p>
               </div>
             </div>
@@ -834,24 +810,19 @@ function App() {
         </div>
         <div className="content_container chapter_header_2" ref={chapter2Ref}>
           <div className="text_container">
-            {/* <ChapterHeader
+            <ChapterHeader
               chapter_number="2"
               subtitle="Chapter 2 subtitle"
               title={chapterTitles[1]}
-            /> */}
+            />
             <div className="download_buttons_container">
               <a href="https://unctad.org/system/files/official-document/tdr2025ch2_en.pdf" target="_blank" onClick={(event) => downloadDocument(event)} type="button" className="chapter_download" aria-label="Download Chapter 2" rel="noreferrer">Download</a>
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter2.jpg" /></div></div>
             <div className="text_content">
-              <p>Trade today moves to the rhythm of global finance. When interest rates change in major economies or investor sentiment swings, trade flows shift almost instantly.</p>
-            </div>
-            <div className="charts_container">
-              <DwChartContainer chart_id="7aQWo" title="Global financial market expansion" />
-            </div>
-            <div className="text_content">
-              <p>Data show that world trade and global financial cycles now move in sync, rising and falling together.</p>
-              <p>For developing countries, this creates vulnerabilities:</p>
+              <p className="large">Financialization means finance now plays a much larger role in the world economy. The value of financial assets like stocks and bonds has grown faster than the goods and services companies produce.</p>
+              <p>As a result, trade has become more sensitive to financial factors like movements in interest rates or shifts in investor sentiment. Today, world trade rises and falls with the global financial cycle.</p>
+              <p><strong>For developing countries, this creates vulnerabilities.</strong></p>
               <ul>
                 <li>Currency volatility can make imports and debt repayments more expensive.</li>
                 <li>Shifts in global risk appetite can cut off credit for exporters.</li>
@@ -859,16 +830,24 @@ function App() {
               </ul>
             </div>
             <div className="charts_container">
+              <DwChartContainer chart_id="V8fjj" title="Exchange-traded agricultural derivatives" />
+            </div>
+            <div className="text_content">
+              <p><strong>Financialization is also reshaping entire sectors.</strong></p>
+              <p>In global food markets, for example, over 75% of the income of major food trading companies now comes from financial operations like agricultural derivatives – not from moving wheat, coffee, cocoa or other crops and grains.</p>
+            </div>
+            <div className="charts_container">
               <DwChartContainer chart_id="DL2Od" title="Financial volatility" />
             </div>
             <div className="text_content">
-              <p>Financialization is reshaping entire sectors. In global food markets, for example, over 75% of the revenues of major food trading companies now come from financial operations, not from moving wheat, coffee, cocoa or other crops and grains.</p>
               <p>Prices increasingly reflect speculative strategies, not supply and demand. When finance sets the price of food, countries struggle more to secure affordable, reliable supplies.</p>
-              <p>
-                <strong>The takeaway:</strong>
-                {' '}
-                When markets move based on financial signals rather than real economic conditions, developing economies – especially their small producers – compete on a more uneven playing field. They face higher costs, greater uncertainty, and lower bargaining power – and shocks hit them hardest.
-              </p>
+              <div className="takeaway_container">
+                <p>
+                  <strong>The takeaway</strong>
+                  {' '}
+                  When markets move based on financial signals rather than real economic conditions, developing economies – especially their small producers – compete on a more uneven playing field. They face higher costs, greater uncertainty and lower bargaining power – and shocks hit them hardest.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -911,42 +890,6 @@ function App() {
               <div>
                 <p>
                   The dollar weakened even as Treasury yields rose.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div ref={fixedSectionRefFigure7} className="fixed-section">
-          <div className={`fixed-background ${positionFigure7}`}>
-            <div className="overlay" />
-            <div className="scroll-indicator"><div className="arrow" /></div>
-            <div className="chart_container_full">
-              <Figure7
-                dimensions={dimensions}
-                ref={chartFigure7}
-                value={figure7Data}
-              />
-            </div>
-          </div>
-          <div className="scroll-elements">
-            <div className="scroll-content">
-              <div>
-                <p>
-                  This may hint at softer demand for US assets in the short term.
-                </p>
-              </div>
-            </div>
-            <div className="scroll-content">
-              <div>
-                <p>
-                  But the bigger picture is clear: the dollar’s dominance endures.
-                </p>
-              </div>
-            </div>
-            <div className="scroll-content">
-              <div>
-                <p>
-                  Here’s its share of global finance
                 </p>
               </div>
             </div>
@@ -1007,33 +950,37 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter3.jpg" /></div></div>
             <div className="text_content">
-              <p>In 2025, financial turbulence produced something unusual – the dollar weakened even as yields on United States Treasuries rose. But stepping back, the long-term picture becomes clearer – and the dollar’s dominance remains unchanged.</p>
-            </div>
-            <div className="charts_container">
-              <DwChartContainer chart_id="Z8ZTx" title="The enduring dollar" />
-            </div>
-            <div className="charts_container">
-              <DwChartContainer chart_id="KQgvV" title="Allocated foreign currency reserves" />
-            </div>
-            <div className="text_content">
+              <p className="large">The unusual situation of a weakening dollar while US Treasury yields rise may point to softer short-term demand for US assets. But the bigger picture is unchanged: the dollar’s dominance endures.</p>
               <p>
-                While the dollar’s share in global foreign exchange reserves has steadily declined since 2000, no other currency has risen to replace it. At the same time:
+                Beyond the fact that it still accounts for almost 60% of foreign exchange reserves,
+                <strong>several other indicators highlight the depth of its role</strong>
+                .
               </p>
               <ul>
                 <li>The dollar’s share in SWIFT payments – the global messaging system banks use to move money across borders – climbed from 39% to 50% in just five years, reinforcing its role as the backbone of global transactions.</li>
-                <li>The US still holds 50% of global equity market value – where companies raise capital – and 40% of the global bond market, which finances governments and major investments.</li>
+                <li>Nearly 90% of the global foreign exchange trade – the buying and selling of currencies needed for global payments – involve the dollar.</li>
+                <li>The United States still holds 50% of global equity market value – where companies raise capital.</li>
+                <li>The US also holds 40% of the global bond market, which finances governments and major investments.</li>
+                <li>About half of global investment assets are in dollars.</li>
               </ul>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="DFyN9" title="SWIFT paymets" />
             </div>
+            <div className="charts_container">
+              <DwChartContainer chart_id="Z8ZTx" title="The enduring dollar" />
+            </div>
             <div className="text_content">
-              <p>The dollar’s influence reaches far beyond central bank reserves or how trade is priced. It affects who can get credit, where investment flows and how quickly financial shocks spread around the world.</p>
               <p>
-                <strong>The takeaway:</strong>
-                {' '}
-                Even in a transforming global economy, the dollar remains the anchor, reaching deep into development paths. A dollar-centric global economy means developing countries’ financing costs rise or fall based on decisions taken elsewhere. It reinforces the asymmetry between their growing role in trade and their peripheral place in global finance.
+                The dollar’s influence reaches far beyond central bank reserves or how trade is priced. It affects who can get credit, where investment flows and how quickly financial shocks spread around the world.
               </p>
+              <div className="takeaway_container">
+                <p>
+                  <strong>The takeaway</strong>
+                  {' '}
+                  Even in a transforming global economy, the dollar remains the anchor, reaching deep into development opportunities. A dollar-centric global economy means developing countries’ financing costs rise or fall based on decisions taken elsewhere. It reinforces the asymmetry between their growing role in trade and their peripheral place in global finance.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -1042,7 +989,7 @@ function App() {
           <div className={`fixed-background ${positionFigure2}`}>
             <div className="overlay" />
             <div className="scroll-indicator"><div className="arrow" /></div>
-            <div className="chart_container_full">
+            <div className="chart_container_full overflow-scroll">
               <Figure2
                 dimensions={dimensions}
                 ref={chartFigure2}
@@ -1054,28 +1001,42 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets look at the flow of investments
+                  Let’s look at foreign direct investment (FDI).
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  Before, all major foreign investment hubs were in the Global North.
+                  Before, the major FDI destinations and sources were in the Global North.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  Now, the Global South plays a much larger role.
+                  But recently, several developing economies have become FDI hubs.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  But its role in global financial markets remains small.
+                  Boosting the Global South’s share of FDI flows.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  But a larger share of FDI doesn’t mean a bigger role in global finance.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Let’s take a closer look.
                 </p>
               </div>
             </div>
@@ -1093,41 +1054,41 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter4.jpg" /></div></div>
             <div className="text_content">
-              <p>The Global South has become central to world trade and production – accounting for over 40% of global output and world trade, and half of global foreign direct investment (FDI) inflows.</p>
-              <p>But their presence in global financial markets remains far smaller – a mismatch that constrains development options. Excluding China, developing countries hold just 12% of global equity market value and 6% of the global bond market.</p>
+              <p className="large">The Global South has become central to world trade and production. Developing countries now account for over 40% of global output and world merchandise trade, and nearly 60% of global FDI inflows, up from 22% in 2000.</p>
+              <p>But their share of global financial markets remains smaller at 25% and has even declined – a mismatch that constrains their development. Excluding China, developing countries hold just 12% of global equity market value and 6% of the global bond market.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="Xr09T" title="Uneven growth" />
             </div>
             <div className="text_content">
-              <p>While equity markets in the Global South have grown since the 2008–09 global financial crisis, they still trail in size and sophistication. This leaves many developing countries dependent on foreign banks and financial markets – often at high and volatile interest rates.</p>
+              <p>As developing economies have grown, credit has expanded across the Global South – to households, firms and governments.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="MBUBg" title="Total credit" />
             </div>
             <div className="text_content">
-              <p>Key points about developing countries:</p>
+              <p>But domestic financial markets have not kept pace. This leaves many developing countries dependent on foreign banks and markets – often at high and volatile interest rates.</p>
+              <p><strong>Key points about developing countries and finance:</strong></p>
               <ul>
-                <li>They have smaller, less liquid capital markets, making it harder for firms to raise capital or for investors to trade without difficulty.</li>
-                <li>They pay significantly higher borrowing costs, with higher interest payments draining resources that could otherwise support jobs, infrastructure or public services.</li>
-                <li>They face bigger swings in market sentiment – when global rates rise or investors become more risk-averse, capital can exit quickly, pushing up borrowing costs, weakening currencies and amplifying financial stress.</li>
+                <li>They have smaller, less liquid capital markets, making it harder for firms to raise capital or for investors to trade.</li>
+                <li>They pay significantly higher borrowing costs, with higher interest payments draining resources that could otherwise support jobs or investment in infrastructure and public services.</li>
+                <li>They face bigger swings in market sentiment. When global rates rise or investors become more risk-averse, capital can exit quickly, pushing up borrowing costs, weakening currencies and amplifying financial stress.</li>
               </ul>
+              <p>Borrowing costs show the gap clearly. Advanced economies often borrow at around 1–3%, while many emerging markets pay 6–12% or more for similar government bonds. This means developing countries can pay three to five times more in interest – limiting fiscal space and raising the cost of development.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="2M752" title="Ten-year treasury yield" />
             </div>
             <div className="text_content">
-              <p>The borrowing costs illustrate the gap clearly. While advanced economies often borrow at 1–3%, many emerging markets pay 6–12% or more for similar government bonds. </p>
-              <p>This means a government in an emerging economy may pay three to five times more in interest – a stark difference that limits fiscal space and raises the cost of development.</p>
               <p>
                 <strong>The takeway:</strong>
                 {' '}
-                This structural imbalance means developing economies contribute increasingly to global growth but are not empowered to shape global financial rules or secure affordable financing for long-term development. It limits their ability to invest in infrastructure, innovation and climate adaptation.
+                Developing economies increasingly drive global growth but continue to play a limited role in shaping global finance. This imbalance restricts their ability influence global financial rules and secure access to affordable financing for long-term development. It undermines investments in infrastructure, innovation and climate resilience and adaptation.
               </p>
             </div>
           </div>
         </div>
-        <ScrollingText texts={['Sliding text for chapter 5 will slide']} chapter_text="Chapter 5" />
+        <ScrollingText texts={['What will it take to build lasting resilience?']} chapter_text="Chapter 5" />
         <div className="content_container chapter_header_5" ref={chapter5Ref}>
           <div className="text_container">
             <ChapterHeader
@@ -1140,20 +1101,43 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter5.jpg" /></div></div>
             <div className="text_content">
-              <p>Resilience today requires more than returning to “normal.” It means moving forward rather than bouncing back, building economies that can withstand shocks, adapt to transitions and grow sustainably even under uncertainty.</p>
+              <p className="large">Resilience today requires more than returning to “normal.” It means moving forward rather than bouncing back.</p>
+              <p>It requires building economies that can withstand shocks, adapt to transitions and grow sustainably even under uncertainty.</p>
               <p>The report calls for a strategy that integrates trade, finance and climate policy, with five priorities:</p>
               <ol>
-                <li>Reform the global financial system to support climate-vulnerable countries. Debt and climate are now intertwined. Without major reforms, climate shocks will push more countries into debt distress. Climate-vulnerable countries need fair financing, not higher interest penalties.</li>
-                <li>Expand regional financial cooperation. Regional bond markets, payment systems and development funds can lower borrowing costs and reduce reliance on volatile global markets.</li>
-                <li>Strengthen domestic financial ecosystems. Countries need credible, modern payment and financial infrastructures – especially digital payments and capital markets – to mobilize resources and finance the green transition.</li>
-                <li>Address emerging financial risks beyond the banking sector. Shadow banking and securitized food trading and high-leverage commodity markets create new systemic vulnerabilities and require new regulations.</li>
-                <li>Promote “networked multilateralism”. A fragmented global system hightents uncertainty and cannot deliver predictable trade or stable finance. More inclusive governance is essential. Developing countries need a stronger voice in shaping trade and financial rules.</li>
+                <li>
+                  <strong>Reform the global financial system to support climate-vulnerable countries.</strong>
+                  {' '}
+                  Debt and climate are now intertwined. Without major reforms, climate shocks will push more countries into debt distress. Climate-vulnerable countries need fair financing, not higher interest penalties.
+                </li>
+                <li>
+                  <strong>Expand regional financial cooperation.</strong>
+                  {' '}
+                  Regional bond markets, payment systems and development funds can lower borrowing costs and reduce reliance on volatile global markets.
+                </li>
+                <li>
+                  <strong>Strengthen domestic financial ecosystems.</strong>
+                  {' '}
+                  Countries need credible, modern payment and financial infrastructures – especially digital payments and capital markets – to mobilize resources and finance the green transition.
+                </li>
+                <li>
+                  <strong>Address emerging financial risks beyond the banking sector.</strong>
+                  {' '}
+                  Shadow banking, structured credit products that bundle and resell loans, and high leverage in commodity markets create new systemic vulnerabilities and require new regulations.
+                </li>
+                <li>
+                  <strong>Promote “networked multilateralism”.</strong>
+                  {' '}
+                  A fragmented global system heightens uncertainty and cannot deliver predictable trade or stable finance. More inclusive governance is essential. Developing countries need a stronger voice in shaping trade and financial rules.
+                </li>
               </ol>
-              <p>
-                <strong>The takeaway:</strong>
-                {' '}
-                Resilience is not automatic. It is built through coordinated strategies that align trade, finance and sustainability – and ensure developing countries can shape, not just absorb, global economic shifts.
-              </p>
+              <div className="takeaway_container">
+                <p>
+                  <strong>The takeaway</strong>
+                  {' '}
+                  Resilience is not automatic. It is built through coordinated strategies that align trade, finance and sustainability – and ensure developing countries can shape, not just absorb, global economic shifts.
+                </p>
+              </div>
             </div>
           </div>
         </div>

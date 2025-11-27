@@ -191,9 +191,9 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
   const chart = useCallback(() => {
     if (!svgContainerRef.current) return;
 
-    let { height } = dimensions;
-    const { width } = dimensions;
+    let { height, width } = dimensions;
     height /= 2;
+    width = Math.min(width, 1000);
     const margin = {
       top: 40, right: 40, bottom: 40, left: 60
     };
@@ -243,10 +243,10 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
         .attr('transform', `translate(${margin.left},0)`)
         .call(axisLeft(y1Scale).tickValues(tickValues).tickSize(0).tickPadding(8))
         .call(sel => sel.select('.domain').remove());
-      g.select('.y-axis')
+      axesG.select('.y-axis')
         .selectAll('.tick line')
-        .attr('x2', width - margin.right);
-      g.selectAll('.tick')
+        .attr('x2', width - margin.left - margin.right);
+      axesG.selectAll('.tick')
         .filter(d => d === 0)
         .select('line')
         .attr('class', 'line_0');
@@ -442,16 +442,16 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
         .call(sel => sel.selectAll('.tick line')
           .attr('x2', width - margin.left - margin.right));
 
-      if (!line1DrawnRef.current) {
-        animateDraw(p1, len1Ref);
-        const currentD = p1.attr('d') || lineGen2(data1);
-        const targetD = lineGen2(data3);
-        morphPath(p1, currentD, targetD, () => {
-          p1.attr('opacity', 1);
-          line1DrawnRef.current = true;
-        }, 0);
+      animateDraw(p1, len1Ref);
+      const currentD = p1.attr('d') || lineGen2(data1);
+      const targetD = lineGen2(data3);
+      morphPath(p1, currentD, targetD, () => {
+        p1.attr('opacity', 1);
+        line1DrawnRef.current = true;
+      }, 0);
+      if (!line4DrawnRef.current) {
+        animateDraw(p4, len4Ref, 5000, easeLinear);
       }
-      animateDraw(p4, len4Ref, 5000, easeLinear);
     }
     prevPhaseRef.current = value;
   }, [animateDraw, animateUndraw, dimensions, morphPath, updateLegend, value]);

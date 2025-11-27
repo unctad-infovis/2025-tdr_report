@@ -21,7 +21,6 @@ import { useIsVisible } from 'react-is-visible';
 import rawData from './data/figure6_data.json';
 
 const highlightRanges = [
-  { start: new Date('1994/01/01'), end: new Date('1995/12/31'), label: 'Mexican Peso Crisis' },
   { start: new Date('1998/01/01'), end: new Date('1999/12/31'), label: 'Asian Financial Crisis' },
   { start: new Date('2007/01/01'), end: new Date('2009/12/31'), label: 'Global Financial Crisis' },
   { start: new Date('2020/01/01'), end: new Date('2022/12/31'), label: 'COVID-19 Pandemic' },
@@ -44,9 +43,9 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       y2: +d['Global financial market']
     }));
 
-    const { width } = dimensions;
-    let { height } = dimensions;
+    let { height, width } = dimensions;
     height /= 2;
+    width = Math.min(width, 1000);
     const margin = {
       top: 40, right: 40, bottom: 40, left: 60
     };
@@ -59,7 +58,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     const legendEnter = legendG.enter()
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', 'translate(60, 100)');
+      .attr('transform', 'translate(60, 20)');
 
     const legend = legendEnter.merge(legendG);
 
@@ -116,7 +115,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     svg.selectAll('.axis-group').data([null]).join('g').attr('class', 'axis-group');
 
     const axesG = svg.select('.axis-group');
-    axesG.selectAll('*').remove(); // simple: clear and re-draw axes each render
+    axesG.selectAll('*').remove();
     // X-Axis
     axesG.append('g').attr('class', 'x-axis')
       .attr('transform', `translate(0, ${height - margin.top})`)
@@ -128,20 +127,19 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     axesG.select('.y-axis')
       .selectAll('.tick line')
-      .attr('x2', width);
+      .attr('x2', width - margin.left - margin.right);
 
     // Y-Axis label
     axesG.append('text')
       .attr('class', 'y-axis-label')
-      .attr('transform', 'rotate(-90)') // rotate text vertically
-      .attr('x', -(height / 2)) // move to vertical center
-      .attr('y', margin.left - 40) // left of the axis, adjust padding
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -(height / 2))
+      .attr('y', margin.left - 40)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#fff') // adjust color
+      .attr('fill', '#fff')
       .style('font-size', '12px')
-      .text('Trillions of dollars'); // replace with your desired label
+      .text('Trillions of dollars');
 
-    // --- Line generators (use d.date and d.y1/d.y2) ---
     const line1 = line()
       .x(d => xScale(d.date))
       .y(d => yScale(d.y1))
@@ -152,12 +150,9 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .y(d => yScale(d.y2))
       .defined(d => d.y2 != null && !Number.isNaN(d.y2));
 
-    // --- Helper: compute index limit for a target date ---
     const getIndexForDate = (targetDate) => {
       if (!targetDate) return dataRaw.length;
-      // index of first point after targetDate
       const idx = bisector(d => d.date).right(dataRaw, targetDate);
-      // we want to draw up to idx (i.e., slice(0, idx))
       return Math.max(0, Math.min(dataRaw.length, idx));
     };
 
@@ -328,17 +323,14 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       highlightGroup.select('.highlight-range-0').style('opacity', 0);
       highlightGroup.select('.highlight-range-1').style('opacity', 0);
       highlightGroup.select('.highlight-range-2').style('opacity', 0);
-      highlightGroup.select('.highlight-range-3').style('opacity', 0);
     } else if (value === '2') {
       highlightGroup.select('.highlight-range-0').style('opacity', 1);
-      highlightGroup.select('.highlight-range-1').style('opacity', 1);
+      highlightGroup.select('.highlight-range-1').style('opacity', 0);
       highlightGroup.select('.highlight-range-2').style('opacity', 0);
-      highlightGroup.select('.highlight-range-3').style('opacity', 0);
     } else if (value === '3') {
       highlightGroup.select('.highlight-range-0').style('opacity', 1);
       highlightGroup.select('.highlight-range-1').style('opacity', 1);
       highlightGroup.select('.highlight-range-2').style('opacity', 1);
-      highlightGroup.select('.highlight-range-3').style('opacity', 1);
     }
   }, [value, dimensions]);
 

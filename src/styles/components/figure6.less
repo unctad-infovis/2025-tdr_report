@@ -1,53 +1,56 @@
 .figure6 {
-  .highlight-range {
-    transition: opacity 0.5s ease-in;
-    .highlight-rect {
-      fill: #eb1f48;
-      opacity: 0.5;
+    svg {
+    max-width: 100%;
+    .highlight-range {
+      transition: opacity 0.5s ease-in;
+      .highlight-rect {
+        fill: #eb1f48;
+        opacity: 0.5;
+      }
+      .highlight-label {
+        font-size: 16px;
+        fill: #fff;
+      }
     }
-    .highlight-label {
+    .legend {
       font-size: 16px;
       fill: #fff;
     }
-  }
-  .legend {
-    font-size: 16px;
-    fill: #fff;
-  }
-  .line1,
-  .line2 {
-    fill: none;
-  }
-  .line1 {
-    stroke: #009edb;
-    stroke-width: 4;
-  }
-  .line2 {
-    stroke: #ffcb05;
-    stroke-width: 4;
-  }
-  .x-axis,
-  .y-axis {
-    path {
-      stroke-opacity: 0.4;
-      stroke: #fff;
-      display: none;
+    .line1,
+    .line2 {
+      fill: none;
     }
-    .tick {
-      line {
-        stroke-dasharray: 3,3;
+    .line1 {
+      stroke: #009edb;
+      stroke-width: 4;
+    }
+    .line2 {
+      stroke: #ffcb05;
+      stroke-width: 4;
+    }
+    .x-axis,
+    .y-axis {
+      path {
         stroke-opacity: 0.4;
-        stroke-width: 1;
         stroke: #fff;
-        &.line_0 {
-          stroke-dasharray: 0;
-          stroke-opacity: 0.8;
-          stroke-width: 1;
-        }
+        display: none;
       }
-      text {
-        font-size: 14px;
-        fill: #fff;
+      .tick {
+        line {
+          stroke-dasharray: 3,3;
+          stroke-opacity: 0.4;
+          stroke-width: 1;
+          stroke: #fff;
+          &.line_0 {
+            stroke-dasharray: 0;
+            stroke-opacity: 0.8;
+            stroke-width: 1;
+          }
+        }
+        text {
+          font-size: 14px;
+          fill: #fff;
+        }
       }
     }
   }

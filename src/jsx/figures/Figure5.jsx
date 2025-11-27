@@ -35,11 +35,11 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       y1: +d['World trade'],
       y2: +d['Imports of the United States']
     }));
-    let { height } = dimensions;
-    const { width } = dimensions;
+    let { height, width } = dimensions;
     height /= 2;
+    width = Math.min(width, 1000);
     const margin = {
-      top: 40, right: 40, bottom: 40, left: 40
+      top: 40, right: 40, bottom: 40, left: 60
     };
     const svg = select(svgRef.current)
       .attr('height', height)
@@ -54,29 +54,24 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     const legend = legendEnter.merge(legendG);
 
-    // Bind items
     const items = legend.selectAll('.legend-item')
-      .data([{ color: '#009edb', label: 'World Trade, index' }, { color: '#ffcb05', label: 'Imports of the United States, index' }], d => d.label); // use label as key
+      .data([{ color: '#009edb', label: 'World Trade' }, { color: '#ffcb05', label: 'Imports of the United States' }], d => d.label); // use label as key
 
-    // Enter
     const itemsEnter = items.enter()
       .append('g')
       .attr('class', 'legend-item')
       .attr('transform', (d, i) => `translate(0, ${i * 20})`);
 
-    // Rectangles
     itemsEnter.append('rect')
       .attr('width', 12)
       .attr('height', 12)
       .attr('fill', d => d.color);
 
-    // Text
     itemsEnter.append('text')
       .attr('x', 16)
       .attr('y', 10)
       .text(d => d.label);
 
-    // Merge for updates
     items.merge(itemsEnter)
       .select('rect')
       .attr('fill', d => d.color);
@@ -85,7 +80,6 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .select('text')
       .text(d => d.label);
 
-    // Remove old items
     items.exit().remove();
 
     const xScale = scaleTime()
@@ -105,9 +99,8 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     // Axes
     svg.selectAll('.axis-group').data([null]).join('g').attr('class', 'axis-group');
-
     const axesG = svg.select('.axis-group');
-    axesG.selectAll('*').remove(); // simple: clear and re-draw axes each render
+    axesG.selectAll('*').remove();
     // X-Axis
     axesG.append('g').attr('class', 'x-axis')
       .attr('transform', `translate(0, ${height - margin.top})`)
@@ -119,9 +112,19 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     axesG.select('.y-axis')
       .selectAll('.tick line')
-      .attr('x2', width);
+      .attr('x2', width - margin.right - margin.left);
 
-    // --- Line generators (use d.date and d.y1/d.y2) ---
+    // Y-Axis label
+    axesG.append('text')
+      .attr('class', 'y-axis-label')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -(height / 2))
+      .attr('y', margin.left - 40)
+      .attr('text-anchor', 'middle')
+      .attr('fill', '#fff')
+      .style('font-size', '12px')
+      .text('Index');
+
     const line1 = line()
       .x(d => xScale(d.date))
       .y(d => yScale(d.y1))
@@ -132,18 +135,12 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .y(d => yScale(d.y2))
       .defined(d => d.y2 != null && !Number.isNaN(d.y2));
 
-    // --- Helper: compute index limit for a target date ---
     const getIndexForDate = (targetDate) => {
       if (!targetDate) return dataRaw.length;
-      // index of first point after targetDate
       const idx = bisector(d => d.date).right(dataRaw, targetDate);
-      // we want to draw up to idx (i.e., slice(0, idx))
       return Math.max(0, Math.min(dataRaw.length, idx));
     };
 
-    const targetDate = new Date(2024, 9, 1);
-
-    // Create marker group (only once)
     const markerGroup = svg.selectAll('.target-marker')
       .data([null])
       .join(
@@ -163,6 +160,20 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         }
       );
 
+    const targetDate1 = new Date(2024, 9, 1);
+    const targetDate2 = new Date(2025, 2, 1);
+
+    let desiredLimit;
+    if (value === '1') {
+      desiredLimit = 0;
+    } else if (value === '2') {
+      desiredLimit = getIndexForDate(targetDate1);
+    } else if (parseInt(value, 10) < 6) {
+      desiredLimit = getIndexForDate(targetDate2);
+    } else {
+      desiredLimit = dataRaw.length;
+    }
+
     // Function to position the marker
     const updateMarker = (dateLabel) => {
       const xPos = xScale(dateLabel);
@@ -172,14 +183,12 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         .attr('x2', xPos);
 
       markerGroup.select('.marker-label')
-        .attr('x', xPos)
+        .attr('x', xPos - 60)
         .text(timeFormat('%B %Y')(dateLabel));
     };
-    // compute desired end limits (counts of points)
-    let desiredLimit;
     const onLineFinished = () => {
-      if (value === '2') {
-        updateMarker(targetDate);
+      if (parseInt(value, 10) > 2) {
+        updateMarker(targetDate1);
 
         markerGroup
           .transition()
@@ -187,19 +196,9 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
           .style('opacity', 1);
       }
     };
-    if (value === '1') {
-      desiredLimit = 0;
-    } else if (value === '2') {
-      // draw up to targetDate
-      desiredLimit = getIndexForDate(targetDate);
-    } else { // phase === '3'
-      desiredLimit = dataRaw.length;
-    }
 
-    // --- Bind and create two path elements (one per series) ---
     const g = svg.selectAll('.chart-group').data([null]).join('g').attr('class', 'chart-group');
 
-    // single data-binding: pass full data array as datum for both paths
     const path1 = g.selectAll('.line1').data([dataRaw]);
     const path2 = g.selectAll('.line2').data([dataRaw]);
 
@@ -265,7 +264,6 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       })
       .on('end', onLineFinished);
 
-    // if going to phase 1, ensure we fade out paths (so axes-only)
     if (value === '1') {
       g.selectAll('.line')
         .interrupt()
@@ -285,14 +283,12 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         .transition()
         .duration(400)
         .attr('opacity', 0);
-    }
-    if (value === '1') {
       markerGroup.style('opacity', 0);
     }
-    if (value === '3') {
+    if (parseInt(value, 10) > 2) {
       markerGroup.style('opacity', 1);
     }
-    updateMarker(targetDate);
+    updateMarker(targetDate1);
   }, [value, dimensions]);
 
   useEffect(() => {

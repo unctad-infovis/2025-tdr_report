@@ -41,9 +41,9 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     // ensure sorted by x
     dataRaw.sort((a, b) => a.date - b.date);
 
-    let { height } = dimensions;
-    const { width } = dimensions;
+    let { height, width } = dimensions;
     height /= 2;
+    width = Math.min(width, 1000);
     const margin = {
       top: 40, right: 40, bottom: 40, left: 40
     };
@@ -56,7 +56,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     const legendEnter = legendG.enter()
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', 'translate(60, 20)');
+      .attr('transform', 'translate(60, 30)');
 
     const legend = legendEnter.merge(legendG);
 
@@ -114,16 +114,34 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     const axesG = svg.select('.axis-group');
     axesG.selectAll('*').remove(); // simple: clear and re-draw axes each render
     // x axis
-    axesG.append('g').attr('class', 'x-axis')
+
+    axesG.append('g')
+      .attr('class', 'x-axis')
       .attr('transform', `translate(0, ${height - margin.top})`)
-      .call(axisBottom(xScale).ticks(6));
+      .call(axisBottom(xScale).tickValues([new Date('2023/07/01'), new Date('2024/01/01'), new Date('2024/07/01'), new Date('2025/01/01'), new Date('2025/07/01')]).tickFormat(timeFormat('%b %Y')))
+      .selectAll('.tick text')
+      .each((d, i, nodes) => {
+        const parts = timeFormat('%b|%Y')(d).split('|');
+        const text = select(nodes[i]);
+
+        text.text(''); // clear original
+        text.append('tspan')
+          .attr('x', 0)
+          .attr('dy', '0em')
+          .text(parts[0]); // first line
+
+        text.append('tspan')
+          .attr('x', 0)
+          .attr('dy', '1.2em')
+          .text(parts[1]); // second line
+      });
     // left y axis (for y1)
     axesG.append('g').attr('class', 'y-axis')
       .attr('transform', `translate(${margin.left},0)`)
       .call(axisLeft(yScale2).ticks(5));
     axesG.select('.y-axis')
       .selectAll('.tick line')
-      .attr('x2', width);
+      .attr('x2', width - margin.left - margin.right);
 
     // --- Line generators (use d.date and d.y1/d.y2) ---
     const line1 = line()
@@ -173,7 +191,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
         .attr('x2', xPos);
 
       markerGroup.select('.marker-label')
-        .attr('x', xPos)
+        .attr('x', xPos - 55)
         .text(timeFormat('%-d %B %Y')(dateLabel));
     };
 

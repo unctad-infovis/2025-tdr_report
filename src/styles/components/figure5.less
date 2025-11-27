@@ -1,54 +1,57 @@
 .figure5 {
-  .legend {
-    font-size: 16px;
-    fill: #fff;
-  }
-  .line1,
-  .line2 {
-    fill: none;
-  }
-  .line1 {
-    stroke: #009edb;
-    stroke-width: 4;
-  }
-  .line2 {
-    stroke: #ffcb05;
-    stroke-width: 4;
-  }
-  .x-axis,
-  .y-axis {
-    path {
-      stroke-opacity: 0.4;
-      stroke: #fff;
-      display: none;
+  svg {
+    max-width: 100%;
+    .legend {
+      font-size: 16px;
+      fill: #fff;
     }
-    .tick {
-      line {
-        stroke-dasharray: 3,3;
+    .line1,
+    .line2 {
+      fill: none;
+    }
+    .line1 {
+      stroke: #009edb;
+      stroke-width: 4;
+    }
+    .line2 {
+      stroke: #ffcb05;
+      stroke-width: 4;
+    }
+    .x-axis,
+    .y-axis {
+      path {
         stroke-opacity: 0.4;
-        stroke-width: 1;
         stroke: #fff;
-        &.line_0 {
-          stroke-dasharray: 0;
-          stroke-opacity: 0.8;
+        display: none;
+      }
+      .tick {
+        line {
+          stroke-dasharray: 3,3;
+          stroke-opacity: 0.4;
           stroke-width: 1;
+          stroke: #fff;
+          &.line_0 {
+            stroke-dasharray: 0;
+            stroke-opacity: 0.8;
+            stroke-width: 1;
+          }
+        }
+        text {
+          font-size: 14px;
+          fill: #fff;
         }
       }
-      text {
-        font-size: 14px;
-        fill: #fff;
+    }
+    .target-marker {
+      .marker-line {
+        stroke-width: 4;
+        stroke: #eb1f48;
       }
-    }
-  }
-  .target-marker {
-    .marker-line {
-      stroke-width: 4;
-      stroke: #eb1f48;
-    }
-    .marker-label {
-      fill: #fff;
-      font-weight: 700;
-      font-size: 16px;
+      .marker-label {
+        fill: #fff;
+        font-weight: 700;
+        font-size: 16px;
+      }
     }
   }
 }

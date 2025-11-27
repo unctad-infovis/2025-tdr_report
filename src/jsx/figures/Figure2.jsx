@@ -27,23 +27,6 @@ import nodes_2007 from './data/figure2_data_2007_nodes.json';
 import edges_2023 from './data/figure2_data_2023_edges.json';
 import nodes_2023 from './data/figure2_data_2023_nodes.json';
 
-function animateNumber(from, to, duration, stepCallback, doneCallback) {
-  const start = performance.now();
-
-  function frame(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    const current = Math.floor(from + (to - from) * progress);
-    stepCallback(current);
-
-    if (progress < 1) {
-      requestAnimationFrame(frame);
-    } else if (doneCallback) {
-      doneCallback();
-    }
-  }
-  requestAnimationFrame(frame);
-}
-
 const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
   const svgRef = useRef();
   const svgContainerRef = useRef();
@@ -51,10 +34,9 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
   const isVisible = useIsVisible(chartRef, { once: true });
   const [visibleGroups, setVisibleGroups] = useState({
     north: true,
-    south: true
+    south: true,
+    title: true
   });
-
-  const [displayYear, setDisplayYear] = useState(2007);
 
   const toggle = (id) => {
     setVisibleGroups(v => ({ ...v, [id]: !v[id] }));
@@ -129,15 +111,15 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
   }, [visibleGroups, value]);
 
   const chart = useCallback(() => {
-    if (!svgContainerRef.current) return;
-    const { height } = dimensions;
-    const { width } = dimensions;
+    const width = Math.max(Math.min(Math.min(dimensions.height, dimensions.width), 800), 800);
+    const height = Math.max(Math.min(Math.min(dimensions.height, dimensions.width), 800), 800);
+
     const margin = {
-      top: 200, right: 0, bottom: 0, left: 100
+      top: 20, right: 20, bottom: 20, left: 20
     };
     const svg = select(svgRef.current)
-      .attr('height', height)
-      .attr('width', width)
+      .attr('height', height - margin.top - margin.bottom)
+      .attr('width', width - margin.left - margin.right)
       .attr('viewBox', [0, 0, width, height]);
 
     const allNodes = [...nodes_2007, ...nodes_2023];
@@ -161,6 +143,7 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
     svg.selectAll('.legend').remove(); // clear old legend on update
 
     const legendData = [
+      { label: (value === '1') ? 'Year 2007' : 'Year 2023', color: '#transparent', group: 'title' },
       { label: 'Global north', color: '#009edb', group: 'north' },
       { label: 'Global south', color: '#ffcb05', group: 'south' }
     ];
@@ -168,7 +151,7 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
     // Legend group
     const legend = svg.append('g')
       .attr('class', 'legend')
-      .attr('transform', `translate(${margin.top}, ${margin.left})`);
+      .attr('transform', 'translate(40, 40)');
 
     // One row per item
     const items = legend.selectAll('.legend-item')
@@ -177,23 +160,27 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
       .append('g')
       .attr('class', 'legend-item')
       .attr('transform', (d, i) => `translate(0, ${i * 24})`)
-      .style('cursor', 'pointer')
+      .style('cursor', (d) => ((d.group === '') ? 'normal' : 'pointer'))
       .style('opacity', d => (visibleGroups[d.group] ? 1 : 0.4)) // initial dim
-      .on('click', (event, d) => toggle(d.group));
+      .on('click', (event, d) => {
+        if (d.group !== 'title') toggle(d.group);
+      });
 
     // Circle symbol
     items.append('circle')
-      .attr('r', 7)
+      .attr('r', (d) => ((d.group) === 'title' ? 0 : 7))
       .attr('cx', 7)
       .attr('cy', 7)
       .attr('fill', d => d.color);
 
     // Text label
     items.append('text')
-      .attr('x', 22)
+      .attr('x', (d) => ((d.group) === 'title' ? 0 : 22))
       .attr('y', 11)
       .attr('fill', '#fff')
-      .style('font-size', '14px')
+      .attr('class', (d) => ((d.group) === 'title' ? 'legend-item-year' : ''))
+      .style('font-weight', (d) => ((d.group) === 'title' ? '700' : '400'))
+      .style('font-size', (d) => ((d.group) === 'title' ? '20px' : '14px'))
       .text(d => d.label);
 
     const nodesData = value === '1' ? nodes_2007 : nodes_2023;
@@ -415,18 +402,10 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
     if (isVisible) chart();
   }, [chart, isVisible]);
 
-  useEffect(() => {
-    const target = value === '1' ? 2007 : 2023;
-    const duration = 300;
-
-    animateNumber(displayYear, target, duration, setDisplayYear);
-  }, [value, displayYear]);
-
   return (
     <div ref={chartRef}>
       <div className="app" ref={ref}>
-        <h3>{displayYear}</h3>
-        {isVisible && (<div className="svg_container" ref={svgContainerRef} />)}
+        {isVisible && (<div className="svg_container figure2" ref={svgContainerRef} />)}
       </div>
     </div>
   );
