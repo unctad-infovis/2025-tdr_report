@@ -180,7 +180,7 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
       .attr('fill', '#fff')
       .attr('class', (d) => ((d.group) === 'title' ? 'legend-item-year' : ''))
       .style('font-weight', (d) => ((d.group) === 'title' ? '700' : '400'))
-      .style('font-size', (d) => ((d.group) === 'title' ? '20px' : '14px'))
+      .style('font-size', (d) => ((d.group) === 'title' ? '26px' : '16px'))
       .text(d => d.label);
 
     const nodesData = value === '1' ? nodes_2007 : nodes_2023;

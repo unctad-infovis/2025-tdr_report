@@ -332,7 +332,7 @@ function App() {
     if (!fixedSectionRefFigure3.current) return;
 
     // 3 screens.
-    fixedSectionRefFigure3.current.style.height = `${4 * 130 + 80}vh`;
+    fixedSectionRefFigure3.current.style.height = `${5 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure3.current.getBoundingClientRect();
@@ -391,7 +391,7 @@ function App() {
     if (!fixedSectionRefFigure4.current) return;
 
     // 3 screens.
-    fixedSectionRefFigure4.current.style.height = `${4 * 130 + 80}vh`;
+    fixedSectionRefFigure4.current.style.height = `${5 * 130 + 80}vh`;
 
     const { scrollY, innerHeight } = window;
     let { top } = fixedSectionRefFigure4.current.getBoundingClientRect();
@@ -851,7 +851,7 @@ function App() {
             </div>
           </div>
         </div>
-        <ScrollingText texts={['Has the dollar’s role changed in the global economy?']} chapter_text="Chapter 3" />
+        <ScrollingText texts={['Is the dollar losing its dominance in the global economy?']} chapter_text="Chapter 3" />
         <div ref={fixedSectionRefFigure4} className="fixed-section">
           <div className={`fixed-background ${positionFigure4}`}>
             <div className="overlay" />
@@ -868,21 +868,21 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Has the dollar’s role changed in the global economy?
+                  This year, something unusual happened.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  In 2025, something unusual happened.
+                  The dollar’s value and US Treasury yields have normally moved together.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  The dollar and US Treasury yields normally move together. But in April 2025, the pattern broke.
+                  But in April 2025, that pattern broke.
                 </p>
               </div>
             </div>
@@ -890,6 +890,13 @@ function App() {
               <div>
                 <p>
                   The dollar weakened even as Treasury yields rose.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  This may point to weaker short-term demand for US assets.
                 </p>
               </div>
             </div>
@@ -911,28 +918,35 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Lets look at the US dollar centric world
+                  But let’s look at global foreign exchange reserves.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  US dollar has been the dominating currency
+                  The dollar’s share has steadily declined since 2000.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  And despite recent decline
+                  But it still accounts for almost 60% of global reserves.
                 </p>
               </div>
             </div>
             <div className="scroll-content">
               <div>
                 <p>
-                  No other single currency has taken its place
+                  And no other currency has risen to replace it.
+                </p>
+              </div>
+            </div>
+            <div className="scroll-content">
+              <div>
+                <p>
+                  Let’s look closer at the dollar’s changing but enduring role.
                 </p>
               </div>
             </div>
@@ -953,6 +967,7 @@ function App() {
               <p className="large">The unusual situation of a weakening dollar while US Treasury yields rise may point to softer short-term demand for US assets. But the bigger picture is unchanged: the dollar’s dominance endures.</p>
               <p>
                 Beyond the fact that it still accounts for almost 60% of foreign exchange reserves,
+                {' '}
                 <strong>several other indicators highlight the depth of its role</strong>
                 .
               </p>
