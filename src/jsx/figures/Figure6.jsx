@@ -39,7 +39,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     // --- Prepare data (same as you had) ---
     const dataRaw = rawData.map(d => ({
       date: new Date(d.date),
-      y1: +d['World economic activity'],
+      y1: +d['Gross domestic product (GDP)'],
       y2: +d['Global financial market']
     }));
 
@@ -64,7 +64,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     // Bind items
     const items = legend.selectAll('.legend-item')
-      .data([{ color: '#009edb', label: 'Gross domestic product (GDP)' }, { color: '#ffcb05', label: 'Global financial market' }], d => d.label); // use label as key
+      .data([{ color: '#009edb', label: 'World economic activity' }, { color: '#ffcb05', label: 'Global financial market' }], d => d.label); // use label as key
 
     // Enter
     const itemsEnter = items.enter()

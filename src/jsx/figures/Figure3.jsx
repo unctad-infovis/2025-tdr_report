@@ -64,8 +64,8 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
     g.attr('transform', `translate(${donutX}, ${donutY})`);
 
     const dataLabels = {
-      1: 2020,
-      2: 2024,
+      1: 2010,
+      2: 2020,
       3: 2025
     };
     const dataStages = {
@@ -244,7 +244,7 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
           .attr('text-anchor', 'middle')
           .attr('dy', '0.35em')
           .attr('opacity', 0)
-          .text(d => d)
+          .text(d => (d === 2025 ? `${d} Q1` : d))
           .call(sel => sel.transition()
             .duration(500)
             .attr('opacity', 1)),
@@ -252,9 +252,20 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
           .duration(500)
           .tween('text', (d, i, nodes) => {
             const node = select(nodes[i]);
-            const current = +node.text();
+            const current = +node.text().replace(' Q1', '');
+            // keep only number
             const interpolator = interpolateNumber(current, d);
-            return t => node.text(Math.round(interpolator(t)));
+
+            return t => {
+              const number = Math.round(interpolator(t));
+
+              // At the end of the animation, append " Q1"
+              if (t === 1 && number === 2025) {
+                node.text(`${number} Q1`);
+              } else {
+                node.text(number);
+              }
+            };
           }))
       );
   }, [value, dimensions]);

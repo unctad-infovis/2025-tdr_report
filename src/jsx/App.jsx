@@ -568,18 +568,23 @@ function App() {
             <p className="large">On the surface, global trade looks resilient. Goods are moving, supply chains are adapting, and trade grew about 4% in early 2025 – even amid tariff hikes and geopolitical tensions.</p>
             <p>But under the surface lies a volatile system powering trade – built more on balance sheets and financial flows than on supply chains.</p>
             <ul>
-              <li>Behind every shipment is a credit line.</li>
+              <li>Behind every shipment, there is a credit line.</li>
               <li>Behind every container, an exchange rate.</li>
               <li>Behind every trade route, a network of banks.</li>
             </ul>
-            <p>Over 90% of world trade now depends on finance. This means the global financial architecture increasingly determines who can trade, on what terms and at what cost.</p>
-            <p>Yet unlike trade, the financial infrastructure remains highly concentrated – leaving much of the global South on the margins.</p>
-            <p>The 2025 Trade and Development Report reveals how the tightening link between trade and finance is reshaping global opportunities – and why the stakes are greatest for developing countries.</p>
+            <p>Over 90% of world trade now depends on trade finance. This means that banks, platforms that clear transactions and complex financial instruments like derivatives determine who can trade, on what terms and at what cost.</p>
+            <p>Yet unlike trade, global finance remains highly concentrated – leaving much of the global South on the margins.</p>
+            <p>
+              <strong>The Trade and Development Report 2025</strong>
+              {' '}
+              reveals how the tightening link between trade and finance is reshaping global opportunities – and why the stakes are greatest for developing countries.
+              {' '}
+            </p>
             <blockquote>
-              <div className="quote">Trade is not just the concatenation of suppliers. It is the concatenation of credit lines, payment systems, currency markets, and capital flows.</div>
+              <div className="quote">Trade is not just the concatenation of suppliers. It is also the concatenation of credit lines, payment systems, currency markets and capital flows.</div>
               <div className="author">
                 <span className="name">Rebeca Grynspan</span>
-                <span className="title">Secretary-General of UN Trade and Development (UNCTAD)</span>
+                <span className="title">Rebeca Grynspan, Secretary-General of UN Trade and Development (UNCTAD)</span>
               </div>
             </blockquote>
           </div>
@@ -641,7 +646,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  This helped pulled world trade up.
+                  This helped pull world trade up.
                 </p>
               </div>
             </div>
@@ -726,7 +731,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  For decades, global production expanded faster than financial assets like stocks and bonds.
+                  For decades, world production exceeded the value of global financial assets like stocks and bonds.
                 </p>
               </div>
             </div>
@@ -760,7 +765,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  This graph shows annual trade growth.
+                  This graph shows the evolution of monthly trade flows.
                 </p>
               </div>
             </div>
@@ -774,7 +779,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  So let’s take the long-term trend and focus in on standard deviations.
+                  So let’s take the long-term trend and compare it to the original data.
                 </p>
               </div>
             </div>
@@ -788,7 +793,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  When we add the standard deviations in global finance, a pattern emerges.
+                  When we add the global financial cycle, a pattern emerges.
                 </p>
               </div>
             </div>
@@ -802,7 +807,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Let’s look at closer at financialization’s impact on trade.
+                  Let’s look closer at financialization’s impact on trade.
                 </p>
               </div>
             </div>
@@ -820,7 +825,7 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter2.jpg" /></div></div>
             <div className="text_content">
-              <p className="large">Financialization means finance now plays a much larger role in the world economy. The value of financial assets like stocks and bonds has grown faster than the goods and services companies produce.</p>
+              <p className="large">Financialization means finance now plays a much larger role in the world economy. Financial markets, institutions and motives increasingly affect the production and trade of goods and services. </p>
               <p>As a result, trade has become more sensitive to financial factors like movements in interest rates or shifts in investor sentiment. Today, world trade rises and falls with the global financial cycle.</p>
               <p><strong>For developing countries, this creates vulnerabilities.</strong></p>
               <ul>
@@ -834,7 +839,7 @@ function App() {
             </div>
             <div className="text_content">
               <p><strong>Financialization is also reshaping entire sectors.</strong></p>
-              <p>In global food markets, for example, over 75% of the income of major food trading companies now comes from financial operations like agricultural derivatives – not from moving wheat, coffee, cocoa or other crops and grains.</p>
+              <p>In global food markets, for example, over 75% of the income of major food trading companies now comes from financial operations like agricultural derivatives – not from moving wheat, coffee, cocoa or other agricultural products.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="V8fjj" title="Exchange-traded agricultural derivatives" />
@@ -843,7 +848,7 @@ function App() {
               <DwChartContainer chart_id="TmsG5" title="Mark-to-market valuation" />
             </div>
             <div className="text_content">
-              <p>Prices increasingly reflect speculative strategies, not supply and demand. When finance sets the price of food, countries struggle more to secure affordable, reliable supplies.</p>
+              <p>Prices increasingly reflect speculative strategies, not supply and demand. When finance sets the price of food, countries struggle more to secure affordable, reliable supplies. </p>
               <div className="takeaway_container">
                 <p>
                   <strong>The takeaway</strong>
@@ -967,17 +972,14 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter3.jpg" /></div></div>
             <div className="text_content">
-              <p className="large">The unusual situation of a weakening dollar while US Treasury yields rise may point to softer short-term demand for US assets. But the bigger picture is unchanged: the dollar’s dominance endures.</p>
+              <p className="large">The unusual situation of a weakening dollar while US Treasury yields rise may point to softer short-term demand for US assets. But the bigger picture is unchanged: the dollar’s dominance endures. </p>
               <p>
-                Beyond the fact that it still accounts for almost 60% of foreign exchange reserves,
-                {' '}
-                <strong>several other indicators highlight the depth of its role</strong>
-                .
+                Beyond the fact that it still accounts for almost 60% of foreign exchange reserves, several other indicators highlight the depth of its role.
               </p>
               <ul>
                 <li>The dollar’s share in SWIFT payments – the global messaging system banks use to move money across borders – climbed from 39% to 50% in just five years, reinforcing its role as the backbone of global transactions.</li>
-                <li>Nearly 90% of the global foreign exchange trade – the buying and selling of currencies needed for global payments – involve the dollar.</li>
-                <li>The United States still holds 50% of global equity market value – where companies raise capital.</li>
+                <li>46% of the global foreign exchange trade – the buying and selling of currencies needed for global payments – involve the dollar.</li>
+                <li>The United States still holds 50% of global equity market value – where companies raise capital. </li>
                 <li>The US also holds 40% of the global bond market, which finances governments and major investments.</li>
                 <li>About half of global investment assets are in dollars.</li>
               </ul>
@@ -1026,7 +1028,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Before, the major FDI destinations and sources were in the Global North.
+                  Before, the major FDI destinations and sources were in the global North.
                 </p>
               </div>
             </div>
@@ -1072,14 +1074,14 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter4.jpg" /></div></div>
             <div className="text_content">
-              <p className="large">The global South has become central to world trade and production. Developing countries now account for over 40% of global output and world merchandise trade, and nearly 60% of global FDI inflows, up from 22% in 2000.</p>
+              <p className="large">The global South has become central to world trade and production. Developing countries now account for over 40% of global output and world merchandise trade, and nearly 60% of global FDI inflows, up from 22% in the mid-2000s. </p>
               <p>But their share of global financial markets remains smaller at 25% and has even declined – a mismatch that constrains their development. Excluding China, developing countries hold just 12% of global equity market value and 6% of the global bond market.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="Xr09T" title="Uneven growth" />
             </div>
             <div className="text_content">
-              <p>As developing economies have grown, credit has expanded across the global South – to households, firms and governments.</p>
+              <p>As developing economies have grown, credit has expanded across the global South – to households, firms and governments. </p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="MBUBg" title="Total credit" />
@@ -1092,7 +1094,7 @@ function App() {
                 <li>They pay significantly higher borrowing costs, with higher interest payments draining resources that could otherwise support jobs or investment in infrastructure and public services.</li>
                 <li>They face bigger swings in market sentiment. When global rates rise or investors become more risk-averse, capital can exit quickly, pushing up borrowing costs, weakening currencies and amplifying financial stress.</li>
               </ul>
-              <p>Borrowing costs show the gap clearly. Advanced economies often borrow at around 1–3%, while many emerging markets pay 6–12% or more for similar government bonds. This means developing countries can pay three to five times more in interest – limiting fiscal space and raising the cost of development.</p>
+              <p>Borrowing costs show the gap clearly. Advanced economies often borrow at around 1–4%, while many emerging markets pay 6–12% or more for similar government bonds. This means developing countries can pay three to five times more in interest – limiting fiscal space and raising the cost of development.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="2M752" title="Ten-year treasury yield" />
@@ -1126,27 +1128,27 @@ function App() {
               <p>The report calls for a strategy that integrates trade, finance and climate policy, with five priorities:</p>
               <ol>
                 <li>
-                  <strong>Reform the global financial system to support climate-vulnerable countries.</strong>
+                  <strong>Reform the global financial system to support climate-vulnerable countries. </strong>
                   {' '}
                   Debt and climate are now intertwined. Without major reforms, climate shocks will push more countries into debt distress. Climate-vulnerable countries need fair financing, not higher interest penalties.
                 </li>
                 <li>
-                  <strong>Expand regional financial cooperation.</strong>
+                  <strong>Expand regional financial cooperation. </strong>
                   {' '}
                   Regional bond markets, payment systems and development funds can lower borrowing costs and reduce reliance on volatile global markets.
                 </li>
                 <li>
-                  <strong>Strengthen domestic financial ecosystems.</strong>
+                  <strong>Strengthen domestic financial ecosystems. </strong>
                   {' '}
                   Countries need credible, modern payment and financial infrastructures – especially digital payments and capital markets – to mobilize resources and finance the green transition.
                 </li>
                 <li>
-                  <strong>Address emerging financial risks beyond the banking sector.</strong>
+                  <strong>Address emerging financial risks beyond the banking sector. </strong>
                   {' '}
                   Shadow banking, structured credit products that bundle and resell loans, and high leverage in commodity markets create new systemic vulnerabilities and require new regulations.
                 </li>
                 <li>
-                  <strong>Promote “networked multilateralism”.</strong>
+                  <strong>Promote “networked multilateralism”. </strong>
                   {' '}
                   A fragmented global system heightens uncertainty and cannot deliver predictable trade or stable finance. More inclusive governance is essential. Developing countries need a stronger voice in shaping trade and financial rules.
                 </li>
@@ -1155,7 +1157,7 @@ function App() {
                 <p>
                   <strong>The takeaway</strong>
                   {' '}
-                  Resilience is not automatic. It is built through coordinated strategies that align trade, finance and sustainability – and ensure developing countries can shape, not just absorb, global economic shifts.
+                  True economic resilience requires coordinated strategies that align trade, finance, climate and sustainability – and ensure developing countries can shape, not just absorb, global economic shifts.
                 </p>
               </div>
             </div>
