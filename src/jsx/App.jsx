@@ -198,7 +198,7 @@ function App() {
     }
   }, [track]);
 
-  const chapterTitles = ['The fleeting resilience of 2025', 'Trade and financialization', 'The enduring dollar', 'Financialization and the Global South', 'Building resilience while avoiding further fracture'];
+  const chapterTitles = ['The fleeting resilience of 2025', 'Trade and financialization', 'The enduring dollar', 'Financialization and the global South', 'Building resilience while avoiding further fracture'];
 
   const [figure1Data, setFigure1Data] = useState('1');
   const fixedSectionRefFigure1 = useRef();
@@ -573,7 +573,7 @@ function App() {
               <li>Behind every trade route, a network of banks.</li>
             </ul>
             <p>Over 90% of world trade now depends on finance. This means the global financial architecture increasingly determines who can trade, on what terms and at what cost.</p>
-            <p>Yet unlike trade, the financial infrastructure remains highly concentrated – leaving much of the Global South on the margins.</p>
+            <p>Yet unlike trade, the financial infrastructure remains highly concentrated – leaving much of the global South on the margins.</p>
             <p>The 2025 Trade and Development Report reveals how the tightening link between trade and finance is reshaping global opportunities – and why the stakes are greatest for developing countries.</p>
             <blockquote>
               <div className="quote">Trade is not just the concatenation of suppliers. It is the concatenation of credit lines, payment systems, currency markets, and capital flows.</div>
@@ -830,14 +830,17 @@ function App() {
               </ul>
             </div>
             <div className="charts_container">
-              <DwChartContainer chart_id="V8fjj" title="Exchange-traded agricultural derivatives" />
+              <DwChartContainer chart_id="DL2Od" title="Financial volatility" />
             </div>
             <div className="text_content">
               <p><strong>Financialization is also reshaping entire sectors.</strong></p>
               <p>In global food markets, for example, over 75% of the income of major food trading companies now comes from financial operations like agricultural derivatives – not from moving wheat, coffee, cocoa or other crops and grains.</p>
             </div>
             <div className="charts_container">
-              <DwChartContainer chart_id="DL2Od" title="Financial volatility" />
+              <DwChartContainer chart_id="V8fjj" title="Exchange-traded agricultural derivatives" />
+            </div>
+            <div className="charts_container">
+              <DwChartContainer chart_id="TmsG5" title="Mark-to-market valuation" />
             </div>
             <div className="text_content">
               <p>Prices increasingly reflect speculative strategies, not supply and demand. When finance sets the price of food, countries struggle more to secure affordable, reliable supplies.</p>
@@ -1037,7 +1040,7 @@ function App() {
             <div className="scroll-content">
               <div>
                 <p>
-                  Boosting the Global South’s share of FDI flows.
+                  Boosting the global South’s share of FDI flows.
                 </p>
               </div>
             </div>
@@ -1069,14 +1072,14 @@ function App() {
             </div>
             <div className="media_container"><div className="image_container"><ParallaxImage src="assets/img/2025tdr-chapter4.jpg" /></div></div>
             <div className="text_content">
-              <p className="large">The Global South has become central to world trade and production. Developing countries now account for over 40% of global output and world merchandise trade, and nearly 60% of global FDI inflows, up from 22% in 2000.</p>
+              <p className="large">The global South has become central to world trade and production. Developing countries now account for over 40% of global output and world merchandise trade, and nearly 60% of global FDI inflows, up from 22% in 2000.</p>
               <p>But their share of global financial markets remains smaller at 25% and has even declined – a mismatch that constrains their development. Excluding China, developing countries hold just 12% of global equity market value and 6% of the global bond market.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="Xr09T" title="Uneven growth" />
             </div>
             <div className="text_content">
-              <p>As developing economies have grown, credit has expanded across the Global South – to households, firms and governments.</p>
+              <p>As developing economies have grown, credit has expanded across the global South – to households, firms and governments.</p>
             </div>
             <div className="charts_container">
               <DwChartContainer chart_id="MBUBg" title="Total credit" />
@@ -1095,11 +1098,13 @@ function App() {
               <DwChartContainer chart_id="2M752" title="Ten-year treasury yield" />
             </div>
             <div className="text_content">
-              <p>
-                <strong>The takeway:</strong>
-                {' '}
-                Developing economies increasingly drive global growth but continue to play a limited role in shaping global finance. This imbalance restricts their ability influence global financial rules and secure access to affordable financing for long-term development. It undermines investments in infrastructure, innovation and climate resilience and adaptation.
-              </p>
+              <div className="takeaway_container">
+                <p>
+                  <strong>The takeway:</strong>
+                  {' '}
+                  Developing economies increasingly drive global growth but continue to play a limited role in shaping global finance. This imbalance restricts their ability influence global financial rules and secure access to affordable financing for long-term development. It undermines investments in infrastructure, innovation and climate resilience and adaptation.
+                </p>
+              </div>
             </div>
           </div>
         </div>

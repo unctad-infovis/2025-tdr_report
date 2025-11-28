@@ -39,7 +39,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     // --- Prepare data (same as you had) ---
     const dataRaw = rawData.map(d => ({
       date: new Date(d.date),
-      y1: +d['Gross domestic product (GDP)'],
+      y1: +d['World economic activity'],
       y2: +d['Global financial market']
     }));
 

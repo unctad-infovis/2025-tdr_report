@@ -70,27 +70,27 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
     };
     const dataStages = {
       1: [
-        { currency: 'US Dollar ($)', value: 62.2 },
-        { currency: 'Euro (€)', value: 27.1 },
-        { currency: 'Pound sterling (£)', value: 4.3 },
-        { currency: 'Japanese yen (¥)', value: 3.0 },
-        { currency: 'Chinese renminbi (¥)', value: null },
+        { currency: 'US dollar, $', value: 62.2 },
+        { currency: 'Euro, €', value: 27.1 },
+        { currency: 'Pound sterling, £', value: 4.3 },
+        { currency: 'Japanese yen, ¥', value: 3.0 },
+        { currency: 'Chinese renminbi, ¥', value: null },
         { currency: 'Other currencies', value: 3.5 },
       ],
       2: [
-        { currency: 'US Dollar ($)', value: 61.9 },
-        { currency: 'Euro (€)', value: 20.1 },
-        { currency: 'Pound sterling (£)', value: 4.4 },
-        { currency: 'Japanese yen (¥)', value: 5.9 },
-        { currency: 'Chinese renminbi (¥)', value: 2.0 },
+        { currency: 'US dollar, $', value: 61.9 },
+        { currency: 'Euro, €', value: 20.1 },
+        { currency: 'Pound sterling, £', value: 4.4 },
+        { currency: 'Japanese yen, ¥', value: 5.9 },
+        { currency: 'Chinese renminbi, ¥', value: 2.0 },
         { currency: 'Other currencies', value: 5.7 },
       ],
       3: [
-        { currency: 'US Dollar ($)', value: 57.7 },
-        { currency: 'Euro (€)', value: 20.1 },
-        { currency: 'Pound sterling (£)', value: 5.2 },
-        { currency: 'Japanese yen (¥)', value: 5.1 },
-        { currency: 'Chinese renminbi (¥)', value: 2.1 },
+        { currency: 'US dollar, $', value: 57.7 },
+        { currency: 'Euro, €', value: 20.1 },
+        { currency: 'Pound sterling, £', value: 5.2 },
+        { currency: 'Japanese yen, ¥', value: 5.1 },
+        { currency: 'Chinese renminbi, ¥', value: 2.1 },
         { currency: 'Other currencies', value: 9.8 },
       ],
     };
@@ -162,11 +162,11 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
 
     // Stable ordering — must match the exact strings in your data.currency
     const CURRENCY_ORDER = [
-      'US Dollar ($)',
-      'Euro (€)',
-      'Pound sterling (£)',
-      'Japanese yen (¥)',
-      'Chinese renminbi (¥)',
+      'US dollar, $',
+      'Euro, €',
+      'Pound sterling, £',
+      'Japanese yen, ¥',
+      'Chinese renminbi, ¥',
       'Other currencies'
     ];
 

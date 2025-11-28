@@ -144,8 +144,8 @@ const ForceNetwork = forwardRef(({ value, dimensions }, ref) => {
 
     const legendData = [
       { label: (value === '1') ? 'Year 2007' : 'Year 2023', color: '#transparent', group: 'title' },
-      { label: 'Global north', color: '#009edb', group: 'north' },
-      { label: 'Global south', color: '#ffcb05', group: 'south' }
+      { label: 'Global North', color: '#009edb', group: 'north' },
+      { label: 'Global South', color: '#ffcb05', group: 'south' }
     ];
 
     // Legend group

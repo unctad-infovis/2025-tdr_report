@@ -19,6 +19,20 @@
     }
     .x-axis,
     .y-axis {
+      &.y-axis-right {
+        .tick {
+          text {
+            fill: #ffcb05;
+          }
+        }
+      }
+      &.y-axis-left {
+        .tick {
+          text {
+            fill: #009edb;
+          }
+        }
+      }
       path {
         stroke-opacity: 0.4;
         stroke: #fff;
@@ -26,7 +40,7 @@
       }
       &.y-axis {
         text {
-          display: none;
+          // display: none;
         }
       }
       .tick {

@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import {
   axisBottom,
   axisLeft,
+  axisRight,
   bisector,
   extent,
   interpolateNumber,
@@ -62,7 +63,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     // Bind items
     const items = legend.selectAll('.legend-item')
-      .data([{ color: '#009edb', label: '30-year US treasury yield, percentage' }, { color: '#ffcb05', label: 'Dollar index, Jan 2006 = 100' }], d => d.label); // use label as key
+      .data([{ color: '#009edb', label: 'Dollar index, Jan 2006 = 100' }, { color: '#ffcb05', label: '30-year US treasury yield, percentage' }], d => d.label); // use label as key
 
     // Enter
     const itemsEnter = items.enter()
@@ -112,8 +113,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     svg.selectAll('.axis-group').data([null]).join('g').attr('class', 'axis-group');
 
     const axesG = svg.select('.axis-group');
-    axesG.selectAll('*').remove(); // simple: clear and re-draw axes each render
-    // x axis
+    axesG.selectAll('*').remove();
 
     axesG.append('g')
       .attr('class', 'x-axis')
@@ -136,12 +136,16 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
           .text(parts[1]); // second line
       });
     // left y axis (for y1)
-    axesG.append('g').attr('class', 'y-axis')
+    axesG.append('g').attr('class', 'y-axis y-axis-left')
       .attr('transform', `translate(${margin.left},0)`)
-      .call(axisLeft(yScale2).ticks(5));
-    axesG.select('.y-axis')
+      .call(axisLeft(yScale2).tickValues([110, 114, 118, 122]));
+    axesG.select('.y-axis-left')
       .selectAll('.tick line')
       .attr('x2', width - margin.left - margin.right);
+
+    axesG.append('g').attr('class', 'y-axis y-axis-right')
+      .attr('transform', `translate(${width - margin.right + 10}, 0)`)
+      .call(axisRight(yScale1).tickValues([3.8, 4.3, 4.8]).tickSize(0));
 
     // --- Line generators (use d.date and d.y1/d.y2) ---
     const line1 = line()

@@ -55,7 +55,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
     const legend = legendEnter.merge(legendG);
 
     const items = legend.selectAll('.legend-item')
-      .data([{ color: '#009edb', label: 'World Trade' }, { color: '#ffcb05', label: 'Imports of the United States' }], d => d.label); // use label as key
+      .data([{ color: '#009edb', label: 'World trade' }, { color: '#ffcb05', label: 'Imports of the United States' }], d => d.label); // use label as key
 
     const itemsEnter = items.enter()
       .append('g')
@@ -123,7 +123,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
       .attr('text-anchor', 'middle')
       .attr('fill', '#fff')
       .style('font-size', '12px')
-      .text('Index');
+      .text('Index, 2021 = 100');
 
     const line1 = line()
       .x(d => xScale(d.date))
