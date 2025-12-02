@@ -64,18 +64,18 @@ const FigurePie = forwardRef(({ value, dimensions }, ref) => {
     g.attr('transform', `translate(${donutX}, ${donutY})`);
 
     const dataLabels = {
-      1: 2010,
+      1: 2000,
       2: 2020,
       3: 2025
     };
     const dataStages = {
       1: [
-        { currency: 'US dollar, $', value: 62.2 },
-        { currency: 'Euro, €', value: 27.1 },
-        { currency: 'Pound sterling, £', value: 4.3 },
-        { currency: 'Japanese yen, ¥', value: 3.0 },
+        { currency: 'US dollar, $', value: 71.5 },
+        { currency: 'Euro, €', value: 17.5 },
+        { currency: 'Pound sterling, £', value: 2.9 },
+        { currency: 'Japanese yen, ¥', value: 6.3 },
         { currency: 'Chinese renminbi, ¥', value: null },
-        { currency: 'Other currencies', value: 3.5 },
+        { currency: 'Other currencies', value: 1.8 },
       ],
       2: [
         { currency: 'US dollar, $', value: 61.9 },

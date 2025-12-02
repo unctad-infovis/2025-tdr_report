@@ -234,7 +234,16 @@ const LineGraph = forwardRef(({ value, dimensions }, ref) => {
 
       axesG.append('g').attr('class', 'x-axis')
         .attr('transform', `translate(0, ${height - margin.top})`)
-        .call(axisBottom(xScale).ticks(6));
+        .call(
+          axisBottom(xScale).tickValues([
+            new Date(2000, 0, 1),
+            new Date(2005, 0, 1),
+            new Date(2010, 0, 1),
+            new Date(2015, 0, 1),
+            new Date(2020, 0, 1),
+            new Date(2024, 0, 1),
+          ])
+        );
 
       const tickValues = [0, 20, 40, 60, 80, 100, 120];
       axesG.append('g').attr('class', 'y-axis')

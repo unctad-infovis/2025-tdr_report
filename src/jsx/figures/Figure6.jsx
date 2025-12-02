@@ -21,7 +21,7 @@ import { useIsVisible } from 'react-is-visible';
 import rawData from './data/figure6_data.json';
 
 const highlightRanges = [
-  { start: new Date('1998/01/01'), end: new Date('1999/12/31'), label: 'Asian Financial Crisis' },
+  { start: new Date('1997/01/01'), end: new Date('1999/12/31'), label: 'Asian Financial Crisis' },
   { start: new Date('2007/01/01'), end: new Date('2009/12/31'), label: 'Global Financial Crisis' },
   { start: new Date('2020/01/01'), end: new Date('2022/12/31'), label: 'COVID-19 Pandemic' },
 ];
@@ -64,7 +64,7 @@ const TwoLineChart = forwardRef(({ value, dimensions }, ref) => {
 
     // Bind items
     const items = legend.selectAll('.legend-item')
-      .data([{ color: '#009edb', label: 'World economic activity' }, { color: '#ffcb05', label: 'Global financial market' }], d => d.label); // use label as key
+      .data([{ color: '#009edb', label: 'World economic activity' }, { color: '#ffcb05', label: 'Global financial markets' }], d => d.label); // use label as key
 
     // Enter
     const itemsEnter = items.enter()

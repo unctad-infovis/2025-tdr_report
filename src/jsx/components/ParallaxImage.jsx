@@ -16,7 +16,7 @@ function ChapterHeader(props) {
 
   return (
     <div className="parallax-container" style={{ opacity: (isVisible) ? '1' : '0', top: (isVisible) ? '0px' : '50px' }}>
-      <img ref={imageRef} src={`${file_path}${src}?v=1`} alt="Chapter opening" className="parallax-image" />
+      <img ref={imageRef} src={`${file_path}${src}?v=2`} alt="Chapter opening" className="parallax-image" />
     </div>
   );
 }

@@ -689,7 +689,7 @@ function App() {
               <p><strong>Other global economic trends tell a similar story.</strong></p>
               <ul>
                 <li>The United States and European economies are cooling. US economic growth is expected to slow to 1.8% in 2025 and 1.5% in 2026, down from an average of 2.5% between 2015 and 2019.</li>
-                <li>China’s growth is slowing. Its economic growth is projected to decline slightly from 5.0% in 2025 to 4.6% in 2026, down from an average of 6.7% between 2015 and 2019.</li>
+                <li>China’s growth is slowing. Its economic growth is projected to decline from 5.0% in 2025 to 4.6% in 2026, down from an average of 6.7% between 2015 and 2019.</li>
                 <li>Across the global South, financial volatility and weaker external demand are squeezing investment and jobs.</li>
               </ul>
             </div>
@@ -978,7 +978,7 @@ function App() {
               </p>
               <ul>
                 <li>The dollar’s share in SWIFT payments – the global messaging system banks use to move money across borders – climbed from 39% to 50% in just five years, reinforcing its role as the backbone of global transactions.</li>
-                <li>46% of the global foreign exchange trade – the buying and selling of currencies needed for global payments – involve the dollar.</li>
+                <li>Nearly 90% of the global foreign exchange trade – the buying and selling of currencies needed for global payments – involve the dollar.</li>
                 <li>The United States still holds 50% of global equity market value – where companies raise capital. </li>
                 <li>The US also holds 40% of the global bond market, which finances governments and major investments.</li>
                 <li>About half of global investment assets are in dollars.</li>
