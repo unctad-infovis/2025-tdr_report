@@ -9,17 +9,17 @@ function Footer() {
         <div className="footer_elements">
           <div className="footer_element footer_element_1">
             <div className="footer_content anchor_videos" id="anchor_videos">
+              <h3>Watch the video</h3>
+              <div className="iframe_container youtube_iframe">
+                <iframe
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                  frameBorder="0"
+                  src="https://player.vimeo.com/video/1143081498?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=584799"
+                  title="UNCTAD’s Trade and development report"
+                />
+                <script src="https://player.vimeo.com/api/player.js" />
+              </div>
               <div className="hidden">
-                <h3>Watch the videos</h3>
-                <div className="iframe_container youtube_iframe">
-                  <iframe
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-                    frameBorder="0"
-                    src="https://player.vimeo.com/video/1116100978?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=584799"
-                    title="UNCTAD’s Trade and development report"
-                  />
-                  <script src="https://player.vimeo.com/api/player.js" />
-                </div>
                 <ul>
                   <li>
                     <div className="hidden">
@@ -43,23 +43,25 @@ function Footer() {
                     </div>
                   </li>
                 </ul>
-                <br />
-                <h4>Watch the press conference</h4>
-                <div className="iframe_container youtube_iframe">
-                  <iframe
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-                    frameBorder="0"
-                    src="https://player.vimeo.com/video/1121582942?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-                    title="UNCTAD’s Trade and development report press release 2025"
-                  />
-                  <script src="https://player.vimeo.com/api/player.js" />
-                </div>
               </div>
+              <br />
+              <h4>Watch the launch event</h4>
+              <div className="iframe_container youtube_iframe">
+                <iframe
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                  frameBorder="0"
+                  src="https://player.vimeo.com/video/1143106385?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                  title="UNCTAD’s Trade and development report press release 2025"
+                />
+                <script src="https://player.vimeo.com/api/player.js" />
+              </div>
+              <p>On the brink – a conversation with Rebeca Grynspan and Mariana Mazzucato</p>
+              <br />
               <div>
                 <h4>Media assets</h4>
                 <ul>
-                  <li className="hidden">
-                    <a href="https://www.flickr.com/photos/unctad/albums/72177720329226625/" target="_blank" rel="noreferrer">Photos</a>
+                  <li>
+                    <a href="https://www.flickr.com/photos/unctad/albums/72177720330663056/with/54961187904" target="_blank" rel="noreferrer">Photos</a>
                   </li>
                   <li>
                     <a href="https://trello.com/b/HQ5i8wu8/" target="_blank" rel="noreferrer">Digital assets</a>

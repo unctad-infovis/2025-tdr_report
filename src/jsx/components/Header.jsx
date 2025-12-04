@@ -29,7 +29,7 @@ function App(props) {
           <a href="https://unctad.org/system/files/official-document/tdr2025overview_en.pdf" target="_blank" onClick={(event) => downloadDocument(event)} type="button" aria-label="Download Overview" className="overview" rel="noreferrer">Overview</a>
           <a href="https://unctad.org/system/files/official-document/tdr2025_en.pdf" target="_blank" onClick={(event) => downloadDocument(event)} type="button" aria-label="Download Full Report" className="pdf_download" rel="noreferrer">Full report</a>
           <button type="button" className="pdf_download" onClick={() => scrollTo('.anchor_download', 'Chapters')}>Chapters</button>
-          {/* <button type="button" className="video" onClick={() => scrollTo('.anchor_videos', 'Videos')}>Videos</button> */}
+          <button type="button" className="video" onClick={() => scrollTo('.anchor_videos', 'Videos')}>Videos</button>
           {/* <button type="button" className="podcast" onClick={() => scrollTo('.anchor_podcasts', 'Podcasts')}>Podcast</button> */}
           <button type="button" className="press" onClick={() => scrollTo('.anchor_press', 'Press')}>Press</button>
         </div>
