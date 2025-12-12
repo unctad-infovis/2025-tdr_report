@@ -19,13 +19,13 @@ function Footer() {
                 />
                 <script src="https://player.vimeo.com/api/player.js" />
               </div>
-              <div className="hidden">
+              <div>
                 <ul>
                   <li>
+                    <a href="https://vimeo.com/1143760432" target="_blank" rel="noreferrer">Français</a>
+                    {', '}
+                    <a href="https://vimeo.com/1143778614" target="_blank" rel="noreferrer">Español</a>
                     <div className="hidden">
-                      <a href="https://vimeo.com/1121191483" target="_blank" rel="noreferrer">Français</a>
-                      {', '}
-                      <a href="https://vimeo.com/1120860563" target="_blank" rel="noreferrer">Español</a>
                       {', '}
                       <a href="https://vimeo.com/1095400709" target="_blank" rel="noreferrer">العربية</a>
                       {', '}
