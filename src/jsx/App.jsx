@@ -584,7 +584,7 @@ function App() {
               <div className="quote">Trade is not just the concatenation of suppliers. It is also the concatenation of credit lines, payment systems, currency markets and capital flows.</div>
               <div className="author">
                 <span className="name">Rebeca Grynspan</span>
-                <span className="title">Rebeca Grynspan, Secretary-General of UN Trade and Development (UNCTAD)</span>
+                <span className="title">Secretary-General of UN Trade and Development (UNCTAD)</span>
               </div>
             </blockquote>
           </div>
